@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -206,10 +207,15 @@ class _RegistrationPageState extends State<RegistrationPage> {
                               ),
                             ),
                             onPressed: () {
-                              // FirebaseAuth.instance.createUserWithEmailAndPassword(
-                              //   email: emailController.text.trim(), 
-                              //   password: passwordController.text.trim()
-                              //   );
+                              FirebaseAuth.instance.createUserWithEmailAndPassword(
+                                email: emailController.text.trim(), 
+                                password: passwordController.text.trim()
+                                );
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ProfilePage()));
+                             
                               },
                           ),
                         ),

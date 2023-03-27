@@ -91,15 +91,15 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             ),
                             onPressed: () => {
-                              // FirebaseAuth.instance.signInWithEmailAndPassword(
-                              //   email: emailController.text.trim(),
-                              //   password: passwordController.text.trim())
-                              // //if the login sucsses - redirct to profile page
-                              // Navigator.pushReplacement(
-                              //     context,
-                              //     MaterialPageRoute(
-                              //         builder: (context) => ProfilePage()))
-                              print(emailController.text.trim())
+                              FirebaseAuth.instance.signInWithEmailAndPassword(
+                                email: emailController.text.trim(),
+                                password: passwordController.text.trim()),
+                              //if the login sucsses - redirct to profile page
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ProfilePage()))
+                              //print(emailController.text.trim())
                             },
                           ),
                         ),
