@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "699462531114",
+    "firebase_url": "https://hfc-app-b33ed-default-rtdb.firebaseio.com",
+    "project_id": "hfc-app-b33ed",
+    "storage_bucket": "hfc-app-b33ed.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:699462531114:android:b9de2bb8e34367d831ab53",
+        "android_client_info": {
+          "package_name": "com.yosef_ruth.hfc"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "699462531114-106hf49m5v786br3vq0nh0qr1qest9jj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDUIvdNJbcZAJ1VXaiGB82HNal5dxnIXnY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "699462531114-106hf49m5v786br3vq0nh0qr1qest9jj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
