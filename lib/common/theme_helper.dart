@@ -3,7 +3,7 @@ import 'package:hexcolor/hexcolor.dart';
 
 // green: Color.fromARGB(156, 156, 204, 101);
 // pink: Color.fromARGB(255, 225, 171, 145);
-Color pink =const Color.fromARGB(255, 225, 171, 145);
+//Color pink =const Color.fromARGB(255, 225, 171, 145);
 
 class ThemeHelper {
   InputDecoration textInputDecoration([String labelText ="",String hintText = ""]){
@@ -44,7 +44,7 @@ class ThemeHelper {
       boxShadow: const [
         BoxShadow(color: Colors.black26, offset: Offset(0, 4), blurRadius: 5.0)
       ],
-      color: pink,
+      color: Theme.of(context).colorScheme.secondary,
       borderRadius: BorderRadius.circular(30),
     );
   }

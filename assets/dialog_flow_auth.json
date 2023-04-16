@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "hfc-app-378515",
+  "private_key_id": "17e5d99bf941d4d719157cb569488da3a26b47c2",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDT2lsoM6ULZEWR\nHOpnVGHv5rVmdm3BvCRoDquQ0TNCyFwiNTTVgnwApAPZqE+X6FeQaB8cBiEAdMAf\nay68z4s904lokGgefAv2RgMGYwxSf+iLpOgYNGq1EjYsNJFyAoBbGrD32iiuMGEB\nFIZGNkmjMa9eYlNNNmOVK/SEAnZ6pIigu587xpnqCyqKMLMTiVEASeybFZez0CIb\n8ril80G5AEWWis3UL3iSpnc6UjQL++KAPqS55VrgrnrRrAA2WtjXY7IpCJIfRW+C\nrfuB4IbHbjMVtM0m9o31SO5SYiSZxLMqbiF9U5a+HPPe5aOP5C3WqmO4mrGLeg5f\nQZ6g/XSfAgMBAAECggEACCxuBOyNKxXYy0L61ja+upNDn2rlTCq2mt8qBmHT4Pk6\n+MTlv3ET2LB7R4wDWiCINFWYEaw43LwkZ3HqsTUusZl2PTcJFVgC3CMSXc43fP1b\nWvvnSnvHPCoyNd1nWSc4jYtHlaBwnlvWekSw84eHqsixc+pGPX3iNLCn8+nmaU/a\ny+hd3iNCadYOFQPHBN0uRIUK77ckFLDKfbRMutdwxN5cvd92md/vYjak0eADRwd/\nV3Mzh0gUWb16Uz7xg1BJ+ClvC+sDaV2ZNl2Xb+vOakoUW3GJ2xAlbfJ2DeGm3sgg\n6XyN+SVEddhOEnQa14Pdeqz7hPHWXQCmk/8UYQ6/YQKBgQDx9QjOH4KDAi7zW/e0\nqD++quQ563CD2rudh7jSkm92/rqOfALn+SgfH5wVJvsXT5mxssNcVV+ZqriRimny\nqHRalb79Ur4ygXJYSGuUkKK8ZyS81q60XVgqvyAbpWzLGQ4NqLuhrY0TFhmLiTFg\nHfrVHRSuPDGHDA2PwjsMWJ35PwKBgQDgJgmbcx87F2X3/wF1A6RgMlW0ol+xtQy0\nHUiWBvFuDnHl2vp1yvpDNfyPR6aTI3l9gG3esZw3ybIR5+hsmRurUNcOGandlBqc\n7SFDmzVaY3oLh+F3V0LpqBJyjwT3c/TknynFWON1uT+1NG1PlRLOrBKGdvVCToVK\nqM4JyhtMoQKBgQC7S22seVHC7e7ALUHbE558jraqaykmuCwhLk2QmxAzsc1hvHdX\ncFRxezuMWCdoDRMxLeryT5f4UOIcr2OCFoozENXOLL3URMXptu2oDCoc407Z6ulD\n7znvpRFKtUw5D0UEp8fOyJR64NGXZPTWrX5cd+1pTmkcW+Unkje5P+PRawKBgGZk\nuerLMi8aRzh8wzujCEnxdHlp23EglccJwYjXbx6pdppb6CI7MQvW86K4Rn3crLkK\nHCao2AYcGz5WxDQn1R3zdeo5CwHvkCCzqohptHuwCaaO0g5kTGrUnmi6sLghvnNZ\nygkey/mRQGsUogLCxK6oqGXInc1GdVlft499Re9BAoGBAM+Q4/G47hkhq+CYnpsN\ncKvcUnE/kkY6eD4zxwZjeeWYIBi7ee+sq/4yE0d4c6RV+wnESoEUjqdG1dpTVxjI\ngYJEfS+jQNgfNSztmGzBtpxDTSqHVlTCdkfJY8ykvQZtOv6CiZXRQ8SMQ+jZN3lX\nRU7VSKvTWzhgNyR3NCTleLST\n-----END PRIVATE KEY-----\n",
+  "client_email": "dialogflow-integration@hfc-app-378515.iam.gserviceaccount.com",
+  "client_id": "109383366036746442895",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/dialogflow-integration%40hfc-app-378515.iam.gserviceaccount.com"
+}

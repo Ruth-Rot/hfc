@@ -6,6 +6,7 @@ import 'package:hfc/pages/profile_page.dart';
 import 'package:hfc/pages/register_page.dart';
 
 import 'forgot_password_page.dart';
+import 'home_page.dart';
 import 'widget/Header_widget.dart';
 
 class LoginPage extends StatefulWidget {
@@ -98,7 +99,7 @@ class _LoginPageState extends State<LoginPage> {
                               Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => ProfilePage()))
+                                      builder: (context) => HomePage()))
                               //print(emailController.text.trim())
                             },
                           ),

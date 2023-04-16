@@ -74,8 +74,8 @@ class _SplashScreenState extends State<SplashScreen> {
             ),
             child: const Center(
               child: ClipOval(
-                child: Icon(Icons.android_outlined, size: 128,), //put your logo here
-              ),
+                child: Image(image: AssetImage('./assets/images/splash_bot.png')),
+                 ),
             ),
           ),
         ),
