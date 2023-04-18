@@ -18,10 +18,14 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   double _headerHeight = 250;
-  Key _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
+  bool passToggle = true;
+  bool _errorS=false;
+
+  String _error="";
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +33,7 @@ class _LoginPageState extends State<LoginPage> {
         backgroundColor: Colors.white,
         body: SingleChildScrollView(
             child: Column(children: [
-          Container(
+                       Container(
             height: _headerHeight,
             child: HeaderWidget(_headerHeight, true, Icons.login_rounded),
           ),
@@ -52,55 +56,125 @@ class _LoginPageState extends State<LoginPage> {
                     key: _formKey,
                     child: Column(
                       children: [
-                        TextField(
-                          decoration: ThemeHelper().textInputDecoration(
-                              "UserName", "Enter your user name"),
+                        TextFormField(
+                          keyboardType: TextInputType.emailAddress,
+                          decoration: ThemeHelper().textInputDecoration("Email",
+                              "Enter your email", const Icon(Icons.email)),
+                          // InputDecoration( labelText: "Email",
+                          // border: OutlineInputBorder(),
+                          // prefixIcon: Icon(Icons.email)),
                           controller: emailController,
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return "Enter email";
+                            }
+                            bool emailValidator =
+                                RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$")
+                                    .hasMatch(value);
+                            if (!emailValidator) {
+                              return "Enter Valid email";
+                            }
+                          },
                         ),
                         const SizedBox(height: 30.0),
-                        TextField(
-                          obscureText: true,
-                          decoration: ThemeHelper().textInputDecoration(
-                              "Password", "Enter your password"),
-                              controller: passwordController,
+                        TextFormField(
+                          keyboardType: TextInputType.visiblePassword,
+                          obscureText: passToggle,
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return "Enter password";
+                            }
+                            if (value.length < 6) {
+                              return "Password should be more then 6 characters";
+                            }
+                          },
+                          decoration: InputDecoration(
+                            labelText: "Password",
+                            hintText: "Enter your password",
+                            prefixIcon: const Icon(Icons.lock),
+                            fillColor: Colors.white,
+                            filled: true,
+                            contentPadding:
+                                const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(100.0),
+                                borderSide:
+                                    const BorderSide(color: Colors.grey)),
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(100.0),
+                                borderSide:
+                                    BorderSide(color: Colors.grey.shade400)),
+                            errorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(100.0),
+                                borderSide: const BorderSide(
+                                    color: Colors.red, width: 2.0)),
+                            focusedErrorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(100.0),
+                                borderSide: const BorderSide(
+                                    color: Colors.red, width: 2.0)),
+                            suffixIcon: InkWell(
+                              onTap: () {
+                                setState(() {
+                                  passToggle = !passToggle;
+                                });
+                              },
+                              child: Icon(passToggle
+                                  ? Icons.visibility
+                                  : Icons.visibility_off),
+                            ),
+                          ),
+                          controller: passwordController,
                         ),
                         const SizedBox(height: 15.0),
-                         Container(
-                              margin: const EdgeInsets.fromLTRB(10,0,10,20),
-                              alignment: Alignment.topRight,
-                              child: GestureDetector(
-                                onTap: () {
-                                  Navigator.push( context, MaterialPageRoute( builder: (context) => ForgotPasswordPage()), );
-                                },
-                                child: const Text( "Forgot your password?", style: TextStyle( color: Colors.grey, ),
-                                ),
+                        Container(
+                          margin: const EdgeInsets.fromLTRB(10, 0, 10, 20),
+                          alignment: Alignment.topRight,
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ForgotPasswordPage()),
+                              );
+                            },
+                            child: const Text(
+                              "Forgot your password?",
+                              style: TextStyle(
+                                color: Colors.grey,
                               ),
                             ),
+                          ),
+                        ),
                         Container(
                           decoration:
                               ThemeHelper().buttonBoxDecoration(context),
                           child: ElevatedButton(
                             style: ThemeHelper().buttonStyle(),
                             child: Padding(
-                              padding: const EdgeInsets.fromLTRB(40, 10, 40, 10),
+                              padding:
+                                  const EdgeInsets.fromLTRB(40, 10, 40, 10),
                               child: Text(
-                                "Sign In".toUpperCase(),
+                                "Log In".toUpperCase(),
                                 style: const TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white),
                               ),
                             ),
-                            onPressed: () => {
-                              FirebaseAuth.instance.signInWithEmailAndPassword(
-                                email: emailController.text.trim(),
-                                password: passwordController.text.trim()),
-                              //if the login sucsses - redirct to profile page
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => HomePage()))
-                              //print(emailController.text.trim())
+                            onPressed: () {
+                              // Validate returns true if the form is valid, or false otherwise.
+                              if (_formKey.currentState!.validate()) {
+                                // If the form is valid, display a snackbar. In the real world,
+                                // you'd often call a server or save the information in a database.
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text('Processing Data'),
+                                      duration: Duration(milliseconds: 1200)),
+                                );
+
+                                login(emailController.text.trim(),
+                                    passwordController.text.trim(), context);
+                              }
                             },
                           ),
                         ),
@@ -118,14 +192,60 @@ class _LoginPageState extends State<LoginPage> {
                                             builder: (context) =>
                                                 RegistrationPage()));
                                   },
-                                  style:  TextStyle(fontWeight: FontWeight.bold,color: Theme.of(context).colorScheme.secondary))
-                          ])),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .secondary))
+                          ,])),
                         ),
-                      ],
+],
                     ))
               ]),
             ),
           ),
-        ])));
+                           showAlert()
+])));
   }
+
+  login(email, password, context) async {
+    try {
+      await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: password);
+      //if succseed:
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => HomePage()));
+    } on FirebaseAuthException catch (e) {
+      // AlertDialog(
+      //   content: Text("hi"),
+      // );
+      // print('Failed with error code: ${e.code}');
+      // print(e.message);
+      setState(() {
+        _errorS = true;
+        _error = e.message!;
+      });
+    }
+  }
+
+
+Widget showAlert() {
+  if(_errorS!){
+    return Container(
+      color: Colors.amberAccent,
+      width: double.infinity,
+      padding: EdgeInsets.all(8.0),
+      child: Row(
+        children: [
+          Icon(Icons.error_outline),
+          SizedBox(width: 10.0,),
+    Expanded(child: Text(_error,))
+        ],
+      ),
+    );
+  }
+  return SizedBox(height:0.0);
+}
+
+
 }

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'messages.dart';
 
 class ChatPage extends StatefulWidget {
+  const ChatPage({super.key});
+
   @override
   State<StatefulWidget> createState() {
     return __ChatPageState();
@@ -25,36 +27,35 @@ class __ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("HFC Bot"),
+          title: const Text("HFC Bot"),
           backgroundColor: Colors.deepPurpleAccent,
         ),
-        body: Container(
-            child: Column(
-              children: [
-                Expanded(child: Messages(messages:messages)),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 14,
-                    vertical: 8
-                  ),
-                  color: Colors.deepPurple,
-                  child: Row(
-                    children: [
-                      Expanded(child: 
-                      TextField(
-                        controller: _controller,
-                        style: const TextStyle(color: Colors.white),
-                        )),
-                        IconButton( onPressed: () {
-                        sendMessage(_controller.text);
-                        _controller.clear();
-                      },
-                     icon: const Icon(Icons.send),
-                     color: Colors.white,)
-                     
-                ]),
-                )
-                ],)));
+        body: Column(
+          children: [
+            Expanded(child: Messages(messages:messages)),
+            Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 14,
+                vertical: 8
+              ),
+              color: Colors.deepPurple,
+              child: Row(
+                children: [
+                  Expanded(child: 
+                  TextField(
+                    controller: _controller,
+                    style: const TextStyle(color: Colors.white),
+                    )),
+                    IconButton( onPressed: () {
+                    sendMessage(_controller.text);
+                    _controller.clear();
+                  },
+                 icon: const Icon(Icons.send),
+                 color: Colors.white,)
+                 
+            ]),
+            )
+            ],));
   }
 
 
