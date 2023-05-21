@@ -27,7 +27,7 @@ class Messages extends StatefulWidget {
 class _MessagesState extends State<Messages> {
         final user = FirebaseAuth.instance.currentUser!;
 
-  bool like = false;
+  bool like = true;
   final nutIcons = {
     'gluten-free': SvgPicture.asset(
       'assets/svgs/gluten-free.svg',

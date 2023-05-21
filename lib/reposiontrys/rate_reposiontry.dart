@@ -45,11 +45,9 @@ final batch = _db.batch();
 // Set the value of 'NYC'
 var snapshot =await _db.collection("Rate").where("recipeId",isEqualTo: recipeId).where("userId",isEqualTo: userId).get();
 final rateData= snapshot.docs.map((e) => RateModel.fromSnapshot(e)).single;
-print("hiii");
-//var ref = FirebaseFirestore.instance.collection('Rate').doc(rateData.id).update({'like:':like}).catchError((error) => print("Failed to update recipe: $error"));;
 
 var rateRef = _db.collection("Rate").doc(rateData.id);
-batch.set(rateRef, {"like": like,"recipeId": recipeId,"userId": userId});
+batch.update(rateRef, {"like": like});
 
 batch.commit();
 }

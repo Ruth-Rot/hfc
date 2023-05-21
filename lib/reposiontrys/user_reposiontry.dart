@@ -34,4 +34,18 @@ Future<List<UserModel>> allUser(String email) async{
   final usersData= snapshot.docs.map((e) => UserModel.fromSnapshot(e)).toList();
   return usersData;
 }
+
+updateSessionId(String sessionId,String email)async{
+// Get a new write batch
+final batch = _db.batch();
+
+// Set the value of 'NYC'
+var snapshot =await _db.collection("Users").where("email",isEqualTo: email).get();
+final userData= snapshot.docs.map((e) => UserModel.fromSnapshot(e)).single;
+
+var userRef = _db.collection("Users").doc(userData.id);
+batch.update(userRef, {"sessionId": sessionId});
+
+batch.commit();
+}
 }
