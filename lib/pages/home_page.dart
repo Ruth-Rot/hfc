@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,6 +8,9 @@ import 'package:hfc/pages/chat_page.dart';
 import 'package:hfc/pages/login_page.dart';
 import 'package:hfc/pages/widget/Header_widget.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:provider/provider.dart';
+
+import 'google_sign_in.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -18,8 +23,10 @@ class __HomePageState extends State<HomePage> {
   double _drawerIconSize = 24;
   double _drawerFontSize = 17;
 
+
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser!;
     return Scaffold(
       // appBar: AppBar(
       //   title: const Text("Home Page",
@@ -36,11 +43,33 @@ class __HomePageState extends State<HomePage> {
       //         )
       //     ),
       //   ),
-      // ),
+      // ), 
       appBar: AppBar(
           toolbarHeight: 200,
           backgroundColor: Colors.transparent,
           elevation: 0.0,
+          leading:
+            Container( alignment: Alignment.topLeft, 
+            child: IconButton(
+              onPressed:(){
+                //google
+              // final provider = Provider.of<GoogleSignInProvider>(context,listen:false);
+              // provider.googleLogout();
+// Navigator.pushReplacement(
+//                                   context,
+//                                   MaterialPageRoute(
+//                                       builder: (context) => LoginPage()));
+
+    FirebaseAuth.instance.signOut();
+   Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => LoginPage()));
+
+
+         } , icon: const Icon(Icons.logout_rounded))),
+            
+        
           flexibleSpace: ClipPath(
               clipper: CustomShape(),
               child: Container(
@@ -145,12 +174,24 @@ class __HomePageState extends State<HomePage> {
                       )
                     ],
                   )))),
-      body: Container(),
+      body: Column(
+        children: [
+          // CircleAvatar(
+          //   radius: 40,
+          //   backgroundImage: NetworkImage(user.photoURL!),
+          // ),
+          // const SizedBox(height: 20,),
+          Text(
+            "logged us "+ user.email!,
+            style: TextStyle(color:Colors.black,fontSize:16)),
+            
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => { Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => ChatPage()))},
+                                      builder: (context) => ChatPage(user)))},
         child: const ClipOval(
                 child: Image(image: AssetImage('./assets/images/splash_bot.png')),
       ),

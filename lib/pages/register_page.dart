@@ -1,11 +1,23 @@
+import 'dart:io';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:hexcolor/hexcolor.dart';
-import 'package:hfc/pages/profile_page.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:hfc/controllers/signup_controller.dart';
+import 'package:hfc/pages/home_page.dart';
+import 'package:hfc/pages/loader.dart';
+
 import 'package:hfc/pages/widget/Header_widget.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:toggle_switch/toggle_switch.dart';
 
 import '../common/theme_helper.dart';
+import '../models/user.dart';
+import 'login_page.dart';
+import '../reposiontrys/user_reposiontry.dart';
 
 class RegistrationPage extends StatefulWidget {
   const RegistrationPage({Key? key}) : super(key: key);
@@ -17,15 +29,24 @@ class RegistrationPage extends StatefulWidget {
 }
 
 class _RegistrationPageState extends State<RegistrationPage> {
-  final  _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
+  final controller = Get.put(SignUpController());
   bool checkedValue = false;
   bool checkboxValue = false;
-  
-  //string field state
-  final passwordController = TextEditingController();
-  final firstNameController = TextEditingController();
-  final lastNameController = TextEditingController();
-  final emailController = TextEditingController();
+  bool passToggle = true;
+  var manUrl = "./assets/images/man_icon.png";
+  var womanUrl = "./assets/images/woman_icon.png";
+  var urlImage = "./assets/images/man_icon.png";
+  bool isUploudPic = false;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  //image varibales:
+  final ImagePicker picker = ImagePicker();
+  var genderInit = 0;
+  late File img;
+  late String imageUrl;
+
+  var credential;
 
   @override
   Widget build(BuildContext context) {
@@ -36,8 +57,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
         children: [
           const SizedBox(
             height: 150,
-            child:
-                HeaderWidget(150, false, Icons.person_add_alt_1_rounded),
+            child: HeaderWidget(150, false, Icons.person_add_alt_1_rounded),
           ),
           Container(
             margin: const EdgeInsets.fromLTRB(25, 50, 25, 10),
@@ -48,242 +68,149 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 key: _formKey,
                 child: Column(
                   children: [
-                    GestureDetector(
-                        child: Stack(children: [
-                      Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(100),
-                          border: Border.all(width: 5, color: Colors.white),
-                          color: Colors.white,
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Colors.black12,
-                              blurRadius: 20,
-                              offset: Offset(5, 5),
-                            ),
-                          ],
-                        ),
-                        child: Icon(
-                          Icons.person,
-                          color: Colors.grey.shade300,
-                          size: 80.0,
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.fromLTRB(80, 80, 0, 0),
-                        child: Icon(
-                          Icons.add_circle,
-                          color: Colors.grey.shade700,
-                          size: 25.0,
-                        ),
-                      ),
-                    ])),
+                    //picture:
+                    imageProfile(),
                     const SizedBox(height: 30),
-                    Container(
-                      decoration: ThemeHelper().inputBoxDecorationShaddow(),
-                      child: TextFormField(
-                        decoration: ThemeHelper().textInputDecoration(
-                            "First name", "Enter your first name"),
-                        controller: firstNameController,
-                      ),
-                    ),
+                    //gender:
+                    genderToggle(),
                     const SizedBox(height: 30),
-                    Container(
-                      decoration: ThemeHelper().inputBoxDecorationShaddow(),
-                      child: TextFormField(
-                        decoration: ThemeHelper().textInputDecoration(
-                            "Last name", "Enter your last name"),
-                           controller: lastNameController,
-                      ),
-                    ),
-                    const SizedBox(height: 30),
-                    Container(
-                      decoration: ThemeHelper().inputBoxDecorationShaddow(),
-                      child: TextFormField(
-                        decoration: ThemeHelper()
-                            .textInputDecoration("E-mail", "Enter your email"),
-                        keyboardType: TextInputType.emailAddress,
-                        controller: emailController,
-                        validator: (val) {
-                          if (!(val!.isEmpty) &&
-                              !RegExp(r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$")
-                                  .hasMatch(val)) {
-                            return "Enter a valid email address";
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                    const SizedBox(height: 20.0),
-                    // Container(
-                    //   decoration: ThemeHelper().inputBoxDecorationShaddow(),
-                    //   child: TextFormField(
-                    //     decoration: ThemeHelper().textInputDecoration(
-                    //         "Mobile Number", "Enter your mobile number"),
-                    //     keyboardType: TextInputType.phone,
-                    //     onChanged: (val){
-                    //         setState(() => number = val   );                     
-                    //       },
-                    //     validator: (val) {
-                    //       if (!(val!.isEmpty) &&
-                    //           !RegExp(r"^(\d+)*$").hasMatch(val)) {
-                    //         return "Enter a valid phone number";
-                    //       }
-                    //       return null;
-                    //     },
-                    //   ),
-                    // ),
-                    const SizedBox(height: 30),
-                    Container(
-                      decoration: ThemeHelper().inputBoxDecorationShaddow(),
-                      child: TextFormField(
-                          obscureText: true,
-                          decoration: ThemeHelper().textInputDecoration(
-                              "Password", "Enter a password"),
-                          keyboardType: TextInputType.emailAddress,
-                          controller: passwordController,
-                          validator: (pass) {
-                            if (!(pass!.isEmpty) && !(pass.length >= 8)) {
-                              return "Enter password with at least 8 characters";
-                            }
-                            // if password not conatein uppercase letter and lowercase letter...
-                            // if password not contain special charcacter as $,# or &....
-                            return null;
-                          }),
-                    ),
+                    //full name:
+                    fullName(),
                     const SizedBox(height: 20),
-                     //const SizedBox(height: 15.0),
-                        FormField<bool>(
-                          builder: (state) {
-                            return Column(
-                              children: <Widget>[
-                                Row(
-                                  children: <Widget>[
-                                    Checkbox(
-                                        value: checkboxValue,
-                                        onChanged: (value) {
-                                          setState(() {
-                                            checkboxValue = value!;
-                                            state.didChange(value);
-                                          });
-                                        }),
-                                    const Text("I accept all terms and conditions.", style: TextStyle(color: Colors.grey),),
-                                  ],
-                                ),
-                                Container(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    state.errorText ?? '',
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(color: Theme.of(context).errorColor,fontSize: 12,),
-                                  ),
-                                )
-                              ],
-                            );
-                          },
-                          validator: (value) {
-                            if (!checkboxValue) {
-                              return 'You need to accept terms and conditions';
-                            } else {
-                              return null;
-                            }
-                          },
-                        ), 
-                        // const SizedBox(height: 10.0),
-                        Container(
-                          decoration: ThemeHelper().buttonBoxDecoration(context),
-                          child: ElevatedButton(
-                            style: ThemeHelper().buttonStyle(),
-                            child: Padding(
-                              padding: const EdgeInsets.fromLTRB(40, 10, 40, 10),
-                              child: Text(
-                                "Register".toUpperCase(),
-                                style: const TextStyle(
+                    //email:
+                    email(),
+                    const SizedBox(height: 20),
+                    //phone number:
+                    //phone(),
+//                    const SizedBox(height: 20),
+                    //password:
+                    password(),
+                    const SizedBox(height: 20),
+                    //accept terms:
+                    terms(context),
+                    const SizedBox(height: 10.0),
+                    //submit:
+                    Container(
+                        decoration: ThemeHelper().buttonBoxDecoration(context),
+                        child: ElevatedButton(
+                          style: ThemeHelper().buttonStyle(),
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(40, 10, 40, 10),
+                            child: Text(
+                              "Sign In".toUpperCase(),
+                              style: const TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
+                                  color: Colors.white),
                             ),
-                            onPressed: () {
-                              FirebaseAuth.instance.createUserWithEmailAndPassword(
-                                email: emailController.text.trim(), 
-                                password: passwordController.text.trim()
-                                );
-                                Navigator.pushReplacement(
+                          ),
+                          onPressed: () async {
+                            // Validate returns true if the form is valid, or false otherwise.
+                            if (_formKey.currentState!.validate()) {
+                              // If the form is valid, display a snackbar. In the real world,
+                              // you'd often call a server or save the information in a database.
+                              // ScaffoldMessenger.of(context).showSnackBar(
+                              //   const SnackBar(
+                              //       content: Text('Processing Data'),
+                              //       duration: Duration(seconds: 30)),
+                              // );
+                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => ProfilePage()));
+                                      builder: (context) => Loader()));
+                              signUpByEmailAndPassword();
+                              FirebaseAuth.instance
+                                  .authStateChanges()
+                                  .listen((User? user) async {
+                                if (user == null) {
+                                  print('User is currently signed out!');
+                                } else {
+                                  final user = await addUserDetails();
+                                  Navigator.pop(context);
+                                  Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => HomePage()));
+                                 }
+                              }
+                              );
+
                              
-                              },
+                              // login(emailController.text.trim(),
+
+                              //     passwordController.text.trim(), context);
+                            }
+                          },
+                        )),
+                    const SizedBox(height: 20),
+                    //         // or continue with
+                    // Padding(
+                    //   padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    //   child: Row(
+                    //     children: [
+                    //       Expanded(
+                    //         child: Divider(
+                    //           thickness: 0.5,
+                    //           color: Colors.grey[400],
+                    //         ),
+                    //       ),
+                    //       Padding(
+                    //         padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    //         child: Text(
+                    //           'Or continue with',
+                    //           style: TextStyle(color: Colors.grey[700]),
+                    //         ),
+                    //       ),
+                    //       Expanded(
+                    //         child: Divider(
+                    //           thickness: 0.5,
+                    //           color: Colors.grey[400],
+                    //         ),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
+                    //   const SizedBox(height: 30),
+
+                    // // google + apple sign in buttons
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.center,
+                    //   children:  [
+                    //     // google button
+                    //     ThemeHelper().SquareTile(FontAwesomeIcons.google, Colors.red, (){}),
+
+                    //     SizedBox(width: 25),
+
+                    //     // apple button
+                    //     ThemeHelper().SquareTile(FontAwesomeIcons.apple, Colors.black, (){}),
+                    //   ],
+                    //  ),
+                    //googleButton(context)
+                    // not a member? register now
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Already have an account?',
+                          style: TextStyle(color: Colors.grey[700]),
+                        ),
+                        const SizedBox(width: 4),
+                        GestureDetector(
+                          child: Text(
+                            'Login now',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).colorScheme.secondary),
                           ),
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => LoginPage()));
+                          },
                         ),
-                        const SizedBox(height: 15.0),
-                        const Text("Or create account using social media",  style: TextStyle(color: Colors.grey),),
-                        const SizedBox(height: 15.0),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            GestureDetector(
-                              child: FaIcon(
-                                FontAwesomeIcons.googlePlus, size: 35,
-                                color: HexColor("#EC2D2F"),),
-                              onTap: () {
-                                setState(() {
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return ThemeHelper().alartDialog("Google Plus","You tap on GooglePlus social icon.",context);
-                                    },
-                                  );
-                                });
-                              },
-                            ),
-                            const SizedBox(width: 30.0,),
-                            GestureDetector(
-                              child: Container(
-                                padding: const EdgeInsets.all(0),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(100),
-                                  border: Border.all(width: 5, color: HexColor("#40ABF0")),
-                                  color: HexColor("#40ABF0"),
-                                ),
-                                child: FaIcon(
-                                  FontAwesomeIcons.twitter, size: 23,
-                                  color: HexColor("#FFFFFF"),),
-                              ),
-                              onTap: () {
-                                setState(() {
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return ThemeHelper().alartDialog("Twitter","You tap on Twitter social icon.",context);
-                                    },
-                                  );
-                                });
-                              },
-                            ),
-                            const SizedBox(width: 30.0,),
-                            GestureDetector(
-                              child: FaIcon(
-                                FontAwesomeIcons.facebook, size: 35,
-                                color: HexColor("#3E529C"),),
-                              onTap: () {
-                                setState(() {
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return ThemeHelper().alartDialog("Facebook",
-                                          "You tap on Facebook social icon.",
-                                          context);
-                                    },
-                                  );
-                                });
-                              },
-                            ),
-                          ]
-                        ),
+                      ],
+                    )
                   ],
                 ),
               )
@@ -292,5 +219,374 @@ class _RegistrationPageState extends State<RegistrationPage> {
         ],
       )),
     );
+  }
+
+  // ElevatedButton googleButton(BuildContext context) {
+  //   return ElevatedButton.icon(
+  //                 style: ElevatedButton.styleFrom(
+  //                   backgroundColor: Colors.white,
+  //                   foregroundColor: Colors.black,
+  //                   minimumSize: Size(double.infinity, 50),
+  //                 ),
+  //                 icon: FaIcon(FontAwesomeIcons.google,color: Colors.red,),
+  //                 label: Text("Sign Up with Google"),
+  //                 onPressed: (){
+  //                   final provider = Provider.of<GoogleSignInProvider>(context,listen: false);
+  //                   provider.googleLogin();
+  //                 },
+  //                );
+  // }
+
+  FormField<bool> terms(BuildContext context) {
+    return FormField<bool>(
+      builder: (state) {
+        return Column(
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                // Checkbox(
+                //     value: checkboxValue,
+                //     onChanged: (value) {
+                //       setState(() {
+                //         checkboxValue = value!;
+                //         state.didChange(value);
+                //       });
+                //     }),
+                Checkbox(
+                  value: checkboxValue,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      checkboxValue = value!;
+                    });
+                  },
+                ),
+                Text(
+                  "I accept all terms and conditions.",
+                  style: TextStyle(color: Colors.grey),
+                ),
+              ],
+            ),
+            Container(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                state.errorText ?? '',
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                  color: Theme.of(context).errorColor,
+                  fontSize: 12,
+                ),
+              ),
+            )
+          ],
+        );
+      },
+      validator: (value) {
+        if (!checkboxValue) {
+          return 'You need to accept terms and conditions';
+        } else {
+          return null;
+        }
+      },
+    );
+  }
+
+  TextFormField password() {
+    return TextFormField(
+      keyboardType: TextInputType.visiblePassword,
+      obscureText: passToggle,
+      validator: (value) {
+        if (value!.isEmpty) {
+          return "Enter password";
+        }
+        if (value.length < 6) {
+          return "Password should be more then 6 characters";
+        }
+      },
+      decoration: InputDecoration(
+        labelText: "Password",
+        hintText: "Enter your password",
+        prefixIcon: const Icon(Icons.fingerprint_outlined),
+        fillColor: Colors.white,
+        filled: true,
+        contentPadding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+        focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(100.0),
+            borderSide: const BorderSide(color: Colors.grey)),
+        enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(100.0),
+            borderSide: BorderSide(color: Colors.grey.shade400)),
+        errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(100.0),
+            borderSide: const BorderSide(color: Colors.red, width: 2.0)),
+        focusedErrorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(100.0),
+            borderSide: const BorderSide(color: Colors.red, width: 2.0)),
+        suffixIcon: InkWell(
+          onTap: () {
+            setState(() {
+              passToggle = !passToggle;
+            });
+          },
+          child: Icon(passToggle
+              ? Icons.visibility_outlined
+              : Icons.visibility_off_outlined),
+        ),
+      ),
+      controller: controller.password,
+    );
+  }
+
+  Container phone() {
+    return Container(
+      decoration: ThemeHelper().inputBoxDecorationShaddow(),
+      child: TextFormField(
+        decoration: ThemeHelper().textInputDecoration("Mobile Number",
+            "Enter your mobile number", Icon(Icons.phone_android)),
+        keyboardType: TextInputType.phone,
+        // onChanged: (val){
+        //     setState(() => number = val   );
+        //   },
+        validator: (val) {
+          if (val!.isEmpty) {
+            return "Enter phone number";
+          } else {
+            bool emailValidator = RegExp(
+                    r"^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$$")
+                .hasMatch(val);
+            if (!emailValidator) {
+              return "Enter a valid phone number";
+            }
+          }
+          return null;
+        },
+      ),
+    );
+  }
+
+  Container email() {
+    return Container(
+      decoration: ThemeHelper().inputBoxDecorationShaddow(),
+      child: TextFormField(
+        decoration: ThemeHelper().textInputDecoration(
+            "Email", "Enter your email", const Icon(Icons.email_outlined)),
+        keyboardType: TextInputType.emailAddress,
+        controller: controller.email,
+        validator: (value) {
+          if (value!.isEmpty) {
+            return "Enter email";
+          }
+          bool emailValidator =
+              RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$").hasMatch(value);
+          if (!emailValidator) {
+            return "Enter Valid email";
+          }
+        },
+      ),
+    );
+  }
+
+  // Container lastName() {
+  //   return Container(
+  //     decoration: ThemeHelper().inputBoxDecorationShaddow(),
+  //     child: TextFormField(
+  //         decoration: ThemeHelper()
+  //             .textInputDecoration("Last name", "Enter your last name"),
+  //         controller: lastNameController,
+  //         validator: (value) {
+  //           if (value!.isEmpty) {
+  //             return "Enter your last name";
+  //           }
+  //         }),
+  //   );
+  // }
+
+  Container fullName() {
+    return Container(
+      decoration: ThemeHelper().inputBoxDecorationShaddow(),
+      child: TextFormField(
+          decoration: ThemeHelper().textInputDecoration(
+              "Full name",
+              "Enter your full name",
+              Icon(genderInit == 0
+                  ? Icons.face_outlined
+                  : Icons.face_3_outlined)),
+          controller: controller.fullname,
+          validator: (value) {
+            if (value!.isEmpty) {
+              return "Enter your full name";
+            }
+          }),
+    );
+  }
+
+  ToggleSwitch genderToggle() {
+    return ToggleSwitch(
+      minWidth: 170.0,
+      initialLabelIndex: genderInit,
+      cornerRadius: 20.0,
+      activeFgColor: Colors.white,
+      inactiveBgColor: Colors.grey,
+      inactiveFgColor: Colors.white,
+      totalSwitches: 2,
+      labels: const ['Male', 'Female'],
+      icons: const [FontAwesomeIcons.mars, FontAwesomeIcons.venus],
+      activeBgColors: const [
+        [Colors.blue],
+        [Colors.pink]
+      ],
+      onToggle: (index) {
+        print('switched to: $index');
+        genderInit = index!;
+        setState(() {
+          if (!isUploudPic) {
+            if (index == 0) {
+              urlImage = manUrl;
+            } else {
+              urlImage = womanUrl;
+            }
+          }
+        });
+      },
+    );
+  }
+
+  GestureDetector imageProfile() {
+    return GestureDetector(
+        child: Stack(children: [
+      CircleAvatar(
+        radius: 60,
+        backgroundImage:
+            isUploudPic ? Image.file(img).image : AssetImage(urlImage),
+        backgroundColor: Colors.white,
+      ),
+      Container(
+        padding: const EdgeInsets.fromLTRB(75, 75, 0, 0),
+        child: CircleAvatar(
+          radius: 20,
+          backgroundColor: Colors.grey, //<-- SEE HERE
+          child: IconButton(
+            icon: const Icon(
+              Icons.add_a_photo_outlined,
+              color: Colors.white,
+            ),
+            onPressed: uploadPic,
+          ),
+        ),
+      ),
+    ]));
+  }
+
+  //we can upload image from camera or from gallery based on parameter
+  getImage(ImageSource source) async {
+    final pickedFile =
+        await ImagePicker().pickImage(source: source, imageQuality: 10);
+
+    // Get the application folder directory
+    final directory = await getExternalStorageDirectory();
+
+    if (pickedFile != null) {
+      if (directory != null) {
+        if (directory != null) {
+          img = (await File(pickedFile.path)
+              .copy('${directory.path}/${pickedFile.name}'));
+          isUploudPic = true;
+        }
+      }
+    }
+    setState(() {}); //update image
+  }
+
+//create user
+  signUpByEmailAndPassword() async {
+    try {
+      credential = await _auth.createUserWithEmailAndPassword(
+          email: controller.email.text.trim(),
+          password: controller.password.text.trim());
+    } on FirebaseAuthException catch (e) {
+      print('Failed with error code: ${e.code}');
+      print(e.message);
+    }
+    print(credential);
+  }
+
+  //show popup dialog
+  uploadPic() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            title: Text('Please choose media to select'),
+            content: Container(
+              height: MediaQuery.of(context).size.height / 6,
+              child: Column(
+                children: [
+                  ElevatedButton(
+                    //if user click this button, user can upload image from gallery
+                    onPressed: () {
+                      Navigator.pop(context);
+                      getImage(ImageSource.gallery);
+                    },
+                    child: Row(
+                      children: const [
+                        Icon(Icons.image_outlined),
+                        Text('From Gallery'),
+                      ],
+                    ),
+                  ),
+                  ElevatedButton(
+                    //if user click this button. user can upload image from camera
+                    onPressed: () {
+                      Navigator.pop(context);
+                      getImage(ImageSource.camera);
+                    },
+                    child: Row(
+                      children: const [
+                        Icon(Icons.camera_alt_outlined),
+                        Text('From Camera'),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+  Color getColor(Set<MaterialState> states) {
+    const Set<MaterialState> interactiveStates = <MaterialState>{
+      MaterialState.pressed,
+      MaterialState.hovered,
+      MaterialState.focused,
+    };
+    if (states.any(interactiveStates.contains)) {
+      return Colors.blue;
+    }
+    return Colors.red;
+  }
+
+  //add user details:
+  Future addUserDetails() async {
+    imageUrl = urlImage;
+    if (isUploudPic) {
+      var ref;
+      ref = FirebaseStorage.instance
+          .ref()
+          .child("Users Profile Photos")
+          .child(_auth.currentUser!.uid);
+      await ref.putFile(img);
+     // await Future.delayed(const Duration(seconds: 10), () {});
+      imageUrl = await ref.getDownloadURL();
+    }
+    final user = UserModel(
+        email: controller.email.text.trim().toLowerCase(),
+        fullName: controller.fullname.text.trim(),
+        urlImage: imageUrl,
+        gender: genderInit == 0 ? "man" : "woman",
+        password: controller.password.text.trim());
+    final rep = UserReposiontry();
+    await rep.createUser(user);
   }
 }

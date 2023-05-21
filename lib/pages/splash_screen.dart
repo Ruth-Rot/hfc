@@ -5,6 +5,8 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:hfc/pages/authPage.dart';
+import 'package:hfc/pages/navigator.dart';
 
 import 'login_page.dart';
 
@@ -26,7 +28,7 @@ class _SplashScreenState extends State<SplashScreen> {
       setState(() {
         Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(
-          builder: (context,) => LoginPage()), (route) => false);
+          builder: (context,) => AuthPage()), (route) => false);
       });
     });
 
@@ -55,7 +57,7 @@ class _SplashScreenState extends State<SplashScreen> {
       ),
       child: AnimatedOpacity(
         opacity: _isVisible ? 1.0 : 0,
-        duration: const Duration(milliseconds: 1200),
+        duration: const Duration(milliseconds: 2000),
         child: Center(
           child: Container(
             height: 140.0,
@@ -74,7 +76,8 @@ class _SplashScreenState extends State<SplashScreen> {
             ),
             child: const Center(
               child: ClipOval(
-                child: Image(image: AssetImage('./assets/images/splash_bot.png')),
+          
+                child: Image(image: AssetImage('./assets/images/bot_edges.png'),),
                  ),
             ),
           ),

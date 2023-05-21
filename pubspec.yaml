@@ -41,10 +41,21 @@ dependencies:
   otp_text_field: ^1.1.1
   firebase_auth: ^4.2.5
   firebase_core: ^2.8.0
+  cloud_firestore: ^4.5.3
   percent_indicator: ^4.2.3
   dialog_flowtter:
-
-
+  image_picker: ^0.8.6
+  flutter_svg: ^2.0.5
+  toggle_switch: ^2.0.1
+  path_provider: ^2.0.11
+  firebase_storage: ^11.1.1
+  google_sign_in: ^6.1.0 #register via google
+  provider: ^6.0.5 #state mangment
+  get: ^4.6.5
+  url_launcher: ^6.1.10
+  flutter_custom_clippers: ^2.1.0
+  loading_animation_widget: ^1.2.0+4
+  animated_text_kit: ^4.2.2
 
 dev_dependencies:
   flutter_test:
@@ -100,5 +111,6 @@ flutter:
   # see https://flutter.dev/custom-fonts/#from-packages
 
   assets:
+    - assets/svgs/
     - assets/images/
     - assets/

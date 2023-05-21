@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 // import 'package:hexcolor/hexcolor.dart';
 
 // green: Color.fromARGB(156, 156, 204, 101);
@@ -101,6 +102,20 @@ class ThemeHelper {
     );
   }
 
+  Widget SquareTile(IconData icon, Color color, action) {
+    return GestureDetector(
+      child: Container(
+        padding: EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.white),
+          borderRadius: BorderRadius.circular(16),
+          color: Colors.grey[200],
+        ),
+        child: FaIcon(icon, color: color,)
+        ),
+        onTap: action(),
+    );
+}
   AlertDialog alartDialog(String title, String content, BuildContext context) {
     return AlertDialog(
       title: Text(title),
