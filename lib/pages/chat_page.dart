@@ -29,14 +29,12 @@ class __ChatPageState extends State<ChatPage> {
   final TextEditingController _controller = TextEditingController();
         final user = FirebaseAuth.instance.currentUser!;
 
-
   List<Map<String, dynamic>> messages = [];
-
+  
 
   @override
-  Future<void> initState() async {
+  void initState() {
     DialogFlowtter.fromFile().then((instance) => dialogFlowtter = instance);
-
     super.initState();
   }
 
