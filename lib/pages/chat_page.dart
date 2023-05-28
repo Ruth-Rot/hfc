@@ -17,7 +17,7 @@ import '../reposiontrys/user_reposiontry.dart';
 import 'messages.dart';
 
 class ChatPage extends StatefulWidget {
-  const ChatPage(User user, {super.key});
+  const ChatPage({super.key});
 
   @override
   State<StatefulWidget> createState() {
@@ -31,24 +31,41 @@ class __ChatPageState extends State<ChatPage> {
   //final userFire = FirebaseAuth.instance.currentUser!;
   late UserModel user;
   List<Map<String, dynamic>> messages = [];
+  List<Map<String, dynamic>> previous_messages = [];
+
+  bool isUser = false;
+
+  var isOnce = true;
 
   @override
   void initState() {
     UserReposiontry()
         .getUserDetails(FirebaseAuth.instance.currentUser!.email!)
-        .then((instance){ user = instance;
-         DialogReposiontry()
-        .createDialogRep()
-        .then((ins) { dialogFlowtter = ins;
-        UserReposiontry().updateSessionId(dialogFlowtter.sessionId,user.email);});});
-   
-    
+        .then((instance) {
+      user = instance;
+      DialogReposiontry().createDialogRep().then((ins) {
+        dialogFlowtter = ins;
+        UserReposiontry()
+            .updateSessionId(dialogFlowtter.sessionId, user.email)
+            .then((instance) {
+          if (this.mounted) {
+            setState(() {
+              isUser = true;
+              buildPreviousMessages(user.convresation);
+
+              // previous_messages = buildPreviousMessages(user.convresation);
+            });
+          }
+        });
+      });
+    });
 
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    checkStart();
     return Scaffold(
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(80.0), // here the desired height
@@ -77,6 +94,7 @@ class __ChatPageState extends State<ChatPage> {
             Expanded(
                 child: Messages(
               messages: messages,
+              previous_messages: previous_messages,
             )),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
@@ -169,6 +187,7 @@ class __ChatPageState extends State<ChatPage> {
         color: Colors.white70,
       ),
       onPressed: () {
+        UserReposiontry().saveMessages(messages, user.email);
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => HomePage()));
       },
@@ -179,33 +198,52 @@ class __ChatPageState extends State<ChatPage> {
     if (text.isEmpty) {
       print('Message is empty');
     } else {
-      setState(() {
-        var mes = Message(text: DialogText(text: [text]));
-        addMessage(mes, true);
-      });
+      if (this.mounted) {
+        setState(() {
+          var mes = Message(text: DialogText(text: [text]));
+          addMessage(mes, true);
+        });
+      }
 
       var query = QueryInput(text: TextInput(text: text));
       DetectIntentResponse response =
           await dialogFlowtter.detectIntent(queryInput: query);
       if (response.message == null) return;
+      if (this.mounted) {
+        setState(() {
+          addMessage(response.message!);
+        });
+      }
+    }
+  }
+
+  fillDetails() async {
+    var query = QueryInput(text: TextInput(text: 'profile'));
+    DetectIntentResponse response =
+        await dialogFlowtter.detectIntent(queryInput: query);
+    if (this.mounted) {
+      if (response.message == null) return;
       setState(() {
         addMessage(response.message!);
       });
     }
+    //}
   }
 
   addMessage(Message message, [bool isUserMessage = false]) {
     messages.add({'message': message, 'isUserMessage': isUserMessage});
     try {
       String text = message.text!.text![0];
-      var dec = jsonDecode(text);
-      RecipeModel req = RecipeModel.fromJson(dec);
-      if (req.requset == "recipe") {
-        updateFireBase(req);
+      var dec = jsonDecode(text.toString());
+      if (dec is Map<String, dynamic>) {
+        RecipeModel req = RecipeModel.fromJson(dec);
+        if (req.requset == "recipe") {
+          updateFireBase(req);
+        }
       }
     } on FormatException catch (e) //if not json:
-
-    {}
+    {
+    } on Exception catch (e) {}
   }
 
   Future<void> updateFireBase(RecipeModel req) async {
@@ -216,5 +254,34 @@ class __ChatPageState extends State<ChatPage> {
     var rate =
         RateModel(like: true, userId: user.getId(), recipeId: recipeM.getId());
     RateReposiontry().createRate(rate);
+  }
+
+  checkStart() async {
+    if (isUser == true) {
+      if (user.fillDetails == false && isOnce == true) {
+        fillDetails();
+        isOnce = false;
+      }
+    }
+  }
+
+  buildPreviousMessages(var convresation) {
+    if (convresation != "") {
+      // List valueMap = jsonDecode(convresation).toList();
+      for (var value in convresation) {
+        // Map valueMap = jsonDecode(value);
+        value = value.replaceAll("{", "");
+        value = value.replaceAll("}", "");
+        var dataSp = value.split(',');
+        Map<String, String> mapData = Map();
+        dataSp.forEach((element) => mapData[element.split(':')[0].trim()] =
+            element.split(':')[1].trim());
+        print(value);
+        previous_messages.add({
+          'message': mapData["text"],
+          'isUserMessage': mapData["isUser"]=="true"? true:false
+        });
+      }
+    }
   }
 }

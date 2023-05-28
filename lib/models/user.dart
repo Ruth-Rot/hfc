@@ -7,13 +7,19 @@ class UserModel {
   final String password;
   final String urlImage;
   final String gender;
-  const UserModel(
+  late bool fillDetails;
+  late var convresation;
+
+   UserModel(
       {this.id,
       required this.fullName,
       required this.email,
       required this.password,
       required this.urlImage,
-      required this.gender});
+      required this.gender,
+      required this.fillDetails,
+      required this.convresation,
+      });
     toJson() {
     return {
       "fullName": fullName,
@@ -21,6 +27,8 @@ class UserModel {
       "password": password,
       "gender": gender,
       "urlImage": urlImage,
+      "fill_details": fillDetails,
+      "convresation":convresation
     };
    
   }
@@ -37,6 +45,10 @@ class UserModel {
         email: data["email"],
         password: data["password"],
         urlImage: data["urlImage"],
-        gender: data["gender"]);
+        gender: data["gender"],
+        fillDetails: data["fill_details"],
+        convresation: data["convresation"]);
+       
+
   }
 }

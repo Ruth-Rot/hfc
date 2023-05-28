@@ -6,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:hfc/controllers/signup_controller.dart';
+import 'package:hfc/pages/chat_page.dart';
 import 'package:hfc/pages/home_page.dart';
 import 'package:hfc/pages/loader.dart';
 
@@ -39,6 +40,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
   var urlImage = "./assets/images/man_icon.png";
   bool isUploudPic = false;
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  var womanNetworkUrl = "https://firebasestorage.googleapis.com/v0/b/hfc-app-b33ed.appspot.com/o/Users%20Profile%20Photos%2Fwoman_icon.png?alt=media&token=c39682fb-7cf1-44ac-980e-896075df71ea";
+  var manNetworkUrl = "https://firebasestorage.googleapis.com/v0/b/hfc-app-b33ed.appspot.com/o/Users%20Profile%20Photos%2Fman_icon.png?alt=media&token=3570ba04-d05e-404e-b850-6343acb5b525"; 
 
   //image varibales:
   final ImagePicker picker = ImagePicker();
@@ -47,6 +50,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
   late String imageUrl;
 
   var credential;
+  @override
+  void dispose() {
+    // TODO: implement dispose
+      controller.clear();
+  
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -109,12 +119,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             if (_formKey.currentState!.validate()) {
                               // If the form is valid, display a snackbar. In the real world,
                               // you'd often call a server or save the information in a database.
-                              // ScaffoldMessenger.of(context).showSnackBar(
-                              //   const SnackBar(
-                              //       content: Text('Processing Data'),
-                              //       duration: Duration(seconds: 30)),
-                              // );
-                               Navigator.push(
+                              Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => Loader()));
@@ -122,71 +127,31 @@ class _RegistrationPageState extends State<RegistrationPage> {
                               FirebaseAuth.instance
                                   .authStateChanges()
                                   .listen((User? user) async {
-                                if (user == null) {
-                                  print('User is currently signed out!');
-                                } else {
+                                if (user != null) {
+                               
                                   final user = await addUserDetails();
                                   Navigator.pop(context);
                                   Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => HomePage()));
-                                 }
-                              }
-                              );
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => HomePage()));
+                                }
+                                else{
+                                                                    print('User is currently signed out!');
 
-                             
-                              // login(emailController.text.trim(),
-
-                              //     passwordController.text.trim(), context);
+                                  //    Navigator.pop(context);
+                                  // Navigator.pushReplacement(
+                                  //     context,
+                                  //     MaterialPageRoute(
+                                  //         builder: (context) =>
+                                  //             RegistrationPage()));
+                                
+                                }
+                              });
                             }
                           },
                         )),
                     const SizedBox(height: 20),
-                    //         // or continue with
-                    // Padding(
-                    //   padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    //   child: Row(
-                    //     children: [
-                    //       Expanded(
-                    //         child: Divider(
-                    //           thickness: 0.5,
-                    //           color: Colors.grey[400],
-                    //         ),
-                    //       ),
-                    //       Padding(
-                    //         padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                    //         child: Text(
-                    //           'Or continue with',
-                    //           style: TextStyle(color: Colors.grey[700]),
-                    //         ),
-                    //       ),
-                    //       Expanded(
-                    //         child: Divider(
-                    //           thickness: 0.5,
-                    //           color: Colors.grey[400],
-                    //         ),
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
-                    //   const SizedBox(height: 30),
-
-                    // // google + apple sign in buttons
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.center,
-                    //   children:  [
-                    //     // google button
-                    //     ThemeHelper().SquareTile(FontAwesomeIcons.google, Colors.red, (){}),
-
-                    //     SizedBox(width: 25),
-
-                    //     // apple button
-                    //     ThemeHelper().SquareTile(FontAwesomeIcons.apple, Colors.black, (){}),
-                    //   ],
-                    //  ),
-                    //googleButton(context)
-                    // not a member? register now
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -577,15 +542,18 @@ class _RegistrationPageState extends State<RegistrationPage> {
           .child("Users Profile Photos")
           .child(_auth.currentUser!.uid);
       await ref.putFile(img);
-     // await Future.delayed(const Duration(seconds: 10), () {});
+      // await Future.delayed(const Duration(seconds: 10), () {});
       imageUrl = await ref.getDownloadURL();
     }
     final user = UserModel(
         email: controller.email.text.trim().toLowerCase(),
         fullName: controller.fullname.text.trim(),
-        urlImage: imageUrl,
+        urlImage: genderInit == 0 ? manNetworkUrl : womanNetworkUrl,
         gender: genderInit == 0 ? "man" : "woman",
-        password: controller.password.text.trim());
+        password: controller.password.text.trim(),
+        fillDetails: false,
+        convresation: "");
+
     final rep = UserReposiontry();
     await rep.createUser(user);
   }

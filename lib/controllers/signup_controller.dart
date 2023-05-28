@@ -14,5 +14,11 @@ class SignUpController extends GetxController{
 
   }
 
+  void clear(){
+    this.email.clear();
+    this.fullname.clear();
+    this.password.clear();
+  }
+
 
 }

@@ -13,20 +13,24 @@ import 'package:url_launcher/url_launcher.dart';
 import '../reposiontrys/recipe_reposiontry.dart';
 
 class Messages extends StatefulWidget {
+  final List previous_messages;
+
   final List messages;
 
 
-  Messages({Key? key
-  , required this.messages
-  }) : super(key: key);
+  Messages({Key? key, required this.previous_messages,required this.messages}) : super(key: key);
 
   @override
   _MessagesState createState() => _MessagesState();
 }
 
 class _MessagesState extends State<Messages> {
-        final user = FirebaseAuth.instance.currentUser!;
+  final user = FirebaseAuth.instance.currentUser!;
 
+ScrollController _scrollController = new ScrollController(
+    initialScrollOffset: 0.0,
+    keepScrollOffset: true,
+  );
   bool like = true;
   final nutIcons = {
     'gluten-free': SvgPicture.asset(
@@ -65,71 +69,150 @@ class _MessagesState extends State<Messages> {
       height: 20,
     ),
   };
+    
 
   @override
   Widget build(BuildContext context) {
     var w = MediaQuery.of(context).size.width;
-    return ListView.separated(
-        itemBuilder: (context, index) {
-          return Container(
-            margin: const EdgeInsets.all(10),
-            child: Row(
-              mainAxisAlignment: widget.messages[index]['isUserMessage']
-                  ? MainAxisAlignment.end
-                  : MainAxisAlignment.start,
-              children: [
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 14, horizontal: 14),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: const Radius.circular(
-                        10,
-                      ),
-                      bottomRight: const Radius.circular(10),
-                      topRight: Radius.circular(
-                          widget.messages[index]['isUserMessage'] ? 0 : 10),
-                      topLeft: Radius.circular(
-                          widget.messages[index]['isUserMessage'] ? 10 : 0),
-                    ),
-                    color: widget.messages[index]['isUserMessage']
-                        ? Colors.indigo.shade800
-                        : Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.indigo.shade200,
-                        offset: const Offset(
-                          5.0,
-                          5.0,
+    return SafeArea(
+      child: SingleChildScrollView(
+        reverse: true,
+        controller: _scrollController,
+        child: Column(
+          children: [
+             ListView.separated(
+              physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  return Container(
+                    margin: const EdgeInsets.all(10),
+                    child: Row(
+                      mainAxisAlignment: widget.previous_messages[index]['isUserMessage']
+                          ? MainAxisAlignment.end
+                          : MainAxisAlignment.start,
+                      children: [
+                        Container(
+                          padding:
+                              const EdgeInsets.symmetric(vertical: 14, horizontal: 14),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: const Radius.circular(
+                                10,
+                              ),
+                              bottomRight: const Radius.circular(10),
+                              topRight: Radius.circular(
+                                  widget.previous_messages[index]['isUserMessage'] ? 0 : 10),
+                              topLeft: Radius.circular(
+                                  widget.previous_messages[index]['isUserMessage'] ? 10 : 0),
+                            ),
+                            color: widget.previous_messages[index]['isUserMessage']
+                                ? Colors.indigo.shade800
+                                : Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.indigo.shade200,
+                                offset: const Offset(
+                                  5.0,
+                                  5.0,
+                                ),
+                                blurRadius: 10.0,
+                                spreadRadius: 2.0,
+                              ), //BoxShadow
+                              const BoxShadow(
+                                color: Colors.black,
+                                offset: Offset(0.0, 0.0),
+                                blurRadius: 0.0,
+                                spreadRadius: 0.0,
+                              ), //BoxShadow
+                            ],
+                          ),
+                          constraints: BoxConstraints(maxWidth: w * 4 / 5),
+                          child: buildPreviousMessages(
+                              widget.previous_messages[index]['message'],
+                              widget.previous_messages[index]['isUserMessage']),
                         ),
-                        blurRadius: 10.0,
-                        spreadRadius: 2.0,
-                      ), //BoxShadow
-                      const BoxShadow(
-                        color: Colors.black,
-                        offset: Offset(0.0, 0.0),
-                        blurRadius: 0.0,
-                        spreadRadius: 0.0,
-                      ), //BoxShadow
-                    ],
-                  ),
-                  constraints: BoxConstraints(maxWidth: w * 4 / 5),
-                  child: buildMessage(
-                      widget.messages[index]['message'].text.text[0],
-                      widget.messages[index]['isUserMessage']),
-                ),
-                SizedBox(
-                  child: widget.messages[index]['isUserMessage']
-                      ? Container()
-                      : rate(widget.messages[index]['message'].text.text[0]),
-                )
-              ],
-            ),
-          );
-        },
-        separatorBuilder: (_, i) =>
-            const Padding(padding: EdgeInsets.only(top: 10)),
-        itemCount: widget.messages.length);
+                        // SizedBox(
+                        //   child: widget.messages[index]['isUserMessage']
+                        //       ? Container()
+                        //       : rate(widget.messages[index]['message'].text.text[0]),
+                        // )
+                      ],
+                    ),
+                  );
+                },
+                separatorBuilder: (_, i) =>
+                    const Padding(padding: EdgeInsets.only(top: 10)),
+                itemCount: widget.previous_messages.length),
+            SizedBox(height: 20,width: 400,
+              child: Divider(height: 10,)),
+            Text("start convresation"),
+            ListView.separated(
+              physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  return Container(
+                    margin: const EdgeInsets.all(10),
+                    child: Row(
+                      mainAxisAlignment: widget.messages[index]['isUserMessage']
+                          ? MainAxisAlignment.end
+                          : MainAxisAlignment.start,
+                      children: [
+                        Container(
+                          padding:
+                              const EdgeInsets.symmetric(vertical: 14, horizontal: 14),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: const Radius.circular(
+                                10,
+                              ),
+                              bottomRight: const Radius.circular(10),
+                              topRight: Radius.circular(
+                                  widget.messages[index]['isUserMessage'] ? 0 : 10),
+                              topLeft: Radius.circular(
+                                  widget.messages[index]['isUserMessage'] ? 10 : 0),
+                            ),
+                            color: widget.messages[index]['isUserMessage']
+                                ? Colors.indigo.shade800
+                                : Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.indigo.shade200,
+                                offset: const Offset(
+                                  5.0,
+                                  5.0,
+                                ),
+                                blurRadius: 10.0,
+                                spreadRadius: 2.0,
+                              ), //BoxShadow
+                              const BoxShadow(
+                                color: Colors.black,
+                                offset: Offset(0.0, 0.0),
+                                blurRadius: 0.0,
+                                spreadRadius: 0.0,
+                              ), //BoxShadow
+                            ],
+                          ),
+                          constraints: BoxConstraints(maxWidth: w * 4 / 5),
+                          child: buildMessage(
+                              widget.messages[index]['message'].text.text[0],
+                              widget.messages[index]['isUserMessage']),
+                        ),
+                        SizedBox(
+                          child: widget.messages[index]['isUserMessage']
+                              ? Container()
+                              : rate(widget.messages[index]['message'].text.text[0]),
+                        )
+                      ],
+                    ),
+                  );
+                },
+                separatorBuilder: (_, i) =>
+                    const Padding(padding: EdgeInsets.only(top: 10)),
+                itemCount: widget.messages.length),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget rate(data) {
@@ -141,18 +224,20 @@ class _MessagesState extends State<Messages> {
         return IconButton(
             onPressed: () async {
               setState(() {
-                 if (like == true ){
-                like = false;
-              }
-              else{
-              like = true;}
+                if (like == true) {
+                  like = false;
+                } else {
+                  like = true;
+                }
               });
-             
-              //update firebase:
-              UserModel userM = await UserReposiontry().getUserDetails(user.email!);
-     RecipeModel recipeM = await RecipeReposiontry().getRecipeDetails(req.title);
-              await RateReposiontry().updateRate(like,userM.getId(),recipeM.getId());
 
+              //update firebase:
+              UserModel userM =
+                  await UserReposiontry().getUserDetails(user.email!);
+              RecipeModel recipeM =
+                  await RecipeReposiontry().getRecipeDetails(req.title);
+              await RateReposiontry()
+                  .updateRate(like, userM.getId(), recipeM.getId());
             },
             icon: like == false
                 ? Icon(FontAwesomeIcons.thumbsUp)
@@ -164,32 +249,35 @@ class _MessagesState extends State<Messages> {
     }
   }
 
-   buildMessage(data, bool isUser)  {
+  buildMessage(data, bool isUser) {
     try {
       final reqest = jsonDecode(data);
-      RecipeModel req = RecipeModel.fromJson(reqest);
+      if (reqest is Map<String, dynamic>) //check if json
+      {
+        RecipeModel req = RecipeModel.fromJson(reqest);
 
-      if (req.requset == "recipe") {
-        //add recipe for firebase:
-       //  updateFireBase(req);
+        if (req.requset == "recipe") {
+          //add recipe for firebase:
+          //  updateFireBase(req);
 
-        return buildRecipeCard(req);
+          return buildRecipeCard(req);
+        }
       } else {
+        print("first");
         return Container(
-            child: const Text("other", style: TextStyle(color: Colors.black)));
+            child: Text(data,
+                style: TextStyle(
+                    color: isUser == true ? Colors.white : Colors.black)));
       }
-//return buildRecipeCard();
     } on FormatException catch (e) //if not json:
-
     {
+      print("second");
       return Container(
           child: Text(data,
               style: TextStyle(
                   color: isUser == true ? Colors.white : Colors.black)));
     }
   }
-
-  
 
   Widget buildRecipeCard(RecipeModel recipe) {
     return Column(
@@ -393,6 +481,11 @@ class _MessagesState extends State<Messages> {
     }
   }
   
-  
+  buildPreviousMessages(data, isUser) {
+      return Container(
+            child: Text(data,
+                style: TextStyle(
+                    color: isUser == true ? Colors.white : Colors.black)));
+      }
   
 }
