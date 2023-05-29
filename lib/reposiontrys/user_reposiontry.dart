@@ -68,11 +68,28 @@ buildMessagesToSave(List<Map<String, dynamic>> messages) {
   for (var mes in messages) {
     bool flag =  mes['isUserMessage'];
    // var t =  await mes['message'].text;
-    String text =  mes['message'].text.text[0] as String;
-    Map m = Map();
-    m["isUser"] = flag;
-    m["text"]= text;
-    build.add(m.toString());
+   var text;
+   if(mes['message'] is String){
+     text = mes['message'];
+   }
+   else{
+
+     text = mes['message'].text.text[0];
+   }
+     //chanfge the parse charcacters in text:
+    //  text=text.replaceAll(',','#');
+    //  text=text.replaceAll('{', '^');
+    //  text=text.replaceAll('}', "~");
+    //  text=text.replaceAll(':', ';');
+    // Map m = Map();
+    // m["isUser"] = flag;
+    // m["text"]= text;
+    
+    var json = {
+      "isUser": flag,
+      "text": text};
+
+    build.add(json);
   }
   return build;
 }

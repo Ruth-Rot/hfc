@@ -187,7 +187,7 @@ class __ChatPageState extends State<ChatPage> {
         color: Colors.white70,
       ),
       onPressed: () {
-        UserReposiontry().saveMessages(messages, user.email);
+        UserReposiontry().saveMessages(previous_messages+messages, user.email);
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => HomePage()));
       },
@@ -270,16 +270,16 @@ class __ChatPageState extends State<ChatPage> {
       // List valueMap = jsonDecode(convresation).toList();
       for (var value in convresation) {
         // Map valueMap = jsonDecode(value);
-        value = value.replaceAll("{", "");
-        value = value.replaceAll("}", "");
-        var dataSp = value.split(',');
-        Map<String, String> mapData = Map();
-        dataSp.forEach((element) => mapData[element.split(':')[0].trim()] =
-            element.split(':')[1].trim());
-        print(value);
+        // value = value.replaceAll("{", "");
+        // value = value.replaceAll("}", "");
+        // var dataSp = value.split(',');
+        // Map<String, String> mapData = Map();
+        // dataSp.forEach((element) => mapData[element.split(':')[0].trim()] =
+        //     element.split(':')[1].trim());
+        // print(value);
         previous_messages.add({
-          'message': mapData["text"],
-          'isUserMessage': mapData["isUser"]=="true"? true:false
+          'message': value['text'],
+          'isUserMessage': value['isUser']
         });
       }
     }

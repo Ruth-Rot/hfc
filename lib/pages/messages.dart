@@ -255,15 +255,13 @@ ScrollController _scrollController = new ScrollController(
       if (reqest is Map<String, dynamic>) //check if json
       {
         RecipeModel req = RecipeModel.fromJson(reqest);
-
         if (req.requset == "recipe") {
           //add recipe for firebase:
           //  updateFireBase(req);
-
           return buildRecipeCard(req);
         }
       } else {
-        print("first");
+        print("first: " + data);
         return Container(
             child: Text(data,
                 style: TextStyle(
@@ -271,7 +269,7 @@ ScrollController _scrollController = new ScrollController(
       }
     } on FormatException catch (e) //if not json:
     {
-      print("second");
+      print("second: "+ data);
       return Container(
           child: Text(data,
               style: TextStyle(
@@ -482,10 +480,36 @@ ScrollController _scrollController = new ScrollController(
   }
   
   buildPreviousMessages(data, isUser) {
-      return Container(
+       try {
+      final reqest = jsonDecode(data);
+      if (reqest is Map<String, dynamic>) //check if json
+      {
+        RecipeModel req = RecipeModel.fromJson(reqest);
+        if (req.requset == "recipe") {
+          //add recipe for firebase:
+          //  updateFireBase(req);
+          return buildRecipeCard(req);
+        }
+      } else {
+        print("first: " + data);
+        return Container(
             child: Text(data,
                 style: TextStyle(
                     color: isUser == true ? Colors.white : Colors.black)));
       }
+    } on FormatException catch (e) //if not json:
+    {
+      print("second: "+ data);
+      return Container(
+          child: Text(data,
+              style: TextStyle(
+                  color: isUser == true ? Colors.white : Colors.black)));
+    }
+
+
+                    
+      }
+
+      
   
 }
