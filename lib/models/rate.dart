@@ -26,7 +26,7 @@ class RateModel {
     return RateModel(
         like: json['like'] as bool,
         userId: json['userId'] as String,
-        recipeId: json['recipeIf']);
+        recipeId: json['recipeId']);
   }
   factory RateModel.fromSnapshot(
       DocumentSnapshot<Map<String, dynamic>> document) {

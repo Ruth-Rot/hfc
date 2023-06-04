@@ -127,7 +127,7 @@ ScrollController _scrollController = new ScrollController(
                             ],
                           ),
                           constraints: BoxConstraints(maxWidth: w * 4 / 5),
-                          child: buildPreviousMessages(
+                          child: buildMessage(
                               widget.previous_messages[index]['message'],
                               widget.previous_messages[index]['isUserMessage']),
                         ),
@@ -479,36 +479,36 @@ ScrollController _scrollController = new ScrollController(
     }
   }
   
-  buildPreviousMessages(data, isUser) {
-       try {
-      final reqest = jsonDecode(data);
-      if (reqest is Map<String, dynamic>) //check if json
-      {
-        RecipeModel req = RecipeModel.fromJson(reqest);
-        if (req.requset == "recipe") {
-          //add recipe for firebase:
-          //  updateFireBase(req);
-          return buildRecipeCard(req);
-        }
-      } else {
-        print("first: " + data);
-        return Container(
-            child: Text(data,
-                style: TextStyle(
-                    color: isUser == true ? Colors.white : Colors.black)));
-      }
-    } on FormatException catch (e) //if not json:
-    {
-      print("second: "+ data);
-      return Container(
-          child: Text(data,
-              style: TextStyle(
-                  color: isUser == true ? Colors.white : Colors.black)));
-    }
+  // buildPreviousMessages(data, isUser) {
+  //      try {
+  //     final reqest = jsonDecode(data);
+  //     if (reqest is Map<String, dynamic>) //check if json
+  //     {
+  //       RecipeModel req = RecipeModel.fromJson(reqest);
+  //       if (req.requset == "recipe") {
+  //         //add recipe for firebase:
+  //         //  updateFireBase(req);
+  //         return buildRecipeCard(req);
+  //       }
+  //     } else {
+  //       print("first: " + data);
+  //       return Container(
+  //           child: Text(data,
+  //               style: TextStyle(
+  //                   color: isUser == true ? Colors.white : Colors.black)));
+  //     }
+  //   } on FormatException catch (e) //if not json:
+  //   {
+  //     print("second: "+ data);
+  //     return Container(
+  //         child: Text(data,
+  //             style: TextStyle(
+  //                 color: isUser == true ? Colors.white : Colors.black)));
+  //   }
 
 
                     
-      }
+  //     }
 
       
   

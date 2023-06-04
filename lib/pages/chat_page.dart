@@ -16,6 +16,8 @@ import '../reposiontrys/recipe_reposiontry.dart';
 import '../reposiontrys/user_reposiontry.dart';
 import 'messages.dart';
 
+import 'package:web_socket_channel/io.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 class ChatPage extends StatefulWidget {
   const ChatPage({super.key});
 
@@ -51,7 +53,7 @@ class __ChatPageState extends State<ChatPage> {
           if (this.mounted) {
             setState(() {
               isUser = true;
-              buildPreviousMessages(user.convresation);
+              buildPreviousMessages(user.conversation);
 
               // previous_messages = buildPreviousMessages(user.convresation);
             });
@@ -66,6 +68,14 @@ class __ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
     checkStart();
+
+
+// final channel = IOWebSocketChannel.connect('https://293b-46-117-106-176.ngrok-free.app');
+
+// // Receive messages from the server
+// channel.stream.listen((message) {
+//   print('Received message from server: $message');
+//});
     return Scaffold(
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(80.0), // here the desired height
@@ -218,7 +228,7 @@ class __ChatPageState extends State<ChatPage> {
   }
 
   fillDetails() async {
-    var query = QueryInput(text: TextInput(text: 'profile'));
+    var query = QueryInput(text: TextInput(text: 'personal details'));
     DetectIntentResponse response =
         await dialogFlowtter.detectIntent(queryInput: query);
     if (this.mounted) {
@@ -229,6 +239,7 @@ class __ChatPageState extends State<ChatPage> {
     }
     //}
   }
+
 
   addMessage(Message message, [bool isUserMessage = false]) {
     messages.add({'message': message, 'isUserMessage': isUserMessage});

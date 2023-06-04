@@ -128,8 +128,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                   .authStateChanges()
                                   .listen((User? user) async {
                                 if (user != null) {
-                               
-                                  final user = await addUserDetails();
+                                 final user = await addUserDetails();
                                   Navigator.pop(context);
                                   Navigator.pushReplacement(
                                       context,
@@ -137,7 +136,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                           builder: (context) => HomePage()));
                                 }
                                 else{
-                                                                    print('User is currently signed out!');
+                                 print('User is currently signed out!');
 
                                   //    Navigator.pop(context);
                                   // Navigator.pushReplacement(
@@ -552,7 +551,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
         gender: genderInit == 0 ? "man" : "woman",
         password: controller.password.text.trim(),
         fillDetails: false,
-        convresation: "");
+        conversation:[],
+        dailyCalories: 0);
 
     final rep = UserReposiontry();
     await rep.createUser(user);

@@ -31,6 +31,30 @@ class ThemeHelper {
     );
   }
 
+   InputDecoration textInputDecorationFoodForm(
+      [String labelText = "", String hintText = "", Icon? icon]) {
+    return InputDecoration(
+      labelText: labelText,
+      hintText: hintText,
+      prefixIcon: icon,
+      fillColor: Colors.white,
+      filled: true,
+      contentPadding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+      focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: const BorderSide(color: Colors.grey)),
+      enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: BorderSide(color: Colors.grey.shade400)),
+      errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: const BorderSide(color: Colors.red, width: 2.0)),
+      focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: const BorderSide(color: Colors.red, width: 2.0)),
+    );
+  }
+
   // InputDecoration passwordInputDecoration(
   //     [String labelText = "",
   //     String hintText = "",

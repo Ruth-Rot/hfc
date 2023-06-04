@@ -1,3 +1,7 @@
+import 'package:bottom_bar_matu/bottom_bar/bottom_bar_bubble.dart';
+import 'package:bottom_bar_matu/bottom_bar_item.dart';
+import 'package:bottom_bar_matu/bottom_bar_label_slide/bottom_bar_label_slide.dart';
+import 'package:bottom_bar_matu/bottom_bar_matu.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
@@ -6,7 +10,10 @@ import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:hfc/common/custom_shape.dart';
+import 'package:hfc/pages/MyRecipePage.dart';
 import 'package:hfc/pages/chat_page.dart';
+import 'package:hfc/pages/diaryPage.dart';
+import 'package:hfc/pages/goalsPage.dart';
 import 'package:hfc/pages/loader.dart';
 import 'package:hfc/pages/login_page.dart';
 import 'package:hfc/pages/widget/Header_widget.dart';
@@ -36,16 +43,12 @@ class __HomePageState extends State<HomePage> {
   late String email = "";
   bool _isInitialValue = true;
   late AnimationController controller;
-  var currentPage = DrawerSections.home;
+  var currentPage = DrawerSections.diary;
 
- 
+  var _index = 0;
+
   @override
   Widget build(BuildContext context) {
-    //your code goes here
-    //  Navigator.push(
-    //                           context,
-    //                           MaterialPageRoute(
-    //                               builder: (context) => Loader()));
     Future.delayed(Duration.zero, () {
       UserReposiontry()
           .getUserDetails(FirebaseAuth.instance.currentUser!.email!)
@@ -72,137 +75,24 @@ class __HomePageState extends State<HomePage> {
   }
 
   Scaffold buildContainer(BuildContext context) {
+    var container;
+    if (currentPage == DrawerSections.diary) {
+      container = DiaryPage();
+    } else if (currentPage == DrawerSections.progress) {
+      container = GoalsPage();
+    } else if (currentPage == DrawerSections.saved_recipes) {
+      container = MyRecipePage();
+    }
+   
     return Scaffold(
       appBar: AppBar(
-          toolbarHeight: 200,
-          backgroundColor: Colors.transparent,
-          elevation: 0.0,
-          // leading: Container(
-          //     alignment: Alignment.topLeft,
-          //     child: IconButton(
-          //       onPressed: () {
-          //                    FirebaseAuth.instance.signOut();
-          //         Navigator.pushReplacement(context,
-          //             MaterialPageRoute(builder: (context) => LoginPage()));
-          //       },
-          //       icon: const Icon(Icons.arrow_back),
-          //       color: Colors.white,
-          //     )),
-          flexibleSpace: ClipPath(
-              clipper: CustomShape(),
-              child: Container(
-                  height: 220,
-                  width: MediaQuery.of(context).size.width,
-                  color: Theme.of(context).colorScheme.primary,
-                  child: Column(
-                    children: [
-                      SizedBox(height: 20.0),
-                      const SizedBox(height: 20.0),
-                      Center(
-                        child: CircularPercentIndicator(
-                            radius: 40,
-                            lineWidth: 8.0,
-                            backgroundColor: Colors.white,
-                            percent: 0.60,
-                            circularStrokeCap: CircularStrokeCap.round,
-                            progressColor:
-                                Theme.of(context).colorScheme.secondary,
-                            animation: true,
-                            center: Column(
-                              children: const [
-                                SizedBox(height: 15.0),
-                                Text(
-                                  "865",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                  "kcal",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 10,
-                                  ),
-                                ),
-                                Text(
-                                  "Remaining",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 10,
-                                  ),
-                                ),
-                              ],
-                            )),
-                      ),
-                      const SizedBox(height: 5.0),
-                      Row(
-                        children: [
-                          const SizedBox(width: 50.0),
-                          Container(
-                              child: Column(
-                            children: const [
-                              SizedBox(height: 15.0),
-                              Text(
-                                "1238",
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              Text(
-                                "kcal Consumed",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 10,
-                                ),
-                              ),
-                            ],
-                          )),
-                          const SizedBox(width: 120.0),
-                          Container(
-                              child: Column(
-                            children: const [
-                              SizedBox(height: 15.0),
-                              Text(
-                                "2103",
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              Text(
-                                "Daily kcal Goal",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 10,
-                                ),
-                              ),
-                              SizedBox(width: 50.0),
-                            ],
-                          ))
-                        ],
-                      )
-                    ],
-                  )))),
-      body: Column(
-        children: [
-          // CircleAvatar(
-          //   radius: 40,
-          //   backgroundImage: NetworkImage(user.photoURL!),
-          // ),
-          // const SizedBox(height: 20,),
-
-          emailText(),
-        ],
+        //  toolbarHeight: 200,
+        backgroundColor: Colors.indigo,
+        elevation: 0.0,
+        iconTheme: IconThemeData(color: Colors.white),
       ),
+      body: container,
       drawer: Drawer(
-        //backgroundColor: Colors.amber,
-
         child: SingleChildScrollView(
             child: Container(
           child: Column(children: [mydrawerHeader(), myDrawerList()]),
@@ -253,52 +143,53 @@ class __HomePageState extends State<HomePage> {
     return Container(
       padding: EdgeInsets.only(top: 15),
       child: Column(children: [
-        menuItem(0, "Home", FontAwesomeIcons.house,
-              currentPage == DrawerSections.home ? true : false),
-         menuItem(1, "Progress", FontAwesomeIcons.chartLine,
-              currentPage == DrawerSections.progress ? true : false),
-          menuItem(2, "Saved Recipes", FontAwesomeIcons.bowlFood,
-              currentPage == DrawerSections.saved_recipes ? true : false),
-          menuItem(3, "Saved Menus",FontAwesomeIcons.tableColumns,
-              currentPage == DrawerSections.saved_menus ? true : false),
-       
-          Divider(),
-          menuItem(4, "Settings", FontAwesomeIcons.gear,
-              currentPage == DrawerSections.settings ? true : false),
-          menuItem(5, "About As", FontAwesomeIcons.circleInfo,
-              currentPage == DrawerSections.about_as ? true : false),
-          Divider(),
-          menuItem(6, "Log Out", FontAwesomeIcons.doorOpen,
-              currentPage == DrawerSections.logout ? true : false),
-             ]),
+        menuItem(1, "Diary", FontAwesomeIcons.calendar,
+            currentPage == DrawerSections.diary ? true : false),
+        menuItem(2, "Progress", FontAwesomeIcons.chartLine,
+            currentPage == DrawerSections.progress ? true : false),
+        menuItem(3, "Saved Recipes", FontAwesomeIcons.bowlFood,
+            currentPage == DrawerSections.saved_recipes ? true : false),
+        menuItem(4, "Saved Menus", FontAwesomeIcons.tableColumns,
+            currentPage == DrawerSections.saved_menus ? true : false),
+        // Divider(),
+        // menuItem(4, "Settings", FontAwesomeIcons.gear,
+        //     currentPage == DrawerSections.settings ? true : false),
+        // menuItem(5, "About As", FontAwesomeIcons.circleInfo,
+        //     currentPage == DrawerSections.about_as ? true : false),
+        Divider(),
+        menuItem(5, "Log Out", FontAwesomeIcons.doorOpen,
+            currentPage == DrawerSections.logout ? true : false),
+      ]),
     );
   }
 
-  Widget menuItem(int id, String title, IconData icon, bool selected) {
+  Widget menuItem(int id, String title, IconData icon, bool selected ) {
     return Material(
-      color:  selected ? Colors.grey[300]: Colors.transparent,
+      color: selected ? Colors.grey[300] : Colors.transparent,
       child: InkWell(
-          onTap: () {
-          Navigator.pop(context);
-          setState(() {
-             if (id == 0) {
-              currentPage = DrawerSections.home;
-             }
-            if (id == 1) {
-              currentPage = DrawerSections.progress;
-            } else if (id == 2) {
-              currentPage = DrawerSections.saved_recipes;
-            } else if (id == 3) {
-              currentPage = DrawerSections.saved_menus;
-            } else if (id == 4) {
-              currentPage = DrawerSections.settings;
-            } else if (id == 5) {
-              currentPage = DrawerSections.about_as;
-            } else if (id == 6) {
-              currentPage = DrawerSections.logout;
-            }
-          });
-        },
+          onTap: 
+          () {
+            Navigator.pop(context);
+               if (id == 5) {
+                               FirebaseAuth.instance.signOut();
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) => LoginPage()));
+                 // currentPage = DrawerSections.logout;
+                }
+            if (this.mounted) {
+              setState(() {
+                if (id == 1) {
+                  currentPage = DrawerSections.diary;
+                }
+                if (id == 2) {
+                  currentPage = DrawerSections.progress;
+                } else if (id == 3) {
+                  currentPage = DrawerSections.saved_recipes;
+                } else if (id == 4) {
+                  currentPage = DrawerSections.saved_menus;}
+               });
+          }
+          },
           child: Padding(
             padding: const EdgeInsets.all(15.0),
             child: Row(
@@ -366,12 +257,4 @@ class __HomePageState extends State<HomePage> {
   }
 }
 
-enum DrawerSections {
-  home,
-  progress,
-  saved_recipes,
-  saved_menus,
-  settings,
-  about_as,
-  logout
-}
+enum DrawerSections { diary, progress, saved_recipes, saved_menus, logout }

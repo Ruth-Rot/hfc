@@ -8,8 +8,8 @@ class UserModel {
   final String urlImage;
   final String gender;
   late bool fillDetails;
-  late var convresation;
-
+  late List conversation;
+  late int dailyCalories;
    UserModel(
       {this.id,
       required this.fullName,
@@ -18,7 +18,8 @@ class UserModel {
       required this.urlImage,
       required this.gender,
       required this.fillDetails,
-      required this.convresation,
+      required this.conversation,
+      required this.dailyCalories
       });
     toJson() {
     return {
@@ -27,8 +28,9 @@ class UserModel {
       "password": password,
       "gender": gender,
       "urlImage": urlImage,
-      "fill_details": fillDetails,
-      "convresation":convresation
+      "fillDetails": fillDetails,
+      "conversation":conversation,
+      'dailyCalories':dailyCalories
     };
    
   }
@@ -46,9 +48,10 @@ class UserModel {
         password: data["password"],
         urlImage: data["urlImage"],
         gender: data["gender"],
-        fillDetails: data["fill_details"],
-        convresation: data["convresation"]);
-       
+        fillDetails: data["fillDetails"],
+        conversation: data["conversation"],
+        dailyCalories: data["dailyCalories"]);
+     
 
   }
 }

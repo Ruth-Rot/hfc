@@ -186,9 +186,11 @@ class _LoginPageState extends State<LoginPage> {
                                   color: Colors.red, width: 2.0)),
                           suffixIcon: InkWell(
                             onTap: () {
+                              if(this.mounted){
                               setState(() {
                                 passToggle = !passToggle;
                               });
+                              }
                             },
                             child: Icon(passToggle
                                 ? Icons.visibility_outlined
@@ -227,10 +229,12 @@ class _LoginPageState extends State<LoginPage> {
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => HomePage()));
     } on FirebaseAuthException catch (e) {
+      if(this.mounted){
       setState(() {
         _errorS = true;
         _error = e.message!;
       });
+      }
     }
   }
 
