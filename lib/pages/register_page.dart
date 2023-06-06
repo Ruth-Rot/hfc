@@ -548,11 +548,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
         email: controller.email.text.trim().toLowerCase(),
         fullName: controller.fullname.text.trim(),
         urlImage: genderInit == 0 ? manNetworkUrl : womanNetworkUrl,
-        gender: genderInit == 0 ? "man" : "woman",
+        gender: genderInit == 0 ? "male" : "female",
         password: controller.password.text.trim(),
         fillDetails: false,
         conversation:[],
-        dailyCalories: 0);
+        dailyCalories: 0.0,
+        diary: {});
 
     final rep = UserReposiontry();
     await rep.createUser(user);

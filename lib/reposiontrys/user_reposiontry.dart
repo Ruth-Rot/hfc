@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
+import 'package:hfc/models/day.dart';
 import 'package:hfc/models/user.dart';
 
 class UserReposiontry extends GetxController {
@@ -61,6 +62,22 @@ class UserReposiontry extends GetxController {
 
     batch.commit();
   }
+
+   void updateDiary(Map<String, Day> days, String email)async {
+// Get a new write batch
+    final batch = _db.batch();
+
+    // get the user doc
+    var snapshot =
+        await _db.collection("Users").where("email", isEqualTo: email).get();
+    final userData = snapshot.docs.map((e) => UserModel.fromSnapshot(e)).single;
+
+    //update the sessionId of user in this session
+    var userRef = _db.collection("Users").doc(userData.id);
+    batch.update(userRef, {"diary": days});
+
+    batch.commit();
+
 }
 
 buildMessagesToSave(List<Map<String, dynamic>> messages) {
@@ -79,4 +96,5 @@ buildMessagesToSave(List<Map<String, dynamic>> messages) {
     build.add(json);
   }
   return build;
+}
 }

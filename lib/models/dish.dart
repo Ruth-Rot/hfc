@@ -1,20 +1,25 @@
+import 'package:hfc/reposiontrys/nutritionApi_reposiontry.dart';
+
 class DishModel {
   final String? id;
   final String type;
   final String amount;
   final String measurement;
+  final DishData data;
 
   const DishModel(
       {this.id,
       required this.type,
       required this.amount,
-      required this.measurement
+      required this.measurement,
+      required this.data
     });
   toJson() {
     return {
       "dish": type,
       "measurement": measurement,
-      "amount": amount,      
+      "amount": amount,   
+      "data": data   
     };
   }
 }

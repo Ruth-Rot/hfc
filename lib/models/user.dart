@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'day.dart';
+
 class UserModel {
   final String? id;
   final String fullName;
@@ -9,7 +11,9 @@ class UserModel {
   final String gender;
   late bool fillDetails;
   late List conversation;
-  late int dailyCalories;
+  late double dailyCalories;
+  late Map<String, Day> diary;
+
    UserModel(
       {this.id,
       required this.fullName,
@@ -19,7 +23,8 @@ class UserModel {
       required this.gender,
       required this.fillDetails,
       required this.conversation,
-      required this.dailyCalories
+      required this.dailyCalories,
+      required this.diary
       });
     toJson() {
     return {
@@ -28,9 +33,10 @@ class UserModel {
       "password": password,
       "gender": gender,
       "urlImage": urlImage,
-      "fillDetails": fillDetails,
+      "fill_details": fillDetails,
       "conversation":conversation,
-      'dailyCalories':dailyCalories
+      "daily_calories":dailyCalories,
+      "diary":diary
     };
    
   }
@@ -41,6 +47,10 @@ class UserModel {
   factory UserModel.fromSnapshot(
       DocumentSnapshot<Map<String, dynamic>> document) {
     final data = document.data()!;
+    Map<String,Day> days = {};
+    if(data["diary"] != {}){
+      days = data["diary"] as Map<String,Day>;
+    }
     return UserModel(
         id: document.id,
         fullName: data["fullName"],
@@ -48,10 +58,9 @@ class UserModel {
         password: data["password"],
         urlImage: data["urlImage"],
         gender: data["gender"],
-        fillDetails: data["fillDetails"],
+        fillDetails: data["fill_details"],
         conversation: data["conversation"],
-        dailyCalories: data["dailyCalories"]);
-     
-
+        dailyCalories: data["daily_calories"],
+        diary: days);
   }
 }

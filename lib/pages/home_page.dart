@@ -44,13 +44,15 @@ class __HomePageState extends State<HomePage> {
   bool _isInitialValue = true;
   late AnimationController controller;
   var currentPage = DrawerSections.diary;
+    var container;
 
   var _index = 0;
+  UserReposiontry userReposiontry = UserReposiontry();
 
   @override
   Widget build(BuildContext context) {
     Future.delayed(Duration.zero, () {
-      UserReposiontry()
+      userReposiontry
           .getUserDetails(FirebaseAuth.instance.currentUser!.email!)
           .then((instance) {
         user = instance;
@@ -60,6 +62,13 @@ class __HomePageState extends State<HomePage> {
             email = user.email;
             name = user.fullName;
             profile = NetworkImage(user.urlImage);
+             if (currentPage == DrawerSections.diary) {
+      container = DiaryPage(userModel: user,userReposiontry:userReposiontry);
+    } else if (currentPage == DrawerSections.progress) {
+      container = GoalsPage();
+    } else if (currentPage == DrawerSections.saved_recipes) {
+      container = MyRecipePage();
+    }
             // if(user.isSetup == false){
             //    Navigator.pushReplacement(
             //     context, MaterialPageRoute(builder: (context) => ChatPage()));
@@ -75,14 +84,7 @@ class __HomePageState extends State<HomePage> {
   }
 
   Scaffold buildContainer(BuildContext context) {
-    var container;
-    if (currentPage == DrawerSections.diary) {
-      container = DiaryPage();
-    } else if (currentPage == DrawerSections.progress) {
-      container = GoalsPage();
-    } else if (currentPage == DrawerSections.saved_recipes) {
-      container = MyRecipePage();
-    }
+   
    
     return Scaffold(
       appBar: AppBar(
