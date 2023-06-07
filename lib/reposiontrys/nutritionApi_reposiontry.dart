@@ -5,6 +5,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
+import '../models/dishData.dart';
 import '../models/meal.dart';
 
 Future<DishData> fetchDishData (String type, String amount, String measurement) async {
@@ -26,80 +27,42 @@ Future<DishData> fetchDishData (String type, String amount, String measurement) 
   }
 }
 
-class DishData {
-  final double calories;
-  final double protein;
-  final double crabs;
-  final double fat;
-
-  const DishData({
-    required this.calories,
-    required this.protein,
-    required this.crabs,
-    required this.fat,
-  });
-
-  factory DishData.fromJson(Map<String, dynamic> json) {
-    double pro= 0.0;
-    if(json['totalDaily'].length>0){
-      pro = json['totalDaily']['PROCNT']['quantity'].toDouble();
-    }
-    double cra= 0.0;
-    if(json['totalDaily'].length>0){
-      cra = json['totalDaily']['CHOCDF']['quantity'].toDouble();
-    }
-    double fat= 0.0;
-    if(json['totalDaily'].length>0 ){
-      fat = json['totalDaily']['FAT']['quantity'].toDouble();
-    }
-    return DishData(
-      calories: json['calories'].toDouble(),
-      protein: pro,
-      crabs: cra,
-      fat: fat,
-    );
-  }
-
- double getCalories() {
-    return calories;
-  }
-}
 
 //void main() => runApp(const MyApp());
 
-class TotalCalories extends StatefulWidget {
-  List<MealModel> meals;
-  TotalCalories({super.key, required this.meals});
+// class TotalCalories extends StatefulWidget {
+//   List<MealModel> meals;
+//   TotalCalories({super.key, required this.meals});
 
-  @override
-  State<TotalCalories> createState() => _TotalCaloriesState();
-}
+//   @override
+//   State<TotalCalories> createState() => _TotalCaloriesState();
+// }
 
-class _TotalCaloriesState extends State<TotalCalories> {
-  late Future<DishData> futureDish;
+// class _TotalCaloriesState extends State<TotalCalories> {
+//   late Future<DishData> futureDish;
 
-  @override
-  void initState() {
-    super.initState();
-    // futureDish = fetchDishData(DishModel(type: "pizza", amount: "2", measurement: "slices"));
-  }
+//   @override
+//   void initState() {
+//     super.initState();
+//     // futureDish = fetchDishData(DishModel(type: "pizza", amount: "2", measurement: "slices"));
+//   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: FutureBuilder<DishData>(
-        future: futureDish,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return Text(snapshot.data!.calories.toString());
-          } else if (snapshot.hasError) {
-            return Text('${snapshot.error}');
-          }
+//   @override
+//   Widget build(BuildContext context) {
+//     return Center(
+//       child: FutureBuilder<DishData>(
+//         future: futureDish,
+//         builder: (context, snapshot) {
+//           if (snapshot.hasData) {
+//             return Text(snapshot.data!.calories.toString());
+//           } else if (snapshot.hasError) {
+//             return Text('${snapshot.error}');
+//           }
 
-          // By default, show a loading spinner.
-          return const CircularProgressIndicator();
-        },
-      ),
-    );
-  }
-}
+//           // By default, show a loading spinner.
+//           return const CircularProgressIndicator();
+//         },
+//       ),
+//     );
+//   }
+// }

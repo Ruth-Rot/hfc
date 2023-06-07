@@ -9,6 +9,7 @@ import '../common/radialProgress.dart';
 import '../common/stickProgress.dart';
 import '../common/theme_helper.dart';
 import '../models/day.dart';
+import '../models/dishData.dart';
 import '../models/meal.dart';
 import '../reposiontrys/nutritionApi_reposiontry.dart';
 
@@ -26,7 +27,7 @@ class DiaryPage extends StatefulWidget {
 class __DiaryPageState extends State<DiaryPage> {
   var date = DateTime.now();
   Map<String, Day> days = {};
-  Day currentDay = Day(date: DateFormat.yMMMMd('en_US').format(DateTime.now()));
+  Day currentDay = Day(date: DateFormat.yMMMMd('en_US').format(DateTime.now()),meals:getDayMeals());
   String dateS = "";
   List<String> measurements = [
     "Cup",
@@ -51,11 +52,23 @@ class __DiaryPageState extends State<DiaryPage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    dateS = DateFormat.yMMMMd('en_US').format(date);
+    days = widget.userModel.diary;
+    if(days.containsKey(dateS) == false){
+    days[dateS] = currentDay;
+    }
+    else{
+      currentDay = days[dateS]!;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
-    dateS = DateFormat.yMMMMd('en_US').format(date);
-    days[dateS] = currentDay;
+    
 
     if (widget.userModel.fillDetails == true) {
       return Scaffold(
@@ -409,7 +422,7 @@ class __DiaryPageState extends State<DiaryPage> {
           width: 5,
         ),
         SizedBox(
-          width: 110,
+          width: 120,
           child: DropdownButtonFormField<String>(
             decoration: InputDecoration(
               labelText: "Measerment",
@@ -442,7 +455,7 @@ class __DiaryPageState extends State<DiaryPage> {
         SizedBox(
           width: 5,
         ),
-        SizedBox(width: 100, child: amountfield(meal))
+        SizedBox(width: 80, child: amountfield(meal))
       ]),
     );
   }
@@ -536,14 +549,27 @@ class __DiaryPageState extends State<DiaryPage> {
     setState(() {
       dateS = dataString;
 
+      //close the previos day meal Containers:
+      closeCurrentDayMealContainers();
+
       //check if the day map contain this day:
       if (days.containsKey(dataString)) {
         currentDay = days[dataString]!;
       } else {
-        Day newDay = Day(date: dataString);
+        Day newDay = Day(date: dataString,meals:getDayMeals() );
         days[dataString] = newDay;
         currentDay = newDay;
       }
     });
   }
+  
+  void closeCurrentDayMealContainers() {
+    for (MealModel meal in currentDay.meals){
+      meal.isAdd =false;
+      meal.isOpen = false;
+    }
+  }
+
+  
 }
+

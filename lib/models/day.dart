@@ -1,16 +1,9 @@
-
 import 'package:hfc/models/meal.dart';
 
 class Day {
   final String? id;
   final String date;
-  late List<MealModel> meals = [
-    MealModel(type: 'Breakfast'),
-    MealModel(type: 'Lunch'),
-    MealModel(type: 'Dinner'),
-    MealModel(type: 'Snacks'),
-    MealModel(type: 'Activity')
-  ];
+  late List<MealModel> meals;
   late Map<String, int> mealsIndex = {
     'Breakfast': 0,
     'Lunch': 1,
@@ -19,14 +12,19 @@ class Day {
     'Activity': 4
   };
 
-  Day({this.id, required this.date});
+  Day({this.id, required this.date,required this.meals});
   toJson() {
+    List build = [];
+    for (MealModel meal in meals) {
+      build.add(meal.toJson());
+    }
+
     return {
       "date": date,
-      "meals": meals,
+      "meals": build,
     };
   }
-
+  
   getDailyCalories(double daily) {
     double used = 0;
     for (var meal in meals) {
@@ -60,3 +58,11 @@ class Day {
     return used;
   }
 }
+getDayMeals(){return [
+    MealModel(type: 'Breakfast',dishes: []),
+    MealModel(type: 'Lunch',dishes: []),
+    MealModel(type: 'Dinner',dishes:[]),
+    MealModel(type: 'Snacks', dishes: []),
+    MealModel(type: 'Activity',dishes: [])
+  ];
+  }

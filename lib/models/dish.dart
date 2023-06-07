@@ -1,4 +1,6 @@
-import 'package:hfc/reposiontrys/nutritionApi_reposiontry.dart';
+
+
+import 'package:hfc/models/dishData.dart';
 
 class DishModel {
   final String? id;
@@ -19,7 +21,7 @@ class DishModel {
       "dish": type,
       "measurement": measurement,
       "amount": amount,   
-      "data": data   
+      "data": data.toJson()   
     };
   }
 }

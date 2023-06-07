@@ -15,10 +15,17 @@ class MealModel {
   MealModel({
     this.id,
     required this.type,
+    required this.dishes
   });
-  toJson(String date) {
-    return {"type": type, "dishes": dishes, "date": date};
+  toJson() {
+    List build = [];
+    for (DishModel dish in dishes) {
+      build.add(dish.toJson());
+    }
+    return {"type": type, "dishes": build};
   }
+
+
 
   getHeight() {
     if(isOpen == false){

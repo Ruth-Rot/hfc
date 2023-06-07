@@ -74,7 +74,7 @@ class UserReposiontry extends GetxController {
 
     //update the sessionId of user in this session
     var userRef = _db.collection("Users").doc(userData.id);
-    batch.update(userRef, {"diary": days});
+    batch.update(userRef, {"diary": buildDaysToSave(days)});
 
     batch.commit();
 
@@ -96,5 +96,13 @@ buildMessagesToSave(List<Map<String, dynamic>> messages) {
     build.add(json);
   }
   return build;
+}
+
+buildDaysToSave (Map<String, Day> days){
+Map build ={};
+for(String key in days.keys){
+build[key] = days[key]!.toJson();
+}
+return build;
 }
 }

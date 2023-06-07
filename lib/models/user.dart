@@ -1,6 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:hfc/models/dish.dart';
+import 'package:hfc/models/meal.dart';
+import 'package:hfc/reposiontrys/nutritionApi_reposiontry.dart';
 
 import 'day.dart';
+import 'dishData.dart';
 
 class UserModel {
   final String? id;
@@ -14,7 +18,7 @@ class UserModel {
   late double dailyCalories;
   late Map<String, Day> diary;
 
-   UserModel(
+  UserModel(
       {this.id,
       required this.fullName,
       required this.email,
@@ -24,9 +28,8 @@ class UserModel {
       required this.fillDetails,
       required this.conversation,
       required this.dailyCalories,
-      required this.diary
-      });
-    toJson() {
+      required this.diary});
+  toJson() {
     return {
       "fullName": fullName,
       "email": email,
@@ -34,22 +37,46 @@ class UserModel {
       "gender": gender,
       "urlImage": urlImage,
       "fill_details": fillDetails,
-      "conversation":conversation,
-      "daily_calories":dailyCalories,
-      "diary":diary
+      "conversation": conversation,
+      "daily_calories": dailyCalories,
+      "diary": diary
     };
-   
   }
 
- getId(){
-      return id;
-    }
+  getId() {
+    return id;
+  }
+
   factory UserModel.fromSnapshot(
       DocumentSnapshot<Map<String, dynamic>> document) {
     final data = document.data()!;
-    Map<String,Day> days = {};
-    if(data["diary"] != {}){
-      days = data["diary"] as Map<String,Day>;
+    Map<String, Day> days = {};
+    var diaryData = data["diary"];
+
+    if (diaryData.length > 0) {
+      List<DishModel> dishes = [];
+      List<MealModel> meals = [];
+
+      for (var date in diaryData.keys) {
+        meals = [];
+        for (var meal in diaryData[date]["meals"]) {
+          dishes = [];
+          for (var dish in meal["dishes"]) {
+            DishData data = DishData(
+                calories: dish["data"]["calories"],
+                protein: dish["data"]["protein"],
+                crabs: dish["data"]["crabs"],
+                fat: dish["data"]["fat"]);
+            dishes.add(DishModel(
+                type: dish["dish"],
+                amount: dish["amount"],
+                measurement: dish["measurement"],
+                data: data));
+          }
+          meals.add(MealModel(type: meal["type"], dishes: dishes));
+        }
+        days[date] = Day(date: date, meals: meals);
+      }
     }
     return UserModel(
         id: document.id,
