@@ -16,6 +16,8 @@ class UserModel {
   late bool fillDetails;
   late List conversation;
   late double dailyCalories;
+  late double weight;
+  late double height;
   late Map<String, Day> diary;
 
   UserModel(
@@ -28,7 +30,10 @@ class UserModel {
       required this.fillDetails,
       required this.conversation,
       required this.dailyCalories,
-      required this.diary});
+      required this.diary,
+      required this.weight,
+      required this.height,
+      });
   toJson() {
     return {
       "fullName": fullName,
@@ -39,7 +44,9 @@ class UserModel {
       "fill_details": fillDetails,
       "conversation": conversation,
       "daily_calories": dailyCalories,
-      "diary": diary
+      "diary": diary,
+      "weight":weight,
+      "height":height
     };
   }
 
@@ -71,11 +78,12 @@ class UserModel {
                 type: dish["dish"],
                 amount: dish["amount"],
                 measurement: dish["measurement"],
-                data: data));
+                data: data
+                ));
           }
           meals.add(MealModel(type: meal["type"], dishes: dishes));
         }
-        days[date] = Day(date: date, meals: meals);
+        days[date] = Day(date: date, meals: meals,activitys:diaryData[date]["activitys"]);
       }
     }
     return UserModel(
@@ -88,6 +96,8 @@ class UserModel {
         fillDetails: data["fill_details"],
         conversation: data["conversation"],
         dailyCalories: data["daily_calories"],
-        diary: days);
+        diary: days,
+        weight: double.parse(data["weight"]),
+        height: double.parse(data["height"]));
   }
 }

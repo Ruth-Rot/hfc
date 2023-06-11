@@ -33,7 +33,7 @@ class MealModel {
     }
     double basic = 100;
     if (isAdd == true) {
-      basic += 50;
+      basic += 70;
     }
     basic += 40 * dishes.length;
     return basic;

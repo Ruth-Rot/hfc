@@ -3,7 +3,7 @@ import 'package:vector_math/vector_math_64.dart' as math;
 
 class RadialProgress extends StatefulWidget {
   final double height, width, progress;
-  final String remain;
+  final double remain;
 
   RadialProgress(
       {Key? key,
@@ -21,6 +21,7 @@ class RadialProgress extends StatefulWidget {
 class _RadialProgressState extends State<RadialProgress> {
   @override
   Widget build(BuildContext context) {
+      Color? color = widget.remain.isNegative? Colors.red[900]: const Color(0xFF200087);
     return CustomPaint(
       painter: _RadialPainter(
         progress: widget.progress,
@@ -34,21 +35,20 @@ class _RadialProgressState extends State<RadialProgress> {
             text: TextSpan(
               children: [
                 TextSpan(
-                  text: widget.remain,
+                  text: widget.remain.abs().toStringAsFixed(2),
                   style: TextStyle(
                     fontSize: 32,
                     fontWeight: FontWeight.w700,
-                    color: const Color(0xFF200087),
+                    color: color,
                   ),
                 ),
                 TextSpan(text: "\n"),
                 TextSpan(
-                  text: "kcal left",
+                  text: widget.remain.isNegative?"kcal passed":"kcal left",
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w500,
-                    color: const Color(0xFF200087),
-                  ),
+                    color:color      ),
                 ),
               ],
             ),

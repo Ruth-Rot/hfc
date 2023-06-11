@@ -553,7 +553,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
         fillDetails: false,
         conversation:[],
         dailyCalories: 0.0,
-        diary: {});
+        diary: {},
+        weight: 0,
+        height: 0);
 
     final rep = UserReposiontry();
     await rep.createUser(user);
