@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:hfc/models/activity.dart';
+import 'package:hfc/models/activitysList.dart';
 import 'package:hfc/models/dish.dart';
 import 'package:hfc/models/meal.dart';
 import 'package:hfc/reposiontrys/nutritionApi_reposiontry.dart';
@@ -20,20 +22,20 @@ class UserModel {
   late double height;
   late Map<String, Day> diary;
 
-  UserModel(
-      {this.id,
-      required this.fullName,
-      required this.email,
-      required this.password,
-      required this.urlImage,
-      required this.gender,
-      required this.fillDetails,
-      required this.conversation,
-      required this.dailyCalories,
-      required this.diary,
-      required this.weight,
-      required this.height,
-      });
+  UserModel({
+    this.id,
+    required this.fullName,
+    required this.email,
+    required this.password,
+    required this.urlImage,
+    required this.gender,
+    required this.fillDetails,
+    required this.conversation,
+    required this.dailyCalories,
+    required this.diary,
+    required this.weight,
+    required this.height,
+  });
   toJson() {
     return {
       "fullName": fullName,
@@ -45,10 +47,12 @@ class UserModel {
       "conversation": conversation,
       "daily_calories": dailyCalories,
       "diary": diary,
-      "weight":weight,
-      "height":height
+      "weight": weight,
+      "height": height
     };
   }
+
+  
 
   getId() {
     return id;
@@ -63,6 +67,7 @@ class UserModel {
     if (diaryData.length > 0) {
       List<DishModel> dishes = [];
       List<MealModel> meals = [];
+      ActivityList activityList = ActivityList(items: []);
 
       for (var date in diaryData.keys) {
         meals = [];
@@ -78,12 +83,19 @@ class UserModel {
                 type: dish["dish"],
                 amount: dish["amount"],
                 measurement: dish["measurement"],
-                data: data
-                ));
+                data: data));
           }
           meals.add(MealModel(type: meal["type"], dishes: dishes));
+          activityList = ActivityList(items: []);
+          for (var active in diaryData[date]["activitys"]["items"]) {
+            Activity act = Activity(
+                calories: active["calories"],
+                duration: active["duration"],
+                label: active["label"]);
+            activityList.items.add(act);
+          }
         }
-        days[date] = Day(date: date, meals: meals,activitys:diaryData[date]["activitys"]);
+        days[date] = Day(date: date, meals: meals, activitys: activityList);
       }
     }
     return UserModel(

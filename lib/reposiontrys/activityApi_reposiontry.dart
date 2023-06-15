@@ -1,17 +1,15 @@
-import 'package:hfc/models/dish.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
-
-import 'package:flutter/material.dart';
-
 import '../models/activity.dart';
-import '../models/dishData.dart';
-import '../models/meal.dart';
 
-Future<Activity> fetchActivityData (String activity, String weight, String duration) async {
-    var querystring = {"activity":"ym","weight":"70","duration":"60"};
-  //var querystring = {"activity":activity,"weight":weight,"duration":duration};
+
+Future<Activity> fetchActivityData (String activity, double weight, String duration) async {
+    //var querystring = {"activity":"ym","weight":"70","duration":"60"};
+    if(weight<50){
+      weight =50;
+    }
+  var querystring = {"activity":activity,"weight":weight.toString(),"duration":duration};
 
 
 //https://calories-burned-by-api-ninjas.p.rapidapi.com/v1/caloriesburned

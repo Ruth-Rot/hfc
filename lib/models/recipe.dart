@@ -3,48 +3,107 @@ import 'package:flutter/material.dart';
 
 class RecipeModel {
   final String? id;
-  final requset;
+  final String request;
   final String title;
-  final List<dynamic> labels;
+  final List<String> healthLabels;
+  final List<String> dietLabels;
+  final List<String> ingredients;
+  final double calories;
+  final double carbs;
+  final double protein;
+  final double fat;
   final String image;
   final String url;
+
   const RecipeModel(
       {this.id,
-      required this.requset,
+      required this.request,
       required this.title,
-      required this.labels,
       required this.image,
-      required this.url});
+      required this.url,
+      required this.healthLabels,
+      required this.dietLabels,
+      required this.ingredients,
+      required this.calories,
+      required this.carbs,
+      required this.fat,
+      required this.protein});
   toJson() {
     return {
       "title": title,
-      "labels": labels,
+      "healthLabels": healthLabels,
+      "dietLabels": dietLabels,
       "image": image,
-      "urlImage": url,
+      "url": url,
+      "ingredients": ingredients,
+      "calories": calories,
+      "carbs": carbs,
+      "fat": fat,
+      "protein": protein
     };
   }
-  getId(){
+
+  getId() {
     return id;
   }
 
-
   factory RecipeModel.fromJson(Map<String, dynamic> json) {
+    List<String> health=[];
+    List<String> diet=[];
+    List<String> ingredients = [];
+    for(String s in json['healthLabels']){
+      health.add(s);
+    }
+    for(String s in json['dietLabels']){
+      diet.add(s);
+    }
+     for(String s in json['ingredients']){
+      ingredients.add(s);
+    }
     return RecipeModel(
-        requset: json['request'] as String,
+        request: "recipe",
         title: json['title'] as String,
-        labels: json['subtitle'],
-        image: json['imageUri'] as String,
-        url: json['Url'] as String);
+        healthLabels: health,
+        dietLabels: diet,
+        image: json['image'] as String,
+        url: json['url'] as String,
+        calories: json['calories'],
+        ingredients: ingredients,
+        carbs: json['carbs'],
+        fat: json['fat'],
+        protein: json['protein']);
   }
   factory RecipeModel.fromSnapshot(
       DocumentSnapshot<Map<String, dynamic>> document) {
+         List<String> health=[];
+    List<String> diet=[];
+    List<String> ingredients = [];
+    for(String s in document['healthLabels']){
+      health.add(s);
+    }
+    for(String s in document['dietLabels']){
+      diet.add(s);
+    }
+     for(String s in document['ingredients']){
+      ingredients.add(s);
+    }
     final data = document.data()!;
     return RecipeModel(
         id: document.id,
-        requset: "recipe",
-        title: data["title"],
-        labels: data["labels"],
-        image: data["image"],
-        url: data["urlImage"]);
+        request: "recipe",
+        title: data['title'] as String,
+        healthLabels: health,
+        dietLabels: diet,
+        image: data['image'] as String,
+        url: data['url'] as String,
+        calories: data['calories'],
+        ingredients: ingredients,
+        carbs: data['carbs'],
+        fat: data['fat'],
+        protein: data['protein']);
+  }
+
+  getLabels() {
+    return new List.from(healthLabels)..addAll(dietLabels);
   }
 }

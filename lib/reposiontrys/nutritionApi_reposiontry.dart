@@ -1,16 +1,12 @@
-import 'package:hfc/models/dish.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
-
-import 'package:flutter/material.dart';
-
 import '../models/dishData.dart';
-import '../models/meal.dart';
 
 Future<DishData> fetchDishData (String type, String amount, String measurement) async {
   
-  String ask = type + " " + amount + " " + measurement;
+    String ask = "$type $amount $measurement";
+
   ask = ask.replaceAll(" ", "%20");
 
   final response = await http.get(Uri.parse(

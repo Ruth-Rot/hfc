@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hfc/common/circleHeader.dart';
 import 'package:hfc/models/activitysList.dart';
 import 'package:hfc/models/dish.dart';
 import 'package:hfc/models/user.dart';
 import 'package:hfc/reposiontrys/user_reposiontry.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 import '../common/radialProgress.dart';
 import '../common/stickProgress.dart';
 import '../common/theme_helper.dart';
@@ -19,10 +19,8 @@ import '../reposiontrys/nutritionApi_reposiontry.dart';
 class DiaryPage extends StatefulWidget {
   final UserModel userModel;
   final UserReposiontry userReposiontry;
-  DiaryPage(
-      {Key? key,
-      required this.userModel,
-      required UserReposiontry this.userReposiontry})
+  const DiaryPage(
+      {Key? key, required this.userModel, required this.userReposiontry})
       : super(key: key);
 
   @override
@@ -52,6 +50,7 @@ class __DiaryPageState extends State<DiaryPage> {
     "Unit",
     "Bowl"
   ];
+
   String? selectedMeaserment = "Cup";
 
   @override
@@ -74,7 +73,7 @@ class __DiaryPageState extends State<DiaryPage> {
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
+    //final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
 
     if (widget.userModel.fillDetails == true) {
@@ -82,75 +81,7 @@ class __DiaryPageState extends State<DiaryPage> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              Container(
-                height: 100.0,
-                decoration: BoxDecoration(
-                  color: Colors.indigo,
-                  boxShadow: const [BoxShadow(blurRadius: 40.0)],
-                  borderRadius: BorderRadius.vertical(
-                      bottom: Radius.elliptical(
-                          MediaQuery.of(context).size.width, 100.0)),
-                ),
-                child: Column(
-                  children: [
-                    Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.transparent,
-                                  shadowColor: Colors.transparent),
-                              onPressed: () {
-                                //sub a day
-                                date = date.subtract(const Duration(days: 1));
-                                String dataString =
-                                    DateFormat.yMMMMd('en_US').format(date);
-                                updateCurrentDay(dataString);
-                              },
-                              child: const Icon(
-                                Icons.arrow_back_rounded,
-                                color: Colors.white,
-                                size: 30,
-                              )),
-                          const SizedBox(
-                            width: 50,
-                          ),
-                          Text(
-                            dateS,
-                            style: const TextStyle(
-                                color: Colors.white, fontSize: 20),
-                          ),
-                          const SizedBox(
-                            width: 50,
-                          ),
-                          ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.transparent,
-                                  shadowColor: Colors.transparent),
-                              onPressed: () {
-                                //add a day
-                                if (date.day != DateTime.now().day) {
-                                  date = date.add(const Duration(days: 1));
-                                  String dataString =
-                                      DateFormat.yMMMMd('en_US').format(date);
-                                  updateCurrentDay(dataString);
-                                }
-                              },
-                              child: Icon(
-                                Icons.arrow_forward_rounded,
-                                color: date.day == DateTime.now().day
-                                    ? Colors.transparent
-                                    : Colors.white,
-                                size: 30,
-                              )),
-                        ]),
-                    const SizedBox(
-                      height: 50,
-                    )
-                  ],
-                ),
-              ),
+              circleHeader(context, dateWidget()),
               const SizedBox(
                 height: 10,
               ),
@@ -163,13 +94,14 @@ class __DiaryPageState extends State<DiaryPage> {
                       width: width * 0.4,
                       height: width * 0.4,
                       progress: (1.0 -
-                          (currentDay.getDailyCalories(
+                          (currentDay.getRemainCalories(
                                   widget.userModel.dailyCalories) /
-                              widget.userModel.dailyCalories)),
+currentDay.getDailyCalories( widget.userModel.dailyCalories))
+                            ),
                       remain: currentDay
-                          .getDailyCalories(widget.userModel.dailyCalories),
+                          .getRemainCalories(widget.userModel.dailyCalories),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 30,
                     ),
                     Row(
@@ -183,7 +115,7 @@ class __DiaryPageState extends State<DiaryPage> {
                           progressColor: Colors.green,
                           height: 160,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 15,
                         ),
                         StickProgress(
@@ -192,7 +124,7 @@ class __DiaryPageState extends State<DiaryPage> {
                           progressColor: Colors.red,
                           height: 160,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 15,
                         ),
                         StickProgress(
@@ -214,25 +146,22 @@ class __DiaryPageState extends State<DiaryPage> {
                 width: 400,
                 child: ListView.separated(
                     scrollDirection: Axis.vertical,
-                    itemCount: currentDay.meals.length+1 ,
+                    itemCount: currentDay.meals.length + 1,
                     itemBuilder: (BuildContext context, int index) {
-                           if(index< 4){
-                           return Container(
-                              height:
-                                  currentDay.meals[index].getHeight() + 20.0,
-                              child: mealContainer(currentDay.meals[index]),
-                            );
-                           }
-                           else{
- return Container(
-                              height: currentDay.activitys.getHeight() + 20.0,
-                              child: actvitiyContainer(currentDay.activitys),
-                            );
-                           }
-                         
+                      if (index < 4) {
+                        return SizedBox(
+                          height: currentDay.meals[index].getHeight() + 20.0,
+                          child: mealContainer(currentDay.meals[index]),
+                        );
+                      } else {
+                        return SizedBox(
+                          height: currentDay.activitys.getHeight() + 20.0,
+                          child: actvitiyContainer(currentDay.activitys),
+                        );
+                      }
                     },
                     separatorBuilder: (BuildContext context, int index) =>
-                        SizedBox(
+                        const SizedBox(
                           height: 5,
                         )),
               ),
@@ -241,19 +170,96 @@ class __DiaryPageState extends State<DiaryPage> {
         ),
       );
     } else {
-      return Container(child: Text("Fill your details in the chat bot"));
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            Text(
+              "You haven't fill your personal details yet",
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+            ),
+            SizedBox(
+                height: 300,
+                child:
+                    Image(image: AssetImage('./assets/images/splash_bot.png'))),
+            SizedBox(
+              height: 30,
+            ),
+            Text("Fill your details in the chat bot",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700))
+          ],
+        ),
+      );
     }
   }
 
-  Container mealContainer(MealModel meal) {
+  
+
+  Row dateWidget() {
+    return Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.transparent,
+                              shadowColor: Colors.transparent),
+                          onPressed: () {
+                            //sub a day
+                            date = date.subtract(const Duration(days: 1));
+                            String dataString =
+                                DateFormat.yMMMMd('en_US').format(date);
+                            updateCurrentDay(dataString);
+                          },
+                          child: const Icon(
+                            Icons.arrow_back_rounded,
+                            color: Colors.white,
+                            size: 30,
+                          )),
+                      const SizedBox(
+                        width: 50,
+                      ),
+                      Text(
+                        dateS,
+                        style: const TextStyle(
+                            color: Colors.white, fontSize: 20),
+                      ),
+                      const SizedBox(
+                        width: 50,
+                      ),
+                      ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.transparent,
+                              shadowColor: Colors.transparent),
+                          onPressed: () {
+                            //add a day
+                            if (date.day != DateTime.now().day) {
+                              date = date.add(const Duration(days: 1));
+                              String dataString =
+                                  DateFormat.yMMMMd('en_US').format(date);
+                              updateCurrentDay(dataString);
+                            }
+                          },
+                          child: Icon(
+                            Icons.arrow_forward_rounded,
+                            color: date.day == DateTime.now().day
+                                ? Colors.transparent
+                                : Colors.white,
+                            size: 30,
+                          )),
+                    ]);
+  }
+
+  mealContainer(MealModel meal) {
     double height = meal.getHeight();
-    return Container(
+    return SizedBox(
       height: height + 20.0,
       child: Stack(children: [
         Positioned(
             left: 10,
-            child:
-                Container(height: height, width: 380, child: mealCard(meal))),
+            child: SizedBox(height: height, width: 380, child: mealCard(meal))),
         meal.isOpen == true
             ? Positioned(bottom: 0, left: 180, child: addButtonMeal(meal))
             : Container()
@@ -265,7 +271,7 @@ class __DiaryPageState extends State<DiaryPage> {
     Widget openColumn = Container();
     if (meal.isOpen) {
       openColumn = Column(children: [
-        SizedBox(
+        const SizedBox(
           height: 10,
         ),
         SizedBox(
@@ -274,7 +280,7 @@ class __DiaryPageState extends State<DiaryPage> {
               padding: const EdgeInsets.all(8),
               itemCount: meal.dishes.length,
               itemBuilder: (BuildContext context, int index) {
-                return Container(
+                return SizedBox(
                   height: 40,
                   child: itemRow(meal.type, meal.dishes[index]),
                 );
@@ -282,16 +288,16 @@ class __DiaryPageState extends State<DiaryPage> {
               separatorBuilder: (BuildContext context, int index) =>
                   Container()),
         ),
-        SizedBox(
+        const SizedBox(
           height: 10,
         ),
         meal.isAdd == false ? Container() : addItemForm(meal),
-        Divider(),
+        const Divider(),
         Align(
           alignment: Alignment.centerLeft,
           child: Row(
             children: [
-              Text("  total calories: "),
+              const Text("  total calories: "),
               Text(meal.getCalories().toString()),
             ],
           ),
@@ -306,7 +312,7 @@ class __DiaryPageState extends State<DiaryPage> {
           ),
         ),
         child: Column(children: [
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           Stack(
@@ -337,33 +343,33 @@ class __DiaryPageState extends State<DiaryPage> {
     Widget openColumn = Container();
     if (activitys.isOpen) {
       openColumn = Column(children: [
-        SizedBox(
+        const SizedBox(
           height: 10,
         ),
         SizedBox(
-          height: 40.0 * activitys.items.length,
+          height: 50.0 * activitys.items.length,
           child: ListView.separated(
               padding: const EdgeInsets.all(8),
               itemCount: activitys.items.length,
               itemBuilder: (BuildContext context, int index) {
-                return Container(
-                  height: 40,
-                  child: ActivityitemRow("Activitys", activitys.items[index]),
+                return SizedBox(
+                  height: 50,
+                  child: ActivityitemRow(activitys.items[index]),
                 );
               },
               separatorBuilder: (BuildContext context, int index) =>
                   Container()),
         ),
-        SizedBox(
+        const SizedBox(
           height: 10,
         ),
         activitys.isAdd == false ? Container() : addActivityItemForm(activitys),
-        Divider(),
+        const Divider(),
         Align(
           alignment: Alignment.centerLeft,
           child: Row(
             children: [
-              Text("  total calories: "),
+              const Text("  total calories: "),
               Text(activitys.getCalories().toString()),
             ],
           ),
@@ -378,7 +384,7 @@ class __DiaryPageState extends State<DiaryPage> {
           ),
         ),
         child: Column(children: [
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           Stack(
@@ -406,31 +412,32 @@ class __DiaryPageState extends State<DiaryPage> {
   }
 
   labelName(String meal) {
-    Image image = Image(image: AssetImage('./assets/images/breakfast.png'));
+    Image image =
+        const Image(image: AssetImage('./assets/images/breakfast.png'));
 
     if (meal == "Lunch") {
-      image = Image(image: AssetImage('./assets/images/lunch.png'));
+      image = const Image(image: AssetImage('./assets/images/lunch.png'));
     }
 
     if (meal == "Dinner") {
-      image = Image(image: AssetImage('./assets/images/dinner.png'));
+      image = const Image(image: AssetImage('./assets/images/dinner.png'));
     }
     if (meal == "Snacks") {
-      image = Image(image: AssetImage('./assets/images/snacks.png'));
+      image = const Image(image: AssetImage('./assets/images/snacks.png'));
     }
     if (meal == "Activity") {
-      image = Image(image: AssetImage('./assets/images/activty.png'));
+      image = const Image(image: AssetImage('./assets/images/activty.png'));
     }
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         Text(
           meal,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 20,
           ),
         ),
-        SizedBox(
+        const SizedBox(
           width: 5,
         ),
         SizedBox(
@@ -440,7 +447,7 @@ class __DiaryPageState extends State<DiaryPage> {
             child: image,
           ),
         ),
-        SizedBox(
+        const SizedBox(
           width: 10,
         ),
       ],
@@ -510,25 +517,19 @@ class __DiaryPageState extends State<DiaryPage> {
                 //ask api for nutrition date:
 
                 Activity activity;
-                // fetchActivityData(
-                //         activitys.activeController.text.trim(),
-                //         widget.userModel.weight.toString(),
-                //         activitys.durationController.text.trim())
-                //     .then((value) 
-                    
-                     fetchActivityData(
-                     "    ",
-                        widget.userModel.weight.toString(),
-                       "   ")
+
+                fetchActivityData(
+                        activitys.getActivite(),
+                        widget.userModel.weight,
+                        activitys.durationController.text.trim())
                     .then((value) {
                   activity = value;
 
                   activitys.items.add(activity);
 
-                  activitys.activeController.clear();
-                  activitys.durationController.clear();
                   setState(() {
                     activitys.isAdd = !activitys.isAdd;
+                    activitys.restart();
                   });
                 });
               }
@@ -551,49 +552,109 @@ class __DiaryPageState extends State<DiaryPage> {
     return Form(
       key: meal.formKey,
       child: Row(children: [
-        SizedBox(
+        const SizedBox(
           width: 5,
         ),
         SizedBox(width: 150, child: foodfield(meal)),
-        SizedBox(
+        const SizedBox(
           width: 5,
         ),
-        SizedBox(
-          width: 120,
-          child: DropdownButtonFormField<String>(
-            decoration: InputDecoration(
-              labelText: "Measerment",
-              labelStyle: TextStyle(fontSize: 12),
-              fillColor: Colors.white,
-              filled: true,
-              contentPadding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
-              focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                  borderSide: const BorderSide(color: Colors.grey)),
-              enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                  borderSide: BorderSide(color: Colors.grey.shade400)),
-            ),
-            value: selectedMeaserment,
-            onChanged: (item) {
-              meal.measurement = item!;
-              setState(() => selectedMeaserment = item);
-            },
-            items: measurements
-                .map((item) => DropdownMenuItem<String>(
-                    value: item,
-                    child: Text(
-                      item,
-                      style: TextStyle(fontSize: 12),
-                    )))
-                .toList(),
-          ),
-        ),
-        SizedBox(
+        dropDownListChooseMeal(meal),
+        const SizedBox(
           width: 5,
         ),
         SizedBox(width: 90, child: amountfield(meal))
       ]),
+    );
+  }
+
+  SizedBox dropDownListChooseMeal(MealModel meal) {
+    return SizedBox(
+      width: 120,
+      child: DropdownButtonFormField<String>(
+        decoration: InputDecoration(
+          labelText: "Measerment",
+          labelStyle: const TextStyle(fontSize: 12),
+          fillColor: Colors.white,
+          filled: true,
+          contentPadding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+          focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10.0),
+              borderSide: const BorderSide(color: Colors.grey)),
+          enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10.0),
+              borderSide: BorderSide(color: Colors.grey.shade400)),
+        ),
+        value: selectedMeaserment,
+        onChanged: (item) {
+          meal.measurement = item!;
+          setState(() => selectedMeaserment = item);
+        },
+        items: measurements
+            .map((item) => DropdownMenuItem<String>(
+                value: item,
+                child: Text(
+                  item,
+                  style: const TextStyle(fontSize: 12),
+                )))
+            .toList(),
+      ),
+    );
+  }
+
+  dropDownListChooseActivity(ActivityList activtys, String label, int level) {
+    String value;
+    List<String> items;
+    Map<String, List<String>> apiList = activtys.getActivitesMap();
+    if (level == 1) {
+      value = activtys.type;
+      items = apiList.keys.toList();
+    } else {
+      value = apiList[activtys.type]![0];
+      items = apiList[activtys.type]!;
+    }
+
+    return DropdownButtonFormField<String>(
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: const TextStyle(fontSize: 12),
+        fillColor: Colors.white,
+        filled: true,
+        contentPadding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+        focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.0),
+            borderSide: const BorderSide(color: Colors.grey)),
+        enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.0),
+            borderSide: BorderSide(color: Colors.grey.shade400)),
+      ),
+      value: value,
+      onChanged: (item) {
+        if (level == 1) {
+          activtys.type = item!;
+        } else {
+          (activtys.subtype = item!);
+        }
+        setState(() {
+          if (level == 1) {
+            activtys.type = item;
+//     currentDay.activitys.type=value;
+          } else {
+            activtys.subtype = item;
+            //  currentDay.activitys.subtype=value;
+          }
+        });
+      },
+      items: items
+          .map((item) => DropdownMenuItem<String>(
+                value: item,
+                child:  Text(
+                      item,
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                  ),
+                )
+          .toList(),
     );
   }
 
@@ -602,11 +663,11 @@ class __DiaryPageState extends State<DiaryPage> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       mainAxisSize: MainAxisSize.max,
       children: [
-        SizedBox(width: 0),
+        const SizedBox(width: 0),
         SizedBox(width: 100, child: Text(dish.type)),
-        SizedBox(width: 100, child: Text(dish.amount + " " + dish.measurement)),
+        SizedBox(width: 100, child: Text("${dish.amount} ${dish.measurement}")),
         SizedBox(width: 50, child: Text(dish.data.getCalories().toString())),
-        SizedBox(width: 0),
+        const SizedBox(width: 0),
         SizedBox(
             width: 25,
             child: IconButton(
@@ -632,7 +693,7 @@ class __DiaryPageState extends State<DiaryPage> {
                   FontAwesomeIcons.pencil,
                   size: 20,
                 ))),
-        SizedBox(width: 5),
+        const SizedBox(width: 5),
       ],
     );
   }
@@ -643,12 +704,12 @@ class __DiaryPageState extends State<DiaryPage> {
       decoration: ThemeHelper().textInputDecorationFoodForm(
           "Dish",
           "what you ate?",
-          Icon(
+          const Icon(
             FontAwesomeIcons.utensils,
             size: 15,
           )),
       controller: meal.dishController,
-      style: TextStyle(fontSize: 12),
+      style: const TextStyle(fontSize: 12),
       validator: (value) {
         if (value!.trim().isEmpty) {
           return "Enter a dish";
@@ -673,7 +734,7 @@ class __DiaryPageState extends State<DiaryPage> {
         // )),
       ),
       controller: meal.amountController,
-      style: TextStyle(fontSize: 12),
+      style: const TextStyle(fontSize: 12),
       validator: (value) {
         if (value!.isEmpty) {
           return "Enter amount";
@@ -732,18 +793,18 @@ class __DiaryPageState extends State<DiaryPage> {
     );
   }
 
-  ActivityitemRow(String s, Activity item) {
+  ActivityitemRow(Activity item) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       mainAxisSize: MainAxisSize.max,
       children: [
-        SizedBox(width: 0),
-        SizedBox(width: 100, child: Text(s)),
+        const SizedBox(width: 0),
+        SizedBox(width: 180, child: Text(item.label.replaceAll(", ", "\n"))),
         SizedBox(
-            width: 100,
-            child: Text(item.duration.toString() + " minutes " + item.label)),
+            width: 50,
+            child: Text(item.duration.toString())),
         SizedBox(width: 50, child: Text(item.getCalories().toString())),
-        SizedBox(width: 0),
+        const SizedBox(width: 0),
         SizedBox(
             width: 25,
             child: IconButton(
@@ -768,7 +829,7 @@ class __DiaryPageState extends State<DiaryPage> {
                   FontAwesomeIcons.pencil,
                   size: 20,
                 ))),
-        SizedBox(width: 5),
+        const SizedBox(width: 5),
       ],
     );
   }
@@ -776,94 +837,48 @@ class __DiaryPageState extends State<DiaryPage> {
   addActivityItemForm(activitys) {
     return Form(
       key: activitys.formKey,
-      child: Row(children: [
+      child: Column(children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,children: [
+          SizedBox(width: 150, child: durationfield(activitys)),
+          const SizedBox(
+            width: 5,
+          ),
+          SizedBox(
+              width: 175,
+              child: dropDownListChooseActivity(activitys, "Activity", 1)),
+        ]),
+        const SizedBox(
+          height: 10,
+        ),
         SizedBox(
+          width: 330,
+          child: dropDownListChooseActivity(activitys, "Type of activity", 2),
+        ),
+        const SizedBox(
           width: 5,
         ),
-        SizedBox(width: 150, child: activityfield(activitys)),
-        SizedBox(
-          width: 5,
-        ),
-        // SizedBox(
-        //   width: 120,
-        //   child: DropdownButtonFormField<String>(
-        //     decoration: InputDecoration(
-        //       labelText: "Measerment",
-        //       labelStyle: TextStyle(fontSize: 12),
-        //       fillColor: Colors.white,
-        //       filled: true,
-        //       contentPadding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
-        //       focusedBorder: OutlineInputBorder(
-        //           borderRadius: BorderRadius.circular(10.0),
-        //           borderSide: const BorderSide(color: Colors.grey)),
-        //       enabledBorder: OutlineInputBorder(
-        //           borderRadius: BorderRadius.circular(10.0),
-        //           borderSide: BorderSide(color: Colors.grey.shade400)),
-        //     ),
-        //     value: selectedMeaserment,
-        //     onChanged: (item) {
-        //       meal.measurement = item!;
-        //       setState(() => selectedMeaserment = item);
-        //     },
-        //     items: measurements
-        //         .map((item) => DropdownMenuItem<String>(
-        //             value: item,
-        //             child: Text(
-        //               item,
-        //               style: TextStyle(fontSize: 12),
-        //             )))
-        //         .toList(),
-        //   ),
-        // ),
-        SizedBox(
-          width: 5,
-        ),
-        SizedBox(width: 90, child: durationtfield(activitys))
       ]),
     );
   }
 
-  activityfield(ActivityList activitys) {
+  durationfield(ActivityList activitys) {
     return TextFormField(
       keyboardType: TextInputType.text,
       decoration: ThemeHelper().textInputDecorationFoodForm(
-          "Activity",
-          "what you done?",
-          Icon(
-            FontAwesomeIcons.utensils,
-            size: 15,
-          )),
-      controller: activitys.activeController,
-      style: TextStyle(fontSize: 12),
-      validator: (value) {
-        // if (value!.isEmpty) {
-        //   return "Enter activity";
-        // }
-        // bool dishValidator = RegExp(r"^[a-zA-Z\s]*$").hasMatch(value);
-        // if (!dishValidator) {
-        //   return "Enter Valid dish";
-        // }
-      },
-    );
-  }
-
-  durationtfield(ActivityList activitys) {
-    return TextFormField(
-      keyboardType: TextInputType.text,
-      decoration: ThemeHelper().textInputDecorationFoodForm(
-        "Amount",
+        "Duration",
         "How much?",
-        // Icon(
-        //   FontAwesomeIcons.weightScale,
-        //   size: 15,
-        // )),
-      ),
+        Icon(
+          FontAwesomeIcons.clock,
+          size: 15,
+        )),
+      
       controller: activitys.durationController,
-      style: TextStyle(fontSize: 12),
+      style: const TextStyle(fontSize: 12),
       validator: (value) {
-        // if (value!.isEmpty) {
-        //   return "Enter amount";
-        // }
+        if (value!.isEmpty) {
+          return "Enter your duration activity";
+        }
         // bool amountValidator = RegExp(r"/^\d+$/").hasMatch(value);
         // if (!amountValidator) {
         //   return "Enter number";

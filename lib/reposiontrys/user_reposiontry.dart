@@ -105,4 +105,20 @@ build[key] = days[key]!.toJson();
 }
 return build;
 }
+
+  void updateFCMToken(String? fcmToken, String email) async{
+    // Get a new write batch
+    final batch = _db.batch();
+
+    // get the user doc
+    var snapshot =
+        await _db.collection("Users").where("email", isEqualTo: email).get();
+    final userData = snapshot.docs.map((e) => UserModel.fromSnapshot(e)).single;
+
+    //update the sessionId of user in this session
+    var userRef = _db.collection("Users").doc(userData.id);
+    batch.update(userRef, {"token": fcmToken});
+
+    batch.commit();
+  }
 }

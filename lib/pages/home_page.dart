@@ -1,31 +1,24 @@
-import 'package:bottom_bar_matu/bottom_bar/bottom_bar_bubble.dart';
-import 'package:bottom_bar_matu/bottom_bar_item.dart';
-import 'package:bottom_bar_matu/bottom_bar_label_slide/bottom_bar_label_slide.dart';
-import 'package:bottom_bar_matu/bottom_bar_matu.dart';
+import 'package:animated_widgets/widgets/rotation_animated.dart';
+import 'package:animated_widgets/widgets/shake_animated_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get/get.dart';
-import 'package:hfc/common/custom_shape.dart';
-import 'package:hfc/pages/MyRecipePage.dart';
+import 'package:hfc/models/recipe.dart';
 import 'package:hfc/pages/chat_page.dart';
 import 'package:hfc/pages/diaryPage.dart';
-import 'package:hfc/pages/goalsPage.dart';
-import 'package:hfc/pages/loader.dart';
 import 'package:hfc/pages/login_page.dart';
-import 'package:hfc/pages/widget/Header_widget.dart';
-import 'package:percent_indicator/circular_percent_indicator.dart';
-import 'package:provider/provider.dart';
-
-import '../headers/drawerHeader.dart';
+import 'package:hfc/pages/myRecipePage.dart';
+import 'package:hfc/pages/progressPage.dart';
+import '../controllers/dialogMessageController.dart';
 import '../models/user.dart';
+import '../reposiontrys/rate_reposiontry.dart';
 import '../reposiontrys/user_reposiontry.dart';
-import 'google_sign_in.dart';
 
 class HomePage extends StatefulWidget {
+  int Askpermission = 0;
+  List<RecipeModel> recipes = [];
+
+
   @override
   State<StatefulWidget> createState() {
     return __HomePageState();
@@ -44,10 +37,11 @@ class __HomePageState extends State<HomePage> {
   bool _isInitialValue = true;
   late AnimationController controller;
   var currentPage = DrawerSections.diary;
-    var container;
-
+  var container;
   var _index = 0;
   UserReposiontry userReposiontry = UserReposiontry();
+  DialogMessageController dialogMessageController = DialogMessageController();
+  RateReposiontry rateRep = RateReposiontry();
 
   @override
   Widget build(BuildContext context) {
@@ -56,19 +50,37 @@ class __HomePageState extends State<HomePage> {
           .getUserDetails(FirebaseAuth.instance.currentUser!.email!)
           .then((instance) {
         user = instance;
+
+        if (widget.Askpermission == 0) {
+          widget.Askpermission = 1;
+          dialogMessageController.updateMessagingToken(
+              userReposiontry, user.email);
+          rateRep.allLikedRecipes(user.email).then((list) => widget.recipes = list);
+        }
+
+
         if (this.mounted) {
           setState(() {
+                           //   dialogMessageController.listenToServer();
+
             isUser = true;
             email = user.email;
             name = user.fullName;
             profile = NetworkImage(user.urlImage);
-             if (currentPage == DrawerSections.diary) {
-      container = DiaryPage(userModel: user,userReposiontry:userReposiontry);
-    } else if (currentPage == DrawerSections.progress) {
-      container = GoalsPage();
-    } else if (currentPage == DrawerSections.saved_recipes) {
-      container = MyRecipePage();
-    }
+            if (currentPage == DrawerSections.diary) {
+              container =
+                  DiaryPage(userModel: user, userReposiontry: userReposiontry);
+            } else if (currentPage == DrawerSections.progress) {
+              container = ProgressPage(
+                  userModel: user, userReposiontry: userReposiontry);
+            } else if (currentPage == DrawerSections.saved_recipes) {
+              container = MyRecipePage(
+                recipes: widget.recipes,
+              );
+            }
+            else if(currentPage == DrawerSections.about_as){
+
+            }
             // if(user.isSetup == false){
             //    Navigator.pushReplacement(
             //     context, MaterialPageRoute(builder: (context) => ChatPage()));
@@ -84,8 +96,6 @@ class __HomePageState extends State<HomePage> {
   }
 
   Scaffold buildContainer(BuildContext context) {
-   
-   
     return Scaffold(
       appBar: AppBar(
         //  toolbarHeight: 200,
@@ -101,15 +111,52 @@ class __HomePageState extends State<HomePage> {
         )),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => {
-          Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => ChatPage()))
-        },
-        child: ClipOval(
-          child: bot,
-        ),
-      ),
+          onPressed: () => {
+            if(isUser == true){
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ChatPage(
+                            user: user,
+                            userReposiontry: userReposiontry,
+                            dialogController: dialogMessageController)))
+              }
+          },
+          child: Stack(children: [
+            ClipOval(
+              child: bot,
+            ),
+            dialogMessageController.isWaitedMessages == true ||
+                    (isUser == true && user.fillDetails == false)
+                ? notificationBell()
+                : SizedBox()
+          ])),
     );
+  }
+
+  Positioned notificationBell() {
+    return Positioned(
+        bottom: 0,
+        right: 0,
+        height: 18,
+        width: 18,
+        child: ClipOval(
+          child: Material(
+            color: Colors.green[200],
+            child: Center(
+              child: ShakeAnimatedWidget(
+                  //enabled: this._enabled,
+                  duration: const Duration(milliseconds: 2000),
+                  shakeAngle: Rotation.deg(z: 30),
+                  curve: Curves.linear,
+                  child: const FaIcon(
+                    FontAwesomeIcons.bell,
+                    color: Colors.white,
+                    size: 12,
+                  )),
+            ),
+          ),
+        ));
   }
 
   ClipOval floatingActionDesign() {
@@ -159,25 +206,26 @@ class __HomePageState extends State<HomePage> {
         // menuItem(5, "About As", FontAwesomeIcons.circleInfo,
         //     currentPage == DrawerSections.about_as ? true : false),
         Divider(),
-        menuItem(5, "Log Out", FontAwesomeIcons.doorOpen,
+        menuItem(5, "About As", FontAwesomeIcons.circleInfo,
+            currentPage == DrawerSections.logout ? true : false),
+        menuItem(6, "Log Out", FontAwesomeIcons.doorOpen,
             currentPage == DrawerSections.logout ? true : false),
       ]),
     );
   }
 
-  Widget menuItem(int id, String title, IconData icon, bool selected ) {
+  Widget menuItem(int id, String title, IconData icon, bool selected) {
     return Material(
       color: selected ? Colors.grey[300] : Colors.transparent,
       child: InkWell(
-          onTap: 
-          () {
+          onTap: () {
             Navigator.pop(context);
-               if (id == 5) {
-                               FirebaseAuth.instance.signOut();
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) => LoginPage()));
-                 // currentPage = DrawerSections.logout;
-                }
+            if (id == 6) {
+              FirebaseAuth.instance.signOut();
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => LoginPage()));
+              // currentPage = DrawerSections.logout;
+            }
             if (this.mounted) {
               setState(() {
                 if (id == 1) {
@@ -188,9 +236,13 @@ class __HomePageState extends State<HomePage> {
                 } else if (id == 3) {
                   currentPage = DrawerSections.saved_recipes;
                 } else if (id == 4) {
-                  currentPage = DrawerSections.saved_menus;}
-               });
-          }
+                  currentPage = DrawerSections.saved_menus;
+                
+                } else if (id == 5) {
+                  currentPage = DrawerSections.about_as;
+                }
+              });
+            }
           },
           child: Padding(
             padding: const EdgeInsets.all(15.0),
@@ -259,4 +311,4 @@ class __HomePageState extends State<HomePage> {
   }
 }
 
-enum DrawerSections { diary, progress, saved_recipes, saved_menus, logout }
+enum DrawerSections { diary, progress, saved_recipes, saved_menus,about_as, logout }

@@ -35,7 +35,15 @@ class Day {
     for (var meal in meals) {
       used += meal.getCalories();
     }
-    double result = daily - used;
+    double result = daily + activitys.getCalories();
+    return result;
+  }
+   getRemainCalories(double daily) {
+    double used = 0;
+    for (var meal in meals) {
+      used += meal.getCalories();
+    }
+    double result = daily - used + activitys.getCalories();
     return result;
   }
 
@@ -62,6 +70,7 @@ class Day {
     }
     return used;
   }
+
 }
 getDayMeals(){return [
     MealModel(type: 'Breakfast',dishes: []),
