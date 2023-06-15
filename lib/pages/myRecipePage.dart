@@ -30,12 +30,19 @@ class __MyRecipePageState extends State<MyRecipePage> {
       recipeControllers.add(RecipeWidgetController(recipe: r));
     }
 
-    if (widget.recipes.isEmpty == false) {
-      return Column(
+    
+      return Scaffold(
+        body: SingleChildScrollView(child:Column(
         children: [
-          circleHeader(context, Text("Recipes:")),
+          circleHeader(context, Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [ Text("Recipes:" ,style: const TextStyle(
+                            color: Colors.white, fontSize: 20),
+                      )]
+          )),
            SizedBox(
-            height: 500,
+            height: 700,
              child: ListView.separated(
                   scrollDirection: Axis.vertical,
                   padding: const EdgeInsets.all(8),
@@ -54,30 +61,8 @@ class __MyRecipePageState extends State<MyRecipePage> {
            ),
           
         ],
-      );
-    } else {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            Text(
-              "You haven't fill your personal details yet",
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
-            ),
-            SizedBox(
-                height: 300,
-                child:
-                    Image(image: AssetImage('./assets/images/splash_bot.png'))),
-            SizedBox(
-              height: 30,
-            ),
-            Text("Fill your details in the chat bot",
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700))
-          ],
-        ),
-      );
-    }
+      )));
+    
+   
   }
 }

@@ -198,17 +198,16 @@ class __HomePageState extends State<HomePage> {
             currentPage == DrawerSections.progress ? true : false),
         menuItem(3, "Saved Recipes", FontAwesomeIcons.bowlFood,
             currentPage == DrawerSections.saved_recipes ? true : false),
-        menuItem(4, "Saved Menus", FontAwesomeIcons.tableColumns,
-            currentPage == DrawerSections.saved_menus ? true : false),
+      
         // Divider(),
         // menuItem(4, "Settings", FontAwesomeIcons.gear,
         //     currentPage == DrawerSections.settings ? true : false),
         // menuItem(5, "About As", FontAwesomeIcons.circleInfo,
         //     currentPage == DrawerSections.about_as ? true : false),
         Divider(),
-        menuItem(5, "About As", FontAwesomeIcons.circleInfo,
+        menuItem(4, "About As", FontAwesomeIcons.circleInfo,
             currentPage == DrawerSections.logout ? true : false),
-        menuItem(6, "Log Out", FontAwesomeIcons.doorOpen,
+        menuItem(5, "Log Out", FontAwesomeIcons.doorOpen,
             currentPage == DrawerSections.logout ? true : false),
       ]),
     );
@@ -235,10 +234,8 @@ class __HomePageState extends State<HomePage> {
                   currentPage = DrawerSections.progress;
                 } else if (id == 3) {
                   currentPage = DrawerSections.saved_recipes;
+            
                 } else if (id == 4) {
-                  currentPage = DrawerSections.saved_menus;
-                
-                } else if (id == 5) {
                   currentPage = DrawerSections.about_as;
                 }
               });
@@ -311,4 +308,4 @@ class __HomePageState extends State<HomePage> {
   }
 }
 
-enum DrawerSections { diary, progress, saved_recipes, saved_menus,about_as, logout }
+enum DrawerSections { diary, progress, saved_recipes,about_as, logout }

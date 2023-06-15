@@ -45,6 +45,8 @@ class __ChatPageState extends State<ChatPage> {
   //bool isUser = false;
 
   var isOnce = true;
+  
+  bool isDialog =false;
 
   @override
   void initState() {
@@ -55,7 +57,7 @@ class __ChatPageState extends State<ChatPage> {
           .then((instance) {
         if (this.mounted) {
           setState(() {
-            // isUser = true;
+            isDialog = true;
             buildPreviousMessages(widget.user.conversation);
 
             // previous_messages = buildPreviousMessages(user.convresation);
@@ -256,6 +258,7 @@ class __ChatPageState extends State<ChatPage> {
 
   fillDetails() async {
     var query = QueryInput(text: TextInput(text: 'personal details'));
+    if(isDialog == true){
     DetectIntentResponse response =
         await dialogFlowtter.detectIntent(queryInput: query);
     if (this.mounted) {
@@ -264,7 +267,8 @@ class __ChatPageState extends State<ChatPage> {
         addMessage(response.message!);
       });
     }
-    //}
+    }
+    
   }
 
   addMessage(Message message, [bool isUserMessage = false]) {
