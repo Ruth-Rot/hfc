@@ -109,7 +109,7 @@ class UserModel {
         conversation: data["conversation"],
         dailyCalories: data["daily_calories"],
         diary: days,
-        weight: double.parse(data["weight"]),
-        height: double.parse(data["height"]));
+        weight: data["weight"].runtimeType == double? data["weight"]:double.parse(data["weight"]),
+        height: data["height"].runtimeType == double? data["height"]:double.parse(data["height"]));
   }
 }
