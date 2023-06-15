@@ -18,7 +18,6 @@ class HomePage extends StatefulWidget {
   int Askpermission = 0;
   List<RecipeModel> recipes = [];
 
-
   @override
   State<StatefulWidget> createState() {
     return __HomePageState();
@@ -55,13 +54,14 @@ class __HomePageState extends State<HomePage> {
           widget.Askpermission = 1;
           dialogMessageController.updateMessagingToken(
               userReposiontry, user.email);
-          rateRep.allLikedRecipes(user.email).then((list) => widget.recipes = list);
+          rateRep
+              .allLikedRecipes(user.email)
+              .then((list) => widget.recipes = list);
         }
-
 
         if (this.mounted) {
           setState(() {
-                           //   dialogMessageController.listenToServer();
+            //   dialogMessageController.listenToServer();
 
             isUser = true;
             email = user.email;
@@ -77,10 +77,7 @@ class __HomePageState extends State<HomePage> {
               container = MyRecipePage(
                 recipes: widget.recipes,
               );
-            }
-            else if(currentPage == DrawerSections.about_as){
-
-            }
+            } else if (currentPage == DrawerSections.about_as) {}
             // if(user.isSetup == false){
             //    Navigator.pushReplacement(
             //     context, MaterialPageRoute(builder: (context) => ChatPage()));
@@ -112,16 +109,17 @@ class __HomePageState extends State<HomePage> {
       ),
       floatingActionButton: FloatingActionButton(
           onPressed: () => {
-            if(isUser == true){
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => ChatPage(
-                            user: user,
-                            userReposiontry: userReposiontry,
-                            dialogController: dialogMessageController)))
-              }
-          },
+                if (isUser == true)
+                  {
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ChatPage(
+                                user: user,
+                                userReposiontry: userReposiontry,
+                                dialogController: dialogMessageController)))
+                  }
+              },
           child: Stack(children: [
             ClipOval(
               child: bot,
@@ -198,7 +196,7 @@ class __HomePageState extends State<HomePage> {
             currentPage == DrawerSections.progress ? true : false),
         menuItem(3, "Saved Recipes", FontAwesomeIcons.bowlFood,
             currentPage == DrawerSections.saved_recipes ? true : false),
-      
+
         // Divider(),
         // menuItem(4, "Settings", FontAwesomeIcons.gear,
         //     currentPage == DrawerSections.settings ? true : false),
@@ -207,9 +205,40 @@ class __HomePageState extends State<HomePage> {
         Divider(),
         menuItem(4, "About As", FontAwesomeIcons.circleInfo,
             currentPage == DrawerSections.logout ? true : false),
-        menuItem(5, "Log Out", FontAwesomeIcons.doorOpen,
+        LogOut(5, "Log Out", FontAwesomeIcons.doorOpen,
             currentPage == DrawerSections.logout ? true : false),
       ]),
+    );
+  }
+
+  LogOut(int id, String title, IconData icon, bool selected) {
+    return Material(
+      color: selected ? Colors.grey[300] : Colors.transparent,
+      child: InkWell(
+          onTap: () {
+            Navigator.pop(context);
+
+            FirebaseAuth.instance.signOut();
+            Navigator.pushReplacement(
+                context, MaterialPageRoute(builder: (context) => LoginPage()));
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Row(
+              children: [
+                Expanded(
+                    child: Icon(
+                  icon,
+                  size: 20,
+                  color: Colors.black,
+                )),
+                Expanded(
+                    flex: 3,
+                    child: Text(title,
+                        style: TextStyle(color: Colors.black, fontSize: 16)))
+              ],
+            ),
+          )),
     );
   }
 
@@ -234,7 +263,6 @@ class __HomePageState extends State<HomePage> {
                   currentPage = DrawerSections.progress;
                 } else if (id == 3) {
                   currentPage = DrawerSections.saved_recipes;
-            
                 } else if (id == 4) {
                   currentPage = DrawerSections.about_as;
                 }
@@ -308,4 +336,4 @@ class __HomePageState extends State<HomePage> {
   }
 }
 
-enum DrawerSections { diary, progress, saved_recipes,about_as, logout }
+enum DrawerSections { diary, progress, saved_recipes, about_as, logout }
