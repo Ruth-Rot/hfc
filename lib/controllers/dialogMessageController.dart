@@ -16,6 +16,8 @@ class DialogMessageController  extends GetxController{
   late bool sentPlanMeal = false;
  // late int counterMeal = 0;
   late Map<String,dynamic> meal_plan ={};
+  late String meal_plan_text = "";
+
 
 
   DialogMessageController();

@@ -84,24 +84,34 @@ class __ChatPageState extends State<ChatPage> {
             controller.isWaitedRecipe = true;
           });
         }
+         if (message.data['request'] == 'text') {
+          print("text");
+          setState(() {
+        //    if (controller.startSendMeal == false) {
+
+              controller.startSendMeal = true;
+              controller.meal_plan = {};
+            controller.meal_plan_text = message.data["text"];
+       //     }
+          });
+        }
         if (message.data['request'] == 'meal_plan') {
           setState(() {
             print(message.data);
-            if (controller.startSendMeal == false) {
-              controller.startSendMeal = true;
-              controller.meal_plan = {};
+            // if (controller.startSendMeal == false) {
+            //   controller.startSendMeal = true;
+            //   controller.meal_plan = {};
+            //   controller.meal_plan[message.data['currentMessage']] =
+            //       message.data['card'];
+
+            //   //controller.counterMeal++;
+            // } else {
               controller.meal_plan[message.data['currentMessage']] =
                   message.data['card'];
-
-              //controller.counterMeal++;
-            } else {
-              controller.meal_plan[message.data['currentMessage']] =
-                  message.data['card'];
-
               if (controller.meal_plan.length.toString() ==
                   message.data['messagesNumber'].toString()) {
                 controller.sentPlanMeal = true;
-              }
+             // }
             }
           });
         }
@@ -249,7 +259,9 @@ class __ChatPageState extends State<ChatPage> {
           .contains("I'm making the plan for you, it may take some time.") ) {
         if (this.mounted) {
           setState(() {
+            Future.delayed(Duration(milliseconds: 30), () {
             addMessage(loadMessage);
+            });
           });
         }
       }
@@ -304,13 +316,17 @@ class __ChatPageState extends State<ChatPage> {
       widget.dialogController.isWaitedRecipe = false;
     }
     if (widget.dialogController.sentPlanMeal == true) {
+      
       String req =
           jsonEncode(addMealPlanToMessages(widget.dialogController.meal_plan));
       setState(() {
-         messages[messages.length - 1]['message'] = 
-        Message(text: DialogText(text: [req]));
+        messages[messages.length - 1]['message'] = 
+        Message(text: DialogText(text: [widget.dialogController.meal_plan_text]));
+       addMessage(Message(
+            text: DialogText(
+                text: [req])));
+      widget.dialogController.sentPlanMeal = false;
       });
-      widget.dialogController.startSendMeal = false;
     }
   }
 

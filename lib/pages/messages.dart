@@ -358,15 +358,17 @@ Center(
 
   buildMealPlan(Map<String, dynamic> json, message) {
     json.remove("request");
+    // String text = json["text"];
+    // json.remove("text");
     //int day=1;
     return Column(
       children: [
-        Align(
-            alignment: Alignment.centerLeft,
-            child: Text("Here is your meals plan:")),
-        SizedBox(
-          height: 5,
-        ),
+        // Align(
+        //     alignment: Alignment.centerLeft,
+        //     child: Text(text)),
+        // SizedBox(
+        //   height: 5,
+        // ),
         SizedBox(
             height: 670,
             width: 380,
