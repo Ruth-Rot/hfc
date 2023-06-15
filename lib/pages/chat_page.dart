@@ -270,7 +270,7 @@ class __ChatPageState extends State<ChatPage> {
 
   fillDetails() async {
     var query = QueryInput(text: TextInput(text: 'personal details'));
-    if(isDialog == true){
+    
     DetectIntentResponse response =
         await dialogFlowtter.detectIntent(queryInput: query);
     if (this.mounted) {
@@ -278,7 +278,7 @@ class __ChatPageState extends State<ChatPage> {
       setState(() {
         addMessage(response.message!);
       });
-    }
+    
     }
     
   }
@@ -288,9 +288,11 @@ class __ChatPageState extends State<ChatPage> {
   }
 
   checkStart() async {
+    if(isDialog == true){
     if (widget.user.fillDetails == false && isOnce == true) {
       fillDetails();
       isOnce = false;
+    }
     }
   }
 
