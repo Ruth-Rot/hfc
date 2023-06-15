@@ -37,7 +37,7 @@ class __MyRecipePageState extends State<MyRecipePage> {
           circleHeader(context, Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: [ Text("Recipes:" ,style: const TextStyle(
+                    children: [ Text("My Recipes" ,style: const TextStyle(
                             color: Colors.white, fontSize: 20),
                       )]
           )),
