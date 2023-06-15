@@ -259,9 +259,9 @@ class __ChatPageState extends State<ChatPage> {
           .contains("I'm making the plan for you, it may take some time.") ) {
         if (this.mounted) {
           setState(() {
-            Future.delayed(Duration(milliseconds: 30), () {
+            Future.delayed(Duration(milliseconds: 5), () {
             addMessage(loadMessage);
-            });
+             });
           });
         }
       }

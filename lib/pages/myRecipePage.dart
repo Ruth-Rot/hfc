@@ -41,24 +41,27 @@ class __MyRecipePageState extends State<MyRecipePage> {
                             color: Colors.white, fontSize: 20),
                       )]
           )),
-           SizedBox(
-            height: 700,
-             child: ListView.separated(
-                  scrollDirection: Axis.vertical,
-                  padding: const EdgeInsets.all(8),
-                  itemCount: widget.recipes.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return SizedBox(
-                        height: recipeControllers[index].getHeight() + 20.0,
-                        child: recipeCard2(
-                          recipeController: recipeControllers[index],
-                        ));
-                  },
-                  separatorBuilder: (BuildContext context, int index) =>
-                      const SizedBox(
-                        height: 5,
-                      )),
-           ),
+            SizedBox(
+              height: 700,
+               child: ListView.separated(
+                    scrollDirection: Axis.vertical,
+                    padding: const EdgeInsets.all(8),
+                    itemCount: widget.recipes.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Center(
+                        child: SizedBox(
+                            height: recipeControllers[index].getHeight() + 20.0,
+                            child: recipeCard2(
+                              recipeController: recipeControllers[index],
+                            )),
+                      );
+                    },
+                    separatorBuilder: (BuildContext context, int index) =>
+                        const SizedBox(
+                          height: 5,
+                        )),
+             ),
+           
           
         ],
       )));
