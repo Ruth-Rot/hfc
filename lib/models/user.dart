@@ -21,6 +21,8 @@ class UserModel {
   late double weight;
   late double height;
   late Map<String, Day> diary;
+  late String purpose;
+  late String activity_level;
 
   UserModel({
     this.id,
@@ -35,6 +37,8 @@ class UserModel {
     required this.diary,
     required this.weight,
     required this.height,
+    required this.purpose,
+    required this.activity_level
   });
   toJson() {
     return {
@@ -48,7 +52,9 @@ class UserModel {
       "daily_calories": dailyCalories,
       "diary": diary,
       "weight": weight,
-      "height": height
+      "height": height,
+      "purpose": purpose,
+      "activity_level":activity_level
     };
   }
 
@@ -110,6 +116,10 @@ class UserModel {
         dailyCalories: data["daily_calories"],
         diary: days,
         weight: data["weight"].runtimeType == double? data["weight"]:double.parse(data["weight"]),
-        height: data["height"].runtimeType == double? data["height"]:double.parse(data["height"]));
+        height: data["height"].runtimeType == double? data["height"]:double.parse(data["height"]),
+       purpose: data["purpose"],
+        activity_level:data["activity_level"]);
+     
+
   }
 }

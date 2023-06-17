@@ -247,6 +247,7 @@ class __HomePageState extends State<HomePage> {
       color: selected ? Colors.grey[300] : Colors.transparent,
       child: InkWell(
           onTap: () {
+            
             Navigator.pop(context);
             if (id == 6) {
               FirebaseAuth.instance.signOut();

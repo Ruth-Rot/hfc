@@ -59,6 +59,8 @@ class __DiaryPageState extends State<DiaryPage> {
     super.dispose();
   }
 
+  
+
   @override
   void initState() {
     super.initState();
@@ -69,6 +71,8 @@ class __DiaryPageState extends State<DiaryPage> {
     } else {
       currentDay = days[dateS]!;
     }
+        widget.userReposiontry.updateDiary(days, widget.userModel.email);
+
   }
 
   @override

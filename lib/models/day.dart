@@ -46,6 +46,9 @@ class Day {
     double result = daily - used + activitys.getCalories();
     return result;
   }
+  getDailyConsumptionCkal(double daily){
+    return getDailyCalories(daily)-getRemainCalories(daily);
+  }
 
   getDailyProtein() {
     double used = 0;
