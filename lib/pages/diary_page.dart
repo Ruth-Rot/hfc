@@ -1011,7 +1011,7 @@ class __DiaryPageState extends State<DiaryPage> {
               child: Column(
                 children: [
                   const Text(
-                    'Here you can edit the nutriton values of this dish\n',
+                    'Here you can edit the ckal you burn in this activity\n',
                     textAlign: TextAlign.center,
                   ),
                   nutritonField(
