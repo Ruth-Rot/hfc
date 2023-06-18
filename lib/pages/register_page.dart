@@ -49,6 +49,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
   late File img;
   late String imageUrl;
 
+  bool _errorS = false;
+    String _error = "";
+
+
+
   var credential;
   @override
   void dispose() {
@@ -69,116 +74,118 @@ class _RegistrationPageState extends State<RegistrationPage> {
             height: 150,
             child: HeaderWidget(150, false, Icons.person_add_alt_1_rounded),
           ),
-          Container(
-            margin: const EdgeInsets.fromLTRB(25, 50, 25, 10),
-            padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-            alignment: Alignment.center,
-            child: Column(children: [
-              Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const SizedBox(height: 10),
+          Column(
+            children: [
+              Container(
+                margin: const EdgeInsets.fromLTRB(25, 50, 25, 10),
+                padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                alignment: Alignment.center,
+                child: Column(children: [
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const SizedBox(height: 10),
 
-                    //picture:
-                    imageProfile(),
-                    const SizedBox(height: 50),
-                    //gender:
-                    genderToggle(),
-                    const SizedBox(height: 40),
-                    //full name:
-                    fullName(),
-                    const SizedBox(height: 30),
-                    //email:
-                    email(),
-                    const SizedBox(height: 30),
-                    //password:
-                    password(),
-                    const SizedBox(height: 30),
-                    //accept terms:
-                    terms(context),
-                    const SizedBox(height: 10.0),
-                    //submit:
-                    Container(
-                        decoration: ThemeHelper().buttonBoxDecoration(context),
-                        child: ElevatedButton(
-                          style: ThemeHelper().buttonStyle(),
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(40, 10, 40, 10),
-                            child: Text(
-                              "Sign In".toUpperCase(),
-                              style: const TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
-                            ),
-                          ),
-                          onPressed: () async {
-                            // Validate returns true if the form is valid, or false otherwise.
-                            if (_formKey.currentState!.validate()) {
-                              // If the form is valid, display a snackbar. In the real world,
-                              // you'd often call a server or save the information in a database.
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Loader()));
-                              signUpByEmailAndPassword();
-                              FirebaseAuth.instance
-                                  .authStateChanges()
-                                  .listen((User? user) async {
-                                if (user != null) {
-                                  final user = await addUserDetails();
-                                  Navigator.pop(context);
-                                  Navigator.pushReplacement(
+                        //picture:
+                        imageProfile(),
+                        const SizedBox(height: 50),
+                        //gender:
+                        genderToggle(),
+                        const SizedBox(height: 40),
+                        //full name:
+                        fullName(),
+                        const SizedBox(height: 30),
+                        //email:
+                        email(),
+                        const SizedBox(height: 30),
+                        //password:
+                        password(),
+                        const SizedBox(height: 30),
+                        //accept terms:
+                        terms(context),
+                        const SizedBox(height: 10.0),
+                        //submit:
+                        Container(
+                            decoration: ThemeHelper().buttonBoxDecoration(context),
+                            child: ElevatedButton(
+                              style: ThemeHelper().buttonStyle(),
+                              child: Padding(
+                                padding: const EdgeInsets.fromLTRB(40, 10, 40, 10),
+                                child: Text(
+                                  "Sign In".toUpperCase(),
+                                  style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white),
+                                ),
+                              ),
+                              onPressed: () async {
+                                // Validate returns true if the form is valid, or false otherwise.
+                                if (_formKey.currentState!.validate()) {
+                                  // If the form is valid, display a snackbar. In the real world,
+                                  // you'd often call a server or save the information in a database.
+                                  
+                                  signUpByEmailAndPassword().then((instance){
+                                    if(instance == true){
+                                      Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => HomePage()));
-                                } else {
-                                  print('User is currently signed out!');
-
-                                  //    Navigator.pop(context);
-                                  // Navigator.pushReplacement(
-                                  //     context,
-                                  //     MaterialPageRoute(
-                                  //         builder: (context) =>
-                                  //             RegistrationPage()));
-                                }
-                              });
-                            }
-                          },
-                        )),
-                    const SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Already have an account?',
-                          style: TextStyle(color: Colors.grey[700]),
-                        ),
-                        const SizedBox(width: 4),
-                        GestureDetector(
-                          child: Text(
-                            'Login now',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Theme.of(context).colorScheme.secondary),
-                          ),
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => LoginPage()));
-                          },
-                        ),
+                                          builder: (context) => Loader()));
+                                  FirebaseAuth.instance
+                                      .authStateChanges()
+                                      .listen((User? user) async {
+                                    if (user != null) {
+                                      final user = await addUserDetails();
+                                      Navigator.pop(context);
+                                      Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => HomePage()));
+                                    } else {
+                                      print('User is currently signed out!');
+                                    }});
+                                }});}
+                              }
+                    )),
+                        const SizedBox(height: 20),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Already have an account?',
+                              style: TextStyle(color: Colors.grey[700]),
+                            ),
+                            const SizedBox(width: 4),
+                            GestureDetector(
+                              child: Text(
+                                'Login now',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Theme.of(context).colorScheme.secondary),
+                              ),
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => LoginPage()));
+                              },
+                            ),
+                          ],
+                        )
                       ],
-                    )
-                  ],
-                ),
-              )
-            ]),
+                    ),
+                  )
+                ]),
+                
+              ),
+                                  showAlert()
+
+            ],
           ),
+
         ],
       )),
     );
@@ -463,16 +470,22 @@ class _RegistrationPageState extends State<RegistrationPage> {
   }
 
 //create user
-  signUpByEmailAndPassword() async {
+  Future<bool> signUpByEmailAndPassword() async {
     try {
       credential = await _auth.createUserWithEmailAndPassword(
           email: controller.email.text.trim(),
           password: controller.password.text.trim());
     } on FirebaseAuthException catch (e) {
-      print('Failed with error code: ${e.code}');
-      print(e.message);
+      setState(() {
+        _errorS = true;
+        _error = e.message!;
+      });
+      return false;
+      // print('Failed with error code: ${e.code}');
+      // print(e.message);
     }
     print(credential);
+    return true;
   }
 
   //show popup dialog
@@ -563,5 +576,28 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
     final rep = UserReposiontry();
     await rep.createUser(user);
+  }
+
+  Widget showAlert() {
+    if (_errorS) {
+      return Container(
+        color: Colors.amberAccent,
+        width: double.infinity,
+        padding: EdgeInsets.all(8.0),
+        child: Row(
+          children: [
+            Icon(Icons.error_outline),
+            SizedBox(
+              width: 10.0,
+            ),
+            Expanded(
+                child: Text(
+              _error,
+            ))
+          ],
+        ),
+      );
+    }
+    return SizedBox(height: 0.0);
   }
 }
