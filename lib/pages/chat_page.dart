@@ -233,8 +233,6 @@ class __ChatPageState extends State<ChatPage> {
         color: Colors.white70,
       ),
       onPressed: () {
-        UserReposiontry()
-            .saveMessages(previous_messages + messages, widget.user.email);
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => HomePage()));
       },
@@ -262,6 +260,9 @@ class __ChatPageState extends State<ChatPage> {
           addMessage(response.message!);
         });
       }
+      //save messages in firebase:
+       UserReposiontry()
+            .saveMessages(previous_messages + messages, widget.user.email);
       if (response.message!.text!.text![0]
           .contains("the server working on it.") || response.message!.text!.text![0]
           .contains("I'm making the plan for you, it may take some time.") ) {
@@ -287,6 +288,9 @@ class __ChatPageState extends State<ChatPage> {
         addMessage(response.message!);
       });
     
+     //save messages in firebase:
+       UserReposiontry()
+            .saveMessages(previous_messages + messages, widget.user.email);
     }
     
   }
@@ -325,6 +329,9 @@ class __ChatPageState extends State<ChatPage> {
             text: DialogText(
                 text: [widget.dialogController.recipeMessage['text']])));
       });
+       //save messages in firebase:
+       UserReposiontry()
+            .saveMessages(previous_messages + messages, widget.user.email);
               }
       widget.dialogController.isWaitedRecipe = false;
     }
@@ -340,6 +347,9 @@ class __ChatPageState extends State<ChatPage> {
        addMessage(Message(
             text: DialogText(
                 text: [req])));
+                 //save messages in firebase:
+       UserReposiontry()
+            .saveMessages(previous_messages + messages, widget.user.email);
       widget.dialogController.sentPlanMeal = false;
       });
                   }
