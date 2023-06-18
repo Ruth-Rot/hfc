@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:hfc/models/recipe.dart';
 
 class RecipeWidgetController {

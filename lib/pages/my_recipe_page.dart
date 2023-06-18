@@ -1,9 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:hfc/common/circleHeader.dart';
-import 'package:hfc/common/recipeCard2.dart';
-import 'package:hfc/models/recipeWidgetController.dart';
+import 'package:hfc/common/circle_header.dart';
+import 'package:hfc/common/recipe_card.dart';
+import 'package:hfc/models/recipe_widget_controller.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../models/recipe.dart';
 
@@ -51,7 +51,7 @@ class __MyRecipePageState extends State<MyRecipePage> {
                       return Center(
                         child: SizedBox(
                             height: recipeControllers[index].getHeight() + 20.0,
-                            child: recipeCard2(
+                            child: RecipeCard(
                               recipeController: recipeControllers[index],
                             )),
                       );

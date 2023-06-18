@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 
 class RecipeModel {
   final String? id;
@@ -104,6 +103,6 @@ class RecipeModel {
   }
 
   getLabels() {
-    return new List.from(healthLabels)..addAll(dietLabels);
+    return List.from(healthLabels)..addAll(dietLabels);
   }
 }

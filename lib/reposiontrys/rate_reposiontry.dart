@@ -1,13 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:hfc/models/recipe.dart';
-import 'package:hfc/models/user.dart';
 
 import '../models/rate.dart';
 
-class RateReposiontry extends GetxController {
-  static RateReposiontry get instance => Get.find();
+class RateReposiontry{
 
   final _db = FirebaseFirestore.instance;
 

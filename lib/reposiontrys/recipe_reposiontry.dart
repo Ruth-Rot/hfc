@@ -1,12 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+
 import 'package:hfc/models/recipe.dart';
 import 'package:hfc/models/user.dart';
 
-class RecipeReposiontry extends GetxController{
-static RecipeReposiontry get instance => Get.find();
-
+class RecipeReposiontry{
+ 
 final _db = FirebaseFirestore.instance;
 
 // createRecipe(RecipeModel recipe) async{

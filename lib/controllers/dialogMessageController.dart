@@ -1,13 +1,11 @@
 import 'package:dialog_flowtter/dialog_flowtter.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 import '../reposiontrys/user_reposiontry.dart';
 
 
-class DialogMessageController  extends GetxController{
-  static DialogMessageController get instance => Get.find();
+class DialogMessageController  {
   Key? key;
   late bool isWaitedMessages = false;
   late bool isWaitedRecipe = false;

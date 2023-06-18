@@ -1,10 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:get/get.dart';
 import 'package:hfc/models/day.dart';
 import 'package:hfc/models/user.dart';
 
-class UserReposiontry extends GetxController {
-  static UserReposiontry get instance => Get.find();
+class UserReposiontry {
 
   final _db = FirebaseFirestore.instance;
 

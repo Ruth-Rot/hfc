@@ -9,11 +9,9 @@ import 'package:hfc/controllers/dialogMessageController.dart';
 import 'package:hfc/pages/home_page.dart';
 import 'package:hfc/reposiontrys/dialog_reposiontry.dart';
 import '../controllers/messageChatController.dart';
-import '../models/rate.dart';
-import '../models/recipe.dart';
+
 import '../models/user.dart';
-import '../reposiontrys/rate_reposiontry.dart';
-import '../reposiontrys/recipe_reposiontry.dart';
+
 import '../reposiontrys/user_reposiontry.dart';
 import 'messages.dart';
 
@@ -55,7 +53,7 @@ class __ChatPageState extends State<ChatPage> {
       UserReposiontry()
           .updateSessionId(dialogFlowtter.sessionId, widget.user.email)
           .then((instance) {
-        if (this.mounted) {
+        if (mounted) {
           setState(() {
             isDialog = true;
             buildPreviousMessages(widget.user.conversation);
@@ -79,13 +77,18 @@ class __ChatPageState extends State<ChatPage> {
         print('Message also contained a notification: ${message.notification}');
       } else {
         if (message.data['request'] == 'recipe') {
+                  if (mounted) {
+
           setState(() {
             controller.recipeMessage = message.data;
             controller.isWaitedRecipe = true;
           });
+                  }
         }
          if (message.data['request'] == 'text') {
           print("text");
+                  if (mounted) {
+
           setState(() {
         //    if (controller.startSendMeal == false) {
 
@@ -93,9 +96,13 @@ class __ChatPageState extends State<ChatPage> {
               controller.meal_plan = {};
             controller.meal_plan_text = message.data["text"];
        //     }
+
           });
+                  }
         }
         if (message.data['request'] == 'meal_plan') {
+                  if (mounted) {
+
           setState(() {
             print(message.data);
             // if (controller.startSendMeal == false) {
@@ -114,6 +121,7 @@ class __ChatPageState extends State<ChatPage> {
              // }
             }
           });
+                  }
         }
       }
     });
@@ -237,7 +245,7 @@ class __ChatPageState extends State<ChatPage> {
     if (text.isEmpty) {
       print('Message is empty');
     } else {
-      if (this.mounted) {
+      if (mounted) {
         setState(() {
           var mes = Message(text: DialogText(text: [text]));
           addMessage(mes, true);
@@ -249,7 +257,7 @@ class __ChatPageState extends State<ChatPage> {
           await dialogFlowtter.detectIntent(queryInput: query);
       if (response.message == null) return;
 
-      if (this.mounted) {
+      if (mounted) {
         setState(() {
           addMessage(response.message!);
         });
@@ -257,7 +265,7 @@ class __ChatPageState extends State<ChatPage> {
       if (response.message!.text!.text![0]
           .contains("the server working on it.") || response.message!.text!.text![0]
           .contains("I'm making the plan for you, it may take some time.") ) {
-        if (this.mounted) {
+        if (mounted) {
           setState(() {
             Future.delayed(Duration(milliseconds: 5), () {
             addMessage(loadMessage);
@@ -273,7 +281,7 @@ class __ChatPageState extends State<ChatPage> {
     
     DetectIntentResponse response =
         await dialogFlowtter.detectIntent(queryInput: query);
-    if (this.mounted) {
+    if (mounted) {
       if (response.message == null) return;
       setState(() {
         addMessage(response.message!);
@@ -307,6 +315,8 @@ class __ChatPageState extends State<ChatPage> {
 
   void checkWaitedRecipe() {
     if (widget.dialogController.isWaitedRecipe == true) {
+              if (mounted) {
+
       setState(() {
         messages[messages.length - 1]['message'] = Message(
             text: DialogText(
@@ -315,12 +325,15 @@ class __ChatPageState extends State<ChatPage> {
             text: DialogText(
                 text: [widget.dialogController.recipeMessage['text']])));
       });
+              }
       widget.dialogController.isWaitedRecipe = false;
     }
     if (widget.dialogController.sentPlanMeal == true) {
       
       String req =
           jsonEncode(addMealPlanToMessages(widget.dialogController.meal_plan));
+                  if (mounted) {
+
       setState(() {
         messages[messages.length - 1]['message'] = 
         Message(text: DialogText(text: [widget.dialogController.meal_plan_text]));
@@ -329,6 +342,7 @@ class __ChatPageState extends State<ChatPage> {
                 text: [req])));
       widget.dialogController.sentPlanMeal = false;
       });
+                  }
     }
   }
 

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:hfc/common/circleHeader.dart';
+import 'package:hfc/common/circle_header.dart';
 import 'package:hfc/models/activitysList.dart';
 import 'package:hfc/models/dish.dart';
 import 'package:hfc/models/user.dart';
 import 'package:hfc/reposiontrys/user_reposiontry.dart';
 import 'package:intl/intl.dart';
-import '../common/radialProgress.dart';
-import '../common/stickProgress.dart';
+import '../common/radial_progress.dart';
+import '../common/stick_progress.dart';
 import '../common/theme_helper.dart';
 import '../models/activity.dart';
 import '../models/day.dart';

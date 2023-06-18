@@ -1,23 +1,22 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:hfc/models/recipeWidgetController.dart';
+import 'package:hfc/models/recipe_widget_controller.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class recipeCard2 extends StatefulWidget{
+class RecipeCard extends StatefulWidget{
   final RecipeWidgetController recipeController;
-    recipeCard2({Key? key, required this.recipeController}) : super(key: key);
+    const RecipeCard({Key? key, required this.recipeController}) : super(key: key);
 
 
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
-     return __recipeCard2State();
+     return __RecipeCardState();
   }
 
 }
 
-class __recipeCard2State extends State<recipeCard2>{
+class __RecipeCardState extends State<RecipeCard>{
   @override
   Widget build(BuildContext context) {
     double height = widget.recipeController.getHeight() + 20;
@@ -38,7 +37,7 @@ class __recipeCard2State extends State<recipeCard2>{
                       child: InkWell(
                         onTap: () {
                           setState(() {
-                            Future.delayed(Duration(milliseconds:10 ), () {
+                            Future.delayed(const Duration(milliseconds:10 ), () {
                             widget.recipeController.isOpen = !widget.recipeController.isOpen;});
                           });
                         },
@@ -59,55 +58,18 @@ class __recipeCard2State extends State<recipeCard2>{
       ),
     );
   }
-
-  // Widget build(BuildContext context) {
-  //   double height = widget.recipeController.getHeight() + 40;
-  //   return SizedBox(
-  //     height: height,
-  //     child: Column(
-  //       children: [
-  //         SizedBox(
-  //             height: widget.recipeController.getHeight(),
-  //             width: 380,
-  //             child: recipeCard(widget.recipeController)),
-  //       //      Divider(),
-  //        ClipOval(
-  //                 child: Material(
-  //                                           color: Colors.transparent,
-  //                     child: InkWell(
-  //                       onTap: () {
-  //                         setState(() {
-  //                           widget.recipeController.isOpen = !widget.recipeController.isOpen;
-  //                         });
-  //                       },
-  //                       child: SizedBox(
-  //                         width: 40,
-  //                         height: 40,
-  //                         child: Center(
-  //                           child: FaIcon(
-  //                             widget.recipeController.isOpen
-  //                                 ? FontAwesomeIcons.chevronUp
-  //                                 : FontAwesomeIcons.chevronDown,
-  //                             size: 18,
-  //                           ),
-  //                         ),
-  //                       ),
-  //                     )))
-  //       ],
-  //     ),
-  //   );
-  // }
+  
   recipeCard(RecipeWidgetController recipeController) {
     Widget openColumn = Container();
     if (recipeController.isOpen) {
       openColumn = Column(children: [
         showList("Diet Labels", recipeController.recipe.dietLabels,
-            Color.fromARGB(255, 77, 182, 172)),
+           const Color.fromARGB(255, 77, 182, 172)),
         showList("Health Labels", recipeController.recipe.healthLabels,
             Colors.amberAccent),
         showList("Ingredients", recipeController.recipe.ingredients,
-            Color.fromARGB(255, 218, 146, 146)),
-        SizedBox(
+          const  Color.fromARGB(255, 218, 146, 146)),
+     const   SizedBox(
           height: 5,
         ),
         Container(
@@ -119,9 +81,9 @@ class __recipeCard2State extends State<recipeCard2>{
                 throw Exception('Could not launch $uri');
               }
             },
-            child: Row(
+            child: const Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
+              children:  [
                 Text(
                   "To view the complete recipe, ",
                   style: TextStyle(
@@ -147,7 +109,7 @@ class __recipeCard2State extends State<recipeCard2>{
             Radius.circular(12.0),
           ),
         ),
-        child: Column(children: [RecipeHeader(recipeController), openColumn]));
+        child: Column(children: [recipeHeader(recipeController), openColumn]));
   }
 
   Column showList(String recipeName, List<String> list, Color color) {
@@ -159,7 +121,7 @@ class __recipeCard2State extends State<recipeCard2>{
         Text(
           recipeName,
           textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+          style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
         ),
         SizedBox(
           width: 350,
@@ -190,12 +152,12 @@ class __recipeCard2State extends State<recipeCard2>{
               padding: const EdgeInsets.all(5),
               child: Text(
                 label,
-                style: TextStyle(fontSize: 10),
+                style:const TextStyle(fontSize: 10),
               ))),
     );
   }
 
-  RecipeHeader(RecipeWidgetController controller) {
+  recipeHeader(RecipeWidgetController controller) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
@@ -212,8 +174,8 @@ class __recipeCard2State extends State<recipeCard2>{
                 child: CachedNetworkImage(
                   imageUrl: controller.recipe.image,
                   placeholder: (context, url) =>
-                      CircularProgressIndicator(), // Placeholder widget while loading
-                  errorWidget: (context, url, error) => Icon(
+                      const CircularProgressIndicator(), // Placeholder widget while loading
+                  errorWidget: (context, url, error) =>  const Icon(
                       Icons.error), // Widget to display in case of an error
                 ),
               ),

@@ -31,7 +31,7 @@ class StickProgress extends StatefulWidget {
                   Container(
                     height: widget.height,
                     width: 15,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(5)),
                       color: Colors.transparent,
                     ),
@@ -42,14 +42,14 @@ class StickProgress extends StatefulWidget {
                       height: widget.height * widget.progress,
                       width: 15,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(5)),
+                        borderRadius:const BorderRadius.all(Radius.circular(5)),
                         color: widget.progressColor,
                       ),
                     ),
                   )
                 ],
               ),
-              SizedBox(
+            const  SizedBox(
                 width: 10,
               ),
             ],
@@ -57,7 +57,7 @@ class StickProgress extends StatefulWidget {
         ),
         Text(
           widget.ingredient.toUpperCase(),
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 10,
             fontWeight: FontWeight.w700,
           ),

@@ -1,8 +1,7 @@
 import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
-import 'package:hfc/common/recipeCard2.dart';
+import 'package:hfc/common/recipe_card.dart';
 import 'package:hfc/controllers/messageChatController.dart';
 import 'package:hfc/models/recipe.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -10,9 +9,8 @@ import 'package:hfc/models/user.dart';
 import 'package:hfc/reposiontrys/rate_reposiontry.dart';
 import 'package:hfc/reposiontrys/user_reposiontry.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-
 import '../models/rate.dart';
-import '../models/recipeWidgetController.dart';
+import '../models/recipe_widget_controller.dart';
 import '../reposiontrys/recipe_reposiontry.dart';
 
 class Messages extends StatefulWidget {
@@ -20,7 +18,7 @@ class Messages extends StatefulWidget {
   final Map<dynamic, MessageChatController> controllers;
   final List messages;
 
-  Messages(
+  const Messages(
       {Key? key,
       required this.previousMessages,
       required this.messages,
@@ -28,23 +26,18 @@ class Messages extends StatefulWidget {
       : super(key: key);
 
   @override
-  _MessagesState createState() => _MessagesState();
+  State<Messages> createState() => _MessagesState();
 }
 
 class _MessagesState extends State<Messages> {
   final user = FirebaseAuth.instance.currentUser!;
 
-  ScrollController _scrollController = new ScrollController(
+ final ScrollController _scrollController =  ScrollController(
     initialScrollOffset: 0.0,
     keepScrollOffset: true,
   );
 
-  @override
-  void initState() {
-    // TODO: implement initState
 
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,13 +50,13 @@ class _MessagesState extends State<Messages> {
         child: Column(
           children: [
             messagesList(w, widget.previousMessages),
-            SizedBox(
+            const SizedBox(
                 height: 20,
                 width: 400,
                 child: Divider(
                   height: 10,
                 )),
-            Text("start convresation"),
+            const Text("start convresation"),
             messagesList(w, widget.messages),
           ],
         ),
@@ -73,7 +66,7 @@ class _MessagesState extends State<Messages> {
 
   ListView messagesList(double w, List messagesList) {
     return ListView.separated(
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         shrinkWrap: true,
         itemBuilder: (context, index) {
           return Stack(
@@ -164,14 +157,14 @@ class _MessagesState extends State<Messages> {
                 boxShadow: [
                   BoxShadow(
                     color: Colors.indigo.shade200,
-                    offset: Offset(
+                    offset: const Offset(
                       5.0,
                       5.0,
                     ),
                     blurRadius: 10.0,
                     spreadRadius: 2.0,
                   ), //BoxShadow
-                  BoxShadow(
+                  const BoxShadow(
                     color: Colors.black,
                     offset: Offset(0.0, 0.0),
                     blurRadius: 0.0,
@@ -179,7 +172,7 @@ class _MessagesState extends State<Messages> {
                   ), //BoxShadow
                 ],
                 color: Colors.white,
-                borderRadius: BorderRadius.all(
+                borderRadius: const BorderRadius.all(
                   Radius.circular(12.0),
                 )),
             width: 100,
@@ -293,7 +286,7 @@ class _MessagesState extends State<Messages> {
       } else {
         return Container();
       }
-    } on FormatException catch (e) {
+    } on FormatException {
       return Container();
     }
   }
@@ -304,14 +297,13 @@ class _MessagesState extends State<Messages> {
       if (json is Map<String, dynamic>) {
         //check if json
         if (json["request"] == "meal_plan") {
-          print("meal_plan");
           return buildMealPlan(json, message);
         } else {
           RecipeModel req = RecipeModel.fromJson(json);
           if (req.request == "recipe") {
             //add recipe for firebase:
             //  updateFireBase(req);
-            return recipeCard2(
+            return RecipeCard(
                 recipeController: RecipeWidgetController(recipe: req));
           }
         }
@@ -385,7 +377,7 @@ Center(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     widget.controllers[message]!.day == 1
-                        ? SizedBox(
+                        ? const SizedBox(
                             width: 40,
                           )
                         : IconButton(
@@ -395,15 +387,15 @@ Center(
                                   widget.controllers[message]!.day--;
                                 });
                             },
-                            icon: Icon(Icons.arrow_left, size: 40),
+                            icon: const Icon(Icons.arrow_left, size: 40),
                           ),
                     Text(
                       "Day ${widget.controllers[message]!.day}",
                       style:
-                          TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                          const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                     ),
                     widget.controllers[message]!.day == json.keys.length
-                        ? SizedBox(
+                        ? const SizedBox(
                             width: 50,
                           )
                         : IconButton(
@@ -414,12 +406,12 @@ Center(
                                   widget.controllers[message]!.day++;
                                 });
                             },
-                            icon: Icon(Icons.arrow_right, size: 40),
+                            icon: const Icon(Icons.arrow_right, size: 40),
                           ),
                   ],
                 ),
 
-                SizedBox(
+                const SizedBox(
                   height: 5,
                 ),
                 Container(
@@ -441,10 +433,10 @@ Center(
                                       ? "Lanch"
                                       : "Dinner"
                                   : "Breakfast",
-                              style: TextStyle(fontSize: 16),
+                              style: const TextStyle(fontSize: 16),
                             ),
                           ),
-                          recipeCard2(
+                          RecipeCard(
                               recipeController:
                                   RecipeWidgetController(recipe: recipe))
                         ],
@@ -455,7 +447,7 @@ Center(
                         .keys
                         .length,
                     separatorBuilder: (BuildContext context, int index) {
-                      return Divider();
+                      return const Divider();
                     },
                   ),
                 ),
