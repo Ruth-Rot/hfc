@@ -197,21 +197,16 @@ class __HomePageState extends State<HomePage> {
         menuItem(3, "Saved Recipes", FontAwesomeIcons.bowlFood,
             currentPage == DrawerSections.saved_recipes ? true : false),
 
-        // Divider(),
-        // menuItem(4, "Settings", FontAwesomeIcons.gear,
-        //     currentPage == DrawerSections.settings ? true : false),
-        // menuItem(5, "About As", FontAwesomeIcons.circleInfo,
-        //     currentPage == DrawerSections.about_as ? true : false),
-        Divider(),
+        const Divider(),
         menuItem(4, "About As", FontAwesomeIcons.circleInfo,
             currentPage == DrawerSections.logout ? true : false),
-        LogOut(5, "Log Out", FontAwesomeIcons.doorOpen,
+        logOut(5, "Log Out", FontAwesomeIcons.doorOpen,
             currentPage == DrawerSections.logout ? true : false),
       ]),
     );
   }
 
-  LogOut(int id, String title, IconData icon, bool selected) {
+  logOut(int id, String title, IconData icon, bool selected) {
     return Material(
       color: selected ? Colors.grey[300] : Colors.transparent,
       child: InkWell(
@@ -220,7 +215,7 @@ class __HomePageState extends State<HomePage> {
 
             FirebaseAuth.instance.signOut();
             Navigator.pushReplacement(
-                context, MaterialPageRoute(builder: (context) => LoginPage()));
+                context, MaterialPageRoute(builder: (context) => const LoginPage()));
           },
           child: Padding(
             padding: const EdgeInsets.all(15.0),
@@ -235,7 +230,7 @@ class __HomePageState extends State<HomePage> {
                 Expanded(
                     flex: 3,
                     child: Text(title,
-                        style: TextStyle(color: Colors.black, fontSize: 16)))
+                        style: const TextStyle(color: Colors.black, fontSize: 16)))
               ],
             ),
           )),
@@ -249,13 +244,7 @@ class __HomePageState extends State<HomePage> {
           onTap: () {
             
             Navigator.pop(context);
-            if (id == 6) {
-              FirebaseAuth.instance.signOut();
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => LoginPage()));
-              // currentPage = DrawerSections.logout;
-            }
-            if (this.mounted) {
+            if (mounted) {
               setState(() {
                 if (id == 1) {
                   currentPage = DrawerSections.diary;

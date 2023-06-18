@@ -484,6 +484,8 @@ currentDay.getDailyCalories( widget.userModel.dailyCalories))
                   meal.dishes.add(newDish);
 
                   //update firebase:
+                  widget.userReposiontry.updateDiary(days, widget.userModel.email);
+
 
                   meal.dishController.clear();
                   //meal.measurementController.clear();
@@ -530,6 +532,10 @@ currentDay.getDailyCalories( widget.userModel.dailyCalories))
                   activity = value;
 
                   activitys.items.add(activity);
+
+                  //update firebase
+                      widget.userReposiontry.updateDiary(days, widget.userModel.email);
+
 
                   setState(() {
                     activitys.isAdd = !activitys.isAdd;

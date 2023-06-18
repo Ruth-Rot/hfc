@@ -38,8 +38,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
   var urlImage = "./assets/images/man_icon.png";
   bool isUploudPic = false;
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  var womanNetworkUrl = "https://firebasestorage.googleapis.com/v0/b/hfc-app-b33ed.appspot.com/o/Users%20Profile%20Photos%2Fwoman_icon.png?alt=media&token=c39682fb-7cf1-44ac-980e-896075df71ea";
-  var manNetworkUrl = "https://firebasestorage.googleapis.com/v0/b/hfc-app-b33ed.appspot.com/o/Users%20Profile%20Photos%2Fman_icon.png?alt=media&token=3570ba04-d05e-404e-b850-6343acb5b525"; 
+  var womanNetworkUrl =
+      "https://firebasestorage.googleapis.com/v0/b/hfc-app-b33ed.appspot.com/o/Users%20Profile%20Photos%2Fwoman_icon.png?alt=media&token=c39682fb-7cf1-44ac-980e-896075df71ea";
+  var manNetworkUrl =
+      "https://firebasestorage.googleapis.com/v0/b/hfc-app-b33ed.appspot.com/o/Users%20Profile%20Photos%2Fman_icon.png?alt=media&token=3570ba04-d05e-404e-b850-6343acb5b525";
 
   //image varibales:
   final ImagePicker picker = ImagePicker();
@@ -51,8 +53,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
   @override
   void dispose() {
     // TODO: implement dispose
-      controller.clear();
-  
+    controller.clear();
+
     super.dispose();
   }
 
@@ -75,25 +77,26 @@ class _RegistrationPageState extends State<RegistrationPage> {
               Form(
                 key: _formKey,
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
+                    const SizedBox(height: 10),
+
                     //picture:
                     imageProfile(),
-                    const SizedBox(height: 30),
+                    const SizedBox(height: 50),
                     //gender:
                     genderToggle(),
-                    const SizedBox(height: 30),
+                    const SizedBox(height: 40),
                     //full name:
                     fullName(),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 30),
                     //email:
                     email(),
-                    const SizedBox(height: 20),
-                    //phone number:
-                    //phone(),
-//                    const SizedBox(height: 20),
+                    const SizedBox(height: 30),
                     //password:
                     password(),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 30),
                     //accept terms:
                     terms(context),
                     const SizedBox(height: 10.0),
@@ -126,15 +129,14 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                   .authStateChanges()
                                   .listen((User? user) async {
                                 if (user != null) {
-                                 final user = await addUserDetails();
+                                  final user = await addUserDetails();
                                   Navigator.pop(context);
                                   Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => HomePage()));
-                                }
-                                else{
-                                 print('User is currently signed out!');
+                                } else {
+                                  print('User is currently signed out!');
 
                                   //    Navigator.pop(context);
                                   // Navigator.pushReplacement(
@@ -142,7 +144,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                   //     MaterialPageRoute(
                                   //         builder: (context) =>
                                   //             RegistrationPage()));
-                                
                                 }
                               });
                             }
@@ -416,16 +417,16 @@ class _RegistrationPageState extends State<RegistrationPage> {
     return GestureDetector(
         child: Stack(children: [
       CircleAvatar(
-        radius: 60,
+        radius: 65,
         backgroundImage:
             isUploudPic ? Image.file(img).image : AssetImage(urlImage),
         backgroundColor: Colors.white,
       ),
       Container(
-        padding: const EdgeInsets.fromLTRB(75, 75, 0, 0),
+        padding: const EdgeInsets.fromLTRB(80, 90, 0, 0),
         child: CircleAvatar(
           radius: 20,
-          backgroundColor: Colors.grey, //<-- SEE HERE
+          backgroundColor: Colors.grey,
           child: IconButton(
             icon: const Icon(
               Icons.add_a_photo_outlined,
@@ -438,7 +439,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
     ]));
   }
 
-  //we can upload image from camera or from gallery based on parameter
+  // Upload image from camera or from gallery:
   getImage(ImageSource source) async {
     final pickedFile =
         await ImagePicker().pickImage(source: source, imageQuality: 10);
@@ -455,7 +456,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
         }
       }
     }
-    setState(() {}); //update image
+    //update image
+    if (mounted) {
+      setState(() {});
+    }
   }
 
 //create user
@@ -549,14 +553,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
         gender: genderInit == 0 ? "male" : "female",
         password: controller.password.text.trim(),
         fillDetails: false,
-        conversation:[],
+        conversation: [],
         dailyCalories: 0.0,
         diary: {},
         weight: 0,
         height: 0,
         purpose: "",
-        activity_level: ""
-        );
+        activity_level: "");
 
     final rep = UserReposiontry();
     await rep.createUser(user);
