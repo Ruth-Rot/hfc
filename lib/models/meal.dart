@@ -26,6 +26,11 @@ class MealModel {
   }
 
 
+clear(){
+   dishController.clear();
+   amountController.clear();
+   String measurement = "Cup";
+}
 
   getHeight() {
     if(isOpen == false){
@@ -35,7 +40,7 @@ class MealModel {
     if (isAdd == true) {
       basic += 70;
     }
-    basic += 40 * dishes.length;
+    basic += 50 * dishes.length;
     return basic;
   }
 

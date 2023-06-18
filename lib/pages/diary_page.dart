@@ -15,6 +15,7 @@ import '../models/dishData.dart';
 import '../models/meal.dart';
 import '../reposiontrys/activityApi_reposiontry.dart';
 import '../reposiontrys/nutritionApi_reposiontry.dart';
+import 'package:hfc/controllers/dish_controller.dart';
 
 class DiaryPage extends StatefulWidget {
   final UserModel userModel;
@@ -59,8 +60,6 @@ class __DiaryPageState extends State<DiaryPage> {
     super.dispose();
   }
 
-  
-
   @override
   void initState() {
     super.initState();
@@ -71,8 +70,7 @@ class __DiaryPageState extends State<DiaryPage> {
     } else {
       currentDay = days[dateS]!;
     }
-        widget.userReposiontry.updateDiary(days, widget.userModel.email);
-
+    widget.userReposiontry.updateDiary(days, widget.userModel.email);
   }
 
   @override
@@ -100,8 +98,8 @@ class __DiaryPageState extends State<DiaryPage> {
                       progress: (1.0 -
                           (currentDay.getRemainCalories(
                                   widget.userModel.dailyCalories) /
-currentDay.getDailyCalories( widget.userModel.dailyCalories))
-                            ),
+                              currentDay.getDailyCalories(
+                                  widget.userModel.dailyCalories))),
                       remain: currentDay
                           .getRemainCalories(widget.userModel.dailyCalories),
                     ),
@@ -199,61 +197,56 @@ currentDay.getDailyCalories( widget.userModel.dailyCalories))
     }
   }
 
-  
-
   Row dateWidget() {
     return Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.transparent,
-                              shadowColor: Colors.transparent),
-                          onPressed: () {
-                            //sub a day
-                            date = date.subtract(const Duration(days: 1));
-                            String dataString =
-                                DateFormat.yMMMMd('en_US').format(date);
-                            updateCurrentDay(dataString);
-                          },
-                          child: const Icon(
-                            Icons.arrow_back_rounded,
-                            color: Colors.white,
-                            size: 30,
-                          )),
-                      const SizedBox(
-                        width: 50,
-                      ),
-                      Text(
-                        dateS,
-                        style: const TextStyle(
-                            color: Colors.white, fontSize: 20),
-                      ),
-                      const SizedBox(
-                        width: 50,
-                      ),
-                      ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.transparent,
-                              shadowColor: Colors.transparent),
-                          onPressed: () {
-                            //add a day
-                            if (date.day != DateTime.now().day) {
-                              date = date.add(const Duration(days: 1));
-                              String dataString =
-                                  DateFormat.yMMMMd('en_US').format(date);
-                              updateCurrentDay(dataString);
-                            }
-                          },
-                          child: Icon(
-                            Icons.arrow_forward_rounded,
-                            color: date.day == DateTime.now().day
-                                ? Colors.transparent
-                                : Colors.white,
-                            size: 30,
-                          )),
-                    ]);
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.transparent,
+                  shadowColor: Colors.transparent),
+              onPressed: () {
+                //sub a day
+                date = date.subtract(const Duration(days: 1));
+                String dataString = DateFormat.yMMMMd('en_US').format(date);
+                updateCurrentDay(dataString);
+              },
+              child: const Icon(
+                Icons.arrow_back_rounded,
+                color: Colors.white,
+                size: 30,
+              )),
+          const SizedBox(
+            width: 50,
+          ),
+          Text(
+            dateS,
+            style: const TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          const SizedBox(
+            width: 50,
+          ),
+          ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.transparent,
+                  shadowColor: Colors.transparent),
+              onPressed: () {
+                //add a day
+                if (date.day != DateTime.now().day) {
+                  date = date.add(const Duration(days: 1));
+                  String dataString = DateFormat.yMMMMd('en_US').format(date);
+                  updateCurrentDay(dataString);
+                }
+              },
+              child: Icon(
+                Icons.arrow_forward_rounded,
+                color: date.day == DateTime.now().day
+                    ? Colors.transparent
+                    : Colors.white,
+                size: 30,
+              )),
+        ]);
   }
 
   mealContainer(MealModel meal) {
@@ -279,14 +272,14 @@ currentDay.getDailyCalories( widget.userModel.dailyCalories))
           height: 10,
         ),
         SizedBox(
-          height: 40.0 * meal.dishes.length,
+          height: 50.0 * meal.dishes.length,
           child: ListView.separated(
               padding: const EdgeInsets.all(8),
               itemCount: meal.dishes.length,
               itemBuilder: (BuildContext context, int index) {
                 return SizedBox(
                   height: 40,
-                  child: itemRow(meal.type, meal.dishes[index]),
+                  child: itemRow(meal.type, meal.dishes[index], index),
                 );
               },
               separatorBuilder: (BuildContext context, int index) =>
@@ -358,7 +351,7 @@ currentDay.getDailyCalories( widget.userModel.dailyCalories))
               itemBuilder: (BuildContext context, int index) {
                 return SizedBox(
                   height: 50,
-                  child: ActivityitemRow(activitys.items[index]),
+                  child: ActivityitemRow(activitys.items[index],index),
                 );
               },
               separatorBuilder: (BuildContext context, int index) =>
@@ -479,17 +472,16 @@ currentDay.getDailyCalories( widget.userModel.dailyCalories))
                       type: meal.dishController.text.trim(),
                       measurement: meal.measurement,
                       amount: meal.amountController.text.trim(),
-                      data: dishData);
+                      data: dishData,
+                      controller: DishController());
 
                   meal.dishes.add(newDish);
 
                   //update firebase:
-                  widget.userReposiontry.updateDiary(days, widget.userModel.email);
+                  widget.userReposiontry
+                      .updateDiary(days, widget.userModel.email);
 
-
-                  meal.dishController.clear();
-                  //meal.measurementController.clear();
-                  meal.amountController.clear();
+                  meal.clear();
                   setState(() {
                     meal.isAdd = !meal.isAdd;
                   });
@@ -534,8 +526,8 @@ currentDay.getDailyCalories( widget.userModel.dailyCalories))
                   activitys.items.add(activity);
 
                   //update firebase
-                      widget.userReposiontry.updateDiary(days, widget.userModel.email);
-
+                  widget.userReposiontry
+                      .updateDiary(days, widget.userModel.email);
 
                   setState(() {
                     activitys.isAdd = !activitys.isAdd;
@@ -656,27 +648,28 @@ currentDay.getDailyCalories( widget.userModel.dailyCalories))
         });
       },
       items: items
-          .map((item) => DropdownMenuItem<String>(
-                value: item,
-                child:  Text(
-                      item,
-                      style: const TextStyle(fontSize: 12),
-                    ),
-                  ),
-                )
+          .map(
+            (item) => DropdownMenuItem<String>(
+              value: item,
+              child: Text(
+                item,
+                style: const TextStyle(fontSize: 12),
+              ),
+            ),
+          )
           .toList(),
     );
   }
 
-  Row itemRow(String meal, DishModel dish) {
+  Row itemRow(String meal, DishModel dish, int indexD) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       mainAxisSize: MainAxisSize.max,
       children: [
         const SizedBox(width: 0),
         SizedBox(width: 100, child: Text(dish.type)),
-        SizedBox(width: 100, child: Text("${dish.amount} ${dish.measurement}")),
-        SizedBox(width: 50, child: Text(dish.data.getCalories().toString())),
+        SizedBox(width: 60, child: Text("${dish.amount} ${dish.measurement}")),
+        SizedBox(width: 90, child: Text(dish.data.getCalories().toString())),
         const SizedBox(width: 0),
         SizedBox(
             width: 25,
@@ -697,14 +690,37 @@ currentDay.getDailyCalories( widget.userModel.dailyCalories))
             width: 25,
             child: IconButton(
                 onPressed: () {
-                  print("edit calories option to implemt!!!");
+                  int indexM = currentDay.mealsIndex[meal]!;
+                  editNutritionDialogBuilder(context, dish, indexM, indexD);
                 },
-                icon: const FaIcon(
+                icon: FaIcon(
                   FontAwesomeIcons.pencil,
                   size: 20,
                 ))),
         const SizedBox(width: 5),
       ],
+    );
+  }
+
+  TextFormField nutritonField(label, hint, controller) {
+    return TextFormField(
+      keyboardType: TextInputType.number,
+      decoration: ThemeHelper().textInputDecorationFoodForm(
+        label,
+        hint,
+      ),
+      controller: controller,
+      style: const TextStyle(fontSize: 12),
+      validator: (value) {
+        if (value!.isEmpty) {
+          return "Enter amount";
+        }
+        bool amountValidator =
+            RegExp(r"[+-]?([0-9]*[.])?[0-9]+").hasMatch(value);
+        if (!amountValidator) {
+          return "Enter number";
+        }
+      },
     );
   }
 
@@ -734,7 +750,7 @@ currentDay.getDailyCalories( widget.userModel.dailyCalories))
 
   TextFormField amountfield(MealModel meal) {
     return TextFormField(
-      keyboardType: TextInputType.text,
+      keyboardType: TextInputType.number,
       decoration: ThemeHelper().textInputDecorationFoodForm(
         "Amount",
         "How much?",
@@ -803,16 +819,14 @@ currentDay.getDailyCalories( widget.userModel.dailyCalories))
     );
   }
 
-  ActivityitemRow(Activity item) {
+  ActivityitemRow(Activity item,int index) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       mainAxisSize: MainAxisSize.max,
       children: [
         const SizedBox(width: 0),
         SizedBox(width: 180, child: Text(item.label.replaceAll(", ", "\n"))),
-        SizedBox(
-            width: 50,
-            child: Text(item.duration.toString())),
+        SizedBox(width: 50, child: Text(item.duration.toString())),
         SizedBox(width: 50, child: Text(item.getCalories().toString())),
         const SizedBox(width: 0),
         SizedBox(
@@ -834,6 +848,7 @@ currentDay.getDailyCalories( widget.userModel.dailyCalories))
             child: IconButton(
                 onPressed: () {
                   print("edit calories option to implemt!!!");
+                  editActivityDialogBuilder(context, item, index);
                 },
                 icon: const FaIcon(
                   FontAwesomeIcons.pencil,
@@ -848,8 +863,7 @@ currentDay.getDailyCalories( widget.userModel.dailyCalories))
     return Form(
       key: activitys.formKey,
       child: Column(children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,children: [
+        Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           SizedBox(width: 150, child: durationfield(activitys)),
           const SizedBox(
             width: 5,
@@ -876,13 +890,12 @@ currentDay.getDailyCalories( widget.userModel.dailyCalories))
     return TextFormField(
       keyboardType: TextInputType.text,
       decoration: ThemeHelper().textInputDecorationFoodForm(
-        "Duration",
-        "How much?",
-        Icon(
-          FontAwesomeIcons.clock,
-          size: 15,
-        )),
-      
+          "Duration",
+          "How much?",
+          Icon(
+            FontAwesomeIcons.clock,
+            size: 15,
+          )),
       controller: activitys.durationController,
       style: const TextStyle(fontSize: 12),
       validator: (value) {
@@ -893,6 +906,158 @@ currentDay.getDailyCalories( widget.userModel.dailyCalories))
         // if (!amountValidator) {
         //   return "Enter number";
         // }
+      },
+    );
+  }
+
+  Future<void> editNutritionDialogBuilder(
+      BuildContext context, DishModel dishModel, mealI, dishI) {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(32.0))),
+          title: const Text('Edit nutrition values:'),
+          content: SizedBox(
+            height: 350,
+            width: 200,
+            child: Form(
+              key: dishModel.controller.formKey,
+              child: Column(
+                children: [
+                  const Text(
+                    'Here you can edit the nutriton values of this dish\n',
+                    textAlign: TextAlign.center,
+                  ),
+                  nutritonField(
+                      "Ckal", "How much?", dishModel.controller.ckalController),
+                  const Spacer(),
+                  nutritonField("Crabs", "How much?",
+                      dishModel.controller.crabsController),
+                  const Spacer(),
+                  nutritonField("Protein", "How much?",
+                      dishModel.controller.proteinController),
+                  const Spacer(),
+                  nutritonField(
+                      "Fat", "How much?", dishModel.controller.fatsController)
+                ],
+              ),
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.labelLarge,
+              ),
+              child: const Text('Return'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.labelLarge,
+              ),
+              child: const Text('Apply'),
+              onPressed: () {
+                if (dishModel.controller.formKey.currentState!.validate()) {
+                  // change nutrition:
+                  if (mounted) {
+                    setState(() {
+                      dishModel.data = DishData(
+                          calories: double.parse(
+                              dishModel.controller.ckalController.text.trim()),
+                          protein: double.parse(dishModel
+                              .controller.proteinController.text
+                              .trim()),
+                          crabs: double.parse(
+                              dishModel.controller.crabsController.text.trim()),
+                          fat: double.parse(
+                              dishModel.controller.fatsController.text.trim()));
+                      currentDay.meals[mealI].dishes[dishI] = dishModel;
+                      days[currentDay.date] = currentDay;
+                    });
+                  }
+                  dishModel.controller.clear();
+
+                  //save changes:
+                  widget.userReposiontry
+                      .updateDiary(days, widget.userModel.email);
+                  Navigator.of(context).pop();
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+    Future<void> editActivityDialogBuilder(
+      BuildContext context, Activity activity, int index) {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(32.0))),
+          title: const Text('Edit activity Ckal values:'),
+          content: SizedBox(
+            height: 140,
+            width: 200,
+            child: Form(
+              key: activity.controller.formKey,
+              child: Column(
+                children: [
+                  const Text(
+                    'Here you can edit the nutriton values of this dish\n',
+                    textAlign: TextAlign.center,
+                  ),
+                  nutritonField(
+                      "Ckal", "How much?", activity.controller.ckalController),
+                    ],
+              ),
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.labelLarge,
+              ),
+              child: const Text('Return'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.labelLarge,
+              ),
+              child: const Text('Apply'),
+              onPressed: () {
+                if (activity.controller.formKey.currentState!.validate()) {
+                  // change nutrition:
+                  if (mounted) {
+                    setState(() {
+                      activity.calories =  double.parse(
+                              activity.controller.ckalController.text.trim());
+                 
+                      currentDay.activitys.items[index] =activity ;
+                      days[currentDay.date] = currentDay;
+                    });
+                  }
+                  activity.controller.clear();
+
+                  //save changes:
+                  widget.userReposiontry
+                      .updateDiary(days, widget.userModel.email);
+                  Navigator.of(context).pop();
+                }
+              },
+            ),
+          ],
+        );
       },
     );
   }

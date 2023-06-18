@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:hfc/controllers/activity_controller.dart';
 import 'package:hfc/models/activity.dart';
 import 'package:hfc/models/activitysList.dart';
 import 'package:hfc/models/dish.dart';
+import 'package:hfc/controllers/dish_controller.dart';
 import 'package:hfc/models/meal.dart';
-import 'package:hfc/reposiontrys/nutritionApi_reposiontry.dart';
 
 import 'day.dart';
 import 'dishData.dart';
@@ -89,7 +90,8 @@ class UserModel {
                 type: dish["dish"],
                 amount: dish["amount"],
                 measurement: dish["measurement"],
-                data: data));
+                data: data,
+                controller: DishController()));
           }
           meals.add(MealModel(type: meal["type"], dishes: dishes));
           activityList = ActivityList(items: []);
@@ -97,7 +99,8 @@ class UserModel {
             Activity act = Activity(
                 calories: active["calories"],
                 duration: active["duration"],
-                label: active["label"]);
+                label: active["label"],
+                controller: ActivityController());
             activityList.items.add(act);
           }
         }

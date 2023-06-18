@@ -2,19 +2,23 @@
 
 import 'package:hfc/models/dishData.dart';
 
+import '../controllers/dish_controller.dart';
+
 class DishModel {
   final String? id;
   final String type;
   final String amount;
   final String measurement;
-  final DishData data;
+  late DishData data;
+  final DishController controller;
 
-  const DishModel(
+   DishModel(
       {this.id,
       required this.type,
       required this.amount,
       required this.measurement,
-      required this.data
+       required this.data,
+      required this.controller
     });
   toJson() {
     return {
