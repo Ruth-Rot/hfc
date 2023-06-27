@@ -82,7 +82,6 @@ buildMessagesToSave(List<Map<String, dynamic>> messages) {
   List build = [];
   for (var mes in messages) {
     bool flag = mes['isUserMessage'];
-    // var t =  await mes['message'].text;
     var text="";
     if (mes['message'] is String) {
       text = mes['message'];

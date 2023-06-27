@@ -1,17 +1,13 @@
 import 'dart:convert';
-
 import 'package:dialog_flowtter/dialog_flowtter.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
-import 'package:hfc/controllers/dialogMessageController.dart';
+import 'package:hfc/controllers/dialog_message_controller.dart';
 import 'package:hfc/pages/home_page.dart';
 import 'package:hfc/reposiontrys/dialog_reposiontry.dart';
-import '../controllers/messageChatController.dart';
-
+import '../controllers/message_chat_controller.dart';
 import '../models/user.dart';
-
 import '../reposiontrys/user_reposiontry.dart';
 import 'messages.dart';
 
@@ -36,15 +32,11 @@ class __ChatPageState extends State<ChatPage> {
   final TextEditingController _controller = TextEditingController();
   //final userFire = FirebaseAuth.instance.currentUser!;
   List<Map<String, dynamic>> messages = [];
-  List<Map<String, dynamic>> previous_messages = [];
+  List<Map<String, dynamic>> previousMessages = [];
   Map<dynamic, MessageChatController> controllers = {};
-  Message loadMessage = Message(text: DialogText(text: ["#load"]));
-
-  //bool isUser = false;
-
+  Message loadMessage = Message(text: DialogText(text: const ["#load"]));
   var isOnce = true;
-  
-  bool isDialog =false;
+  bool isDialog = false;
 
   @override
   void initState() {
@@ -57,8 +49,6 @@ class __ChatPageState extends State<ChatPage> {
           setState(() {
             isDialog = true;
             buildPreviousMessages(widget.user.conversation);
-
-            // previous_messages = buildPreviousMessages(user.convresation);
           });
         }
       });
@@ -68,60 +58,42 @@ class __ChatPageState extends State<ChatPage> {
   }
 
   listenToServerChat(DialogMessageController controller) async {
-    var mes;
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       print('Got a message whilst in the foreground!');
-      mes = message.data;
       print('Message data: ${message.data}');
       if (message.notification != null) {
         print('Message also contained a notification: ${message.notification}');
       } else {
         if (message.data['request'] == 'recipe') {
-                  if (mounted) {
-
-          setState(() {
-            controller.recipeMessage = message.data;
-            controller.isWaitedRecipe = true;
-          });
-                  }
+          if (mounted) {
+            setState(() {
+              controller.recipeMessage = message.data;
+              controller.isWaitedRecipe = true;
+            });
+          }
         }
-         if (message.data['request'] == 'text') {
+        if (message.data['request'] == 'text') {
           print("text");
-                  if (mounted) {
-
-          setState(() {
-        //    if (controller.startSendMeal == false) {
-
+          if (mounted) {
+            setState(() {
               controller.startSendMeal = true;
-              controller.meal_plan = {};
-            controller.meal_plan_text = message.data["text"];
-       //     }
-
-          });
-                  }
+              controller.mealPlan = {};
+              controller.mealPlanText = message.data["text"];
+            });
+          }
         }
         if (message.data['request'] == 'meal_plan') {
-                  if (mounted) {
-
-          setState(() {
-            print(message.data);
-            // if (controller.startSendMeal == false) {
-            //   controller.startSendMeal = true;
-            //   controller.meal_plan = {};
-            //   controller.meal_plan[message.data['currentMessage']] =
-            //       message.data['card'];
-
-            //   //controller.counterMeal++;
-            // } else {
-              controller.meal_plan[message.data['currentMessage']] =
+          if (mounted) {
+            setState(() {
+              print(message.data);
+              controller.mealPlan[message.data['currentMessage']] =
                   message.data['card'];
-              if (controller.meal_plan.length.toString() ==
+              if (controller.mealPlan.length.toString() ==
                   message.data['messagesNumber'].toString()) {
                 controller.sentPlanMeal = true;
-             // }
-            }
-          });
-                  }
+              }
+            });
+          }
         }
       }
     });
@@ -133,17 +105,15 @@ class __ChatPageState extends State<ChatPage> {
     listenToServerChat(widget.dialogController);
     checkWaitedRecipe();
 
-    for (var m in previous_messages) {
+    for (var m in previousMessages) {
       controllers[m] = MessageChatController();
     }
     for (var m in messages) {
       controllers[m] = MessageChatController();
     }
-    //checkWaitedRecipe();
-
     return Scaffold(
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(80.0), // here the desired height
+          preferredSize: const Size.fromHeight(80.0), // here the desired height
           child: AppBar(
             title: const Text(
               "HFC Bot",
@@ -169,7 +139,7 @@ class __ChatPageState extends State<ChatPage> {
             Expanded(
                 child: Messages(
                     messages: messages,
-                    previousMessages: previous_messages,
+                    previousMessages: previousMessages,
                     controllers: controllers)),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
@@ -216,7 +186,7 @@ class __ChatPageState extends State<ChatPage> {
 
   botAvatar() {
     return Transform.translate(
-        offset: Offset(100, 40),
+        offset: const Offset(100, 40),
         child: const CircleAvatar(
           radius: 50,
           backgroundColor: Colors.white70,
@@ -228,7 +198,7 @@ class __ChatPageState extends State<ChatPage> {
 
   IconButton returnBack(BuildContext context) {
     return IconButton(
-      icon: Icon(
+      icon: const Icon(
         Icons.arrow_back,
         color: Colors.white70,
       ),
@@ -261,16 +231,17 @@ class __ChatPageState extends State<ChatPage> {
         });
       }
       //save messages in firebase:
-       UserReposiontry()
-            .saveMessages(previous_messages + messages, widget.user.email);
+      UserReposiontry()
+          .saveMessages(previousMessages + messages, widget.user.email);
       if (response.message!.text!.text![0]
-          .contains("the server working on it.") || response.message!.text!.text![0]
-          .contains("I'm making the plan for you, it may take some time.") ) {
+              .contains("the server working on it.") ||
+          response.message!.text!.text![0].contains(
+              "I'm making the plan for you, it may take some time.")) {
         if (mounted) {
           setState(() {
-            Future.delayed(Duration(milliseconds: 5), () {
-            addMessage(loadMessage);
-             });
+            Future.delayed(const Duration(milliseconds: 5), () {
+              addMessage(loadMessage);
+            });
           });
         }
       }
@@ -279,7 +250,7 @@ class __ChatPageState extends State<ChatPage> {
 
   fillDetails() async {
     var query = QueryInput(text: TextInput(text: 'personal details'));
-    
+
     DetectIntentResponse response =
         await dialogFlowtter.detectIntent(queryInput: query);
     if (mounted) {
@@ -287,12 +258,11 @@ class __ChatPageState extends State<ChatPage> {
       setState(() {
         addMessage(response.message!);
       });
-    
-     //save messages in firebase:
-       UserReposiontry()
-            .saveMessages(previous_messages + messages, widget.user.email);
+
+      //save messages in firebase:
+      UserReposiontry()
+          .saveMessages(previousMessages + messages, widget.user.email);
     }
-    
   }
 
   addMessage(Message message, [bool isUserMessage = false]) {
@@ -300,18 +270,18 @@ class __ChatPageState extends State<ChatPage> {
   }
 
   checkStart() async {
-    if(isDialog == true){
-    if (widget.user.fillDetails == false && isOnce == true) {
-      fillDetails();
-      isOnce = false;
-    }
+    if (isDialog == true) {
+      if (widget.user.fillDetails == false && isOnce == true) {
+        fillDetails();
+        isOnce = false;
+      }
     }
   }
 
   buildPreviousMessages(var convresation) {
     if (convresation != "") {
       for (var value in convresation) {
-        previous_messages
+        previousMessages
             .add({'message': value['text'], 'isUserMessage': value['isUser']});
       }
     }
@@ -319,53 +289,48 @@ class __ChatPageState extends State<ChatPage> {
 
   void checkWaitedRecipe() {
     if (widget.dialogController.isWaitedRecipe == true) {
-              if (mounted) {
-
-      setState(() {
-        messages[messages.length - 1]['message'] = Message(
-            text: DialogText(
-                text: [widget.dialogController.recipeMessage['card']]));
-        addMessage(Message(
-            text: DialogText(
-                text: [widget.dialogController.recipeMessage['text']])));
-      });
-       //save messages in firebase:
-       UserReposiontry()
-            .saveMessages(previous_messages + messages, widget.user.email);
-              }
+      if (mounted) {
+        setState(() {
+          messages[messages.length - 1]['message'] = Message(
+              text: DialogText(
+                  text: [widget.dialogController.recipeMessage['card']]));
+          addMessage(Message(
+              text: DialogText(
+                  text: [widget.dialogController.recipeMessage['text']])));
+        });
+        //save messages in firebase:
+        UserReposiontry()
+            .saveMessages(previousMessages + messages, widget.user.email);
+      }
       widget.dialogController.isWaitedRecipe = false;
     }
     if (widget.dialogController.sentPlanMeal == true) {
-      
       String req =
-          jsonEncode(addMealPlanToMessages(widget.dialogController.meal_plan));
-                  if (mounted) {
-
-      setState(() {
-        messages[messages.length - 1]['message'] = 
-        Message(text: DialogText(text: [widget.dialogController.meal_plan_text]));
-       addMessage(Message(
-            text: DialogText(
-                text: [req])));
-                 //save messages in firebase:
-       UserReposiontry()
-            .saveMessages(previous_messages + messages, widget.user.email);
-      widget.dialogController.sentPlanMeal = false;
-      });
-                  }
+          jsonEncode(addMealPlanToMessages(widget.dialogController.mealPlan));
+      if (mounted) {
+        setState(() {
+          messages[messages.length - 1]['message'] = Message(
+              text: DialogText(text: [widget.dialogController.mealPlanText]));
+          addMessage(Message(text: DialogText(text: [req])));
+          //save messages in firebase:
+          UserReposiontry()
+              .saveMessages(previousMessages + messages, widget.user.email);
+          widget.dialogController.sentPlanMeal = false;
+        });
+      }
     }
   }
 
-  addMealPlanToMessages(Map meal_plan) {
+  addMealPlanToMessages(Map mealPlan) {
     Map<String, dynamic> days = {};
     Map<String, dynamic> meals;
     int day = 1;
-    for (var index = 1; index < meal_plan.length; index = index + 3) {
+    for (var index = 1; index < mealPlan.length; index = index + 3) {
       meals = {};
       int place = 1;
       for (var inerIndex = index; inerIndex < index + 3; inerIndex++) {
         //  int modolu = (inerIndex / 3).floor()+1;
-        meals[place.toString()] = meal_plan[(inerIndex).toString()];
+        meals[place.toString()] = mealPlan[(inerIndex).toString()];
         place++;
       }
       days[day.toString()] = jsonEncode(meals);

@@ -1,29 +1,23 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:hfc/models/recipe.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-//import 'package:syncfusion_flutter_charts/charts.dart';
-import '../common/circle_header.dart';
+import '../headers/circle_header.dart';
+import '../common/fill_your_details.dart';
 import '../models/day.dart';
 import '../models/user.dart';
-import '../reposiontrys/rate_reposiontry.dart';
 import '../reposiontrys/user_reposiontry.dart';
 
 class ProgressPage extends StatefulWidget {
   final UserModel userModel;
   final UserReposiontry userReposiontry;
 
-  ProgressPage(
-      {Key? key,
-      required this.userModel,
-      required UserReposiontry this.userReposiontry})
+  const ProgressPage(
+      {Key? key, required this.userModel, required this.userReposiontry})
       : super(key: key);
 
   @override
-  __ProgressPageState createState() {
+  State<ProgressPage> createState() {
     return __ProgressPageState();
   }
 }
@@ -43,6 +37,9 @@ class __ProgressPageState extends State<ProgressPage> {
     "Extreme weight gain": 7
   };
 
+  final TextStyle _textStyle =
+      const TextStyle(fontSize: 15, fontWeight: FontWeight.bold);
+
   late TooltipBehavior _tooltipBehavior;
   @override
   initState() {
@@ -58,51 +55,32 @@ class __ProgressPageState extends State<ProgressPage> {
   @override
   Widget build(BuildContext context) {
     if (widget.userModel.fillDetails == false) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              "You haven't fill your personal details yet",
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
-            ),
-            SizedBox(
-                height: 300,
-                child:
-                    Image(image: AssetImage('./assets/images/splash_bot.png'))),
-            SizedBox(
-              height: 30,
-            ),
-            Text("Fill your details in the chat bot",
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700))
-          ],
-        ),
-      );
+      return 
+      SafeArea(
+          child: Scaffold(
+              body: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: Column(children: [
+                    progressHeader(context),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    fillYourDetails()])
+              )))
+                    
+                    ;
     } else {
       return SafeArea(
           child: Scaffold(
               body: SingleChildScrollView(
                   scrollDirection: Axis.vertical,
                   child: Column(children: [
-                    circleHeader(
-                        context,
-                        Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "Progress",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 20),
-                              )
-                            ])),
-                    SizedBox(
+                    progressHeader(context),
+                    const SizedBox(
                       height: 20,
                     ),
                     Row(children: [
-                      SizedBox(
+                      const SizedBox(
                         width: 20,
                       ),
                       Column(children: [
@@ -111,42 +89,80 @@ class __ProgressPageState extends State<ProgressPage> {
                                 FontAwesomeIcons.weightScale, "Weight"),
                             90,
                             100),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         card(
-                            iconCard(
-                                widget.userModel.activity_level
-                                    .replaceAll("level_", ""),
-                                FontAwesomeIcons.personRunning,
-                                "Active level"),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "Active level",
+                                  style: _textStyle,
+                                ),
+                                const SizedBox(height: 5),
+                                Text(
+                                  widget.userModel.activityLevel
+                                      .replaceAll("level_", ""),
+                                  style: const TextStyle(fontSize: 24),
+                                ),
+                                const Text(
+                                  "out of 6",
+                                  style: TextStyle(fontSize: 10),
+                                ),
+                              ],
+                            ),
                             90,
                             100),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         card(
-                            iconCard(goals[widget.userModel.purpose].toString(),
-                                FontAwesomeIcons.bullseye, "Goal level"),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "Goal",
+                                  style: _textStyle,
+                                ),
+                                const SizedBox(height: 10),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SizedBox(
+                                      width: 80,
+                                      child: Text(
+                                        widget.userModel.purpose,
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            // iconCard(widget.userModel.purpose,
+                            //     FontAwesomeIcons.bullseye, "Goal level"),
                             90,
                             100),
                       ]),
-                      SizedBox(
+                      const SizedBox(
                         width: 10,
                       ),
                       card(
                           SfCircularChart(
                               title: ChartTitle(
                                   text: "Today ckal consumption",
-                                  
-                                  textStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                                  textStyle: _textStyle),
                               legend: Legend(
                                   isVisible: true,
-        
                                   toggleSeriesVisibility: true,
                                   position: LegendPosition.bottom),
-                                                            tooltipBehavior: _tooltipBehavior,
-
+                              tooltipBehavior: _tooltipBehavior,
                               series: <CircularSeries>[
                                 PieSeries<DailyPieChartData, String>(
                                   dataSource: _pieChartData,
@@ -160,17 +176,15 @@ class __ProgressPageState extends State<ProgressPage> {
                           290,
                           265),
                     ]),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     card(
                         SfCartesianChart(
                           title: ChartTitle(
-                            text:
-                                "Daily ckal consumption in this month",
-                                                                  textStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                            text: "Daily ckal consumption in this month",
+                            textStyle: _textStyle,
                           ),
-                          //backgroundColor: Colors.yellow,
                           legend: Legend(
                               isVisible: true, position: LegendPosition.bottom),
                           tooltipBehavior: _tooltipBehavior,
@@ -190,7 +204,6 @@ class __ProgressPageState extends State<ProgressPage> {
                               xValueMapper: (data, _) => data.day,
                               yValueMapper: (data, _) => data.ckal,
                               enableTooltip: true,
-                              // dataLabelSettings:  DataLabelSettings(isVisible: true, alignment: ChartAlignment.near)
                             )
                           ],
                           primaryXAxis: NumericAxis(
@@ -200,8 +213,30 @@ class __ProgressPageState extends State<ProgressPage> {
                         ),
                         300,
                         380),
-                      ]))));
+                  ]))));
     }
+  }
+
+  Container progressHeader(BuildContext context) {
+    return circleHeader(
+                      context,
+                      const Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            FaIcon(
+                              FontAwesomeIcons.chartLine,
+                              color: Colors.white,
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Text(
+                              "Progress",
+                              style: TextStyle(
+                                  color: Colors.white, fontSize: 30),
+                            )
+                          ]));
   }
 
   iconCard(String num, IconData icon, String label) {
@@ -211,20 +246,22 @@ class __ProgressPageState extends State<ProgressPage> {
       children: [
         Text(
           label,
-          style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+          style: _textStyle,
         ),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            FaIcon(
-              icon,
-              size: 22,
-            ),
-            SizedBox(width: 10),
+            // FaIcon(
+            //   icon,
+            //   size: 22,
+            // ),
+            // const SizedBox(width: 10),
             Text(
-              "${num}",
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              num,
+              style: const TextStyle(
+                fontSize: 24,
+              ),
             ),
           ],
         ),
@@ -232,6 +269,7 @@ class __ProgressPageState extends State<ProgressPage> {
     );
   }
 
+  //white container card
   Container card(Widget content, double height, double width) {
     return Container(
       height: height,
@@ -246,11 +284,14 @@ class __ProgressPageState extends State<ProgressPage> {
     );
   }
 
+  // collect ckal recommended consum data of every day in this month:
   List<CkalConsumptionData> getCounsumChartData() {
     final List<CkalConsumptionData> charData = [];
     for (String date in widget.userModel.diary.keys) {
       Day day = widget.userModel.diary[date]!;
       DateTime time = DateFormat.yMMMMd('en_US').parse(date);
+      //check it belong to this month!!!!!
+
       charData.add(CkalConsumptionData(time.day,
           day.getDailyConsumptionCkal(widget.userModel.dailyCalories)));
     }

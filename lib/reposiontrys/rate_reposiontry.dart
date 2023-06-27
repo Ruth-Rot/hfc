@@ -3,8 +3,7 @@ import 'package:hfc/models/recipe.dart';
 
 import '../models/rate.dart';
 
-class RateReposiontry{
-
+class RateReposiontry {
   final _db = FirebaseFirestore.instance;
 
   createRate(RateModel rate) async {
@@ -13,30 +12,17 @@ class RateReposiontry{
         .where("recipeId", isEqualTo: rate.recipeId)
         .where("userId", isEqualTo: rate.userId)
         .get();
-    if(snapshot.docs.isEmpty){
-    await _db
-        .collection("Rate")
-        .add(rate.toJson())
-      
-        .catchError((error, stackTrace) {
-     
-      print(error.toString());
-    });
-    }
-    else{
+    if (snapshot.docs.isEmpty) {
+      await _db
+          .collection("Rate")
+          .add(rate.toJson())
+          .catchError((error, stackTrace) {
+        print(error.toString());
+      });
+    } else {
       updateRate(rate.like, rate.userId, rate.recipeId);
     }
   }
-// Future<RateModel> getRateDetails(String title) async{
-//   final snapshot= await _db.collection("Recipes").where("title",isEqualTo: title).get();
-//   final rateData= snapshot.docs.map((e) => RateModel.fromSnapshot(e)).single;
-//   return rateData;
-// }
-// Future<List<RateModel>> allUser(String email) async{
-//   final snapshot= await _db.collection("Users").get();
-//   final ratesData= snapshot.docs.map((e) => RateModel.fromSnapshot(e)).toList();
-//   return ratesData;
-// }
 
   Future<List<RecipeModel>> allLikedRecipes(String email) async {
     List<RecipeModel> recipes = [];
@@ -58,15 +44,12 @@ class RateReposiontry{
         recipes.add(recipeModel);
       });
     }
-    //return recipessData;
     return recipes;
   }
 
   updateRate(bool like, String userId, String recipeId) async {
-// Get a new write batch
     final batch = _db.batch();
 
-// Set the value of 'NYC'
     var snapshot = await _db
         .collection("Rate")
         .where("recipeId", isEqualTo: recipeId)

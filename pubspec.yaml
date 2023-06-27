@@ -84,6 +84,8 @@ dependencies:
   #flutter_svg: ^2.0.5 used in RecipeCard vesion 1
   otp_text_field: ^1.1.1 #used in verfication page
 
+  vector_math: ^2.1.4
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

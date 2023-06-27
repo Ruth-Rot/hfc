@@ -1,10 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-// import 'package:hexcolor/hexcolor.dart';
-
-// green: Color.fromARGB(156, 156, 204, 101);
-// pink: Color.fromARGB(255, 225, 171, 145);
-//Color pink =const Color.fromARGB(255, 225, 171, 145);
 
 class ThemeHelper {
   InputDecoration textInputDecoration(
@@ -67,15 +62,6 @@ class ThemeHelper {
 
   BoxDecoration buttonBoxDecoration(BuildContext context,
       [String color1 = "", String color2 = ""]) {
-    // Color c1 = Theme.of(context).colorScheme.primary;
-    // Color c2 = Theme.of(context).colorScheme.secondary;
-    // if (color1.isEmpty == false) {
-    //   c1 = HexColor(color1);
-    // }
-    // if (color2.isEmpty == false) {
-    //   c2 = HexColor(color2);
-    // }
-
     return BoxDecoration(
       boxShadow: const [
         BoxShadow(color: Colors.black26, offset: Offset(0, 4), blurRadius: 5.0)
@@ -98,10 +84,11 @@ class ThemeHelper {
     );
   }
 
-  Widget SquareTile(IconData icon, Color color, action) {
+  Widget squareTile(IconData icon, Color color, action) {
     return GestureDetector(
+      onTap: action(),
       child: Container(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
           border: Border.all(color: Colors.white),
           borderRadius: BorderRadius.circular(16),
@@ -109,7 +96,6 @@ class ThemeHelper {
         ),
         child: FaIcon(icon, color: color,)
         ),
-        onTap: action(),
     );
 }
   AlertDialog alartDialog(String title, String content, BuildContext context) {

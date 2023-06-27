@@ -5,7 +5,7 @@ class RadialProgress extends StatefulWidget {
   final double height, width, progress;
   final double remain;
 
-  RadialProgress(
+  const RadialProgress(
       {Key? key,
       required this.height,
       required this.width,
@@ -26,7 +26,7 @@ class _RadialProgressState extends State<RadialProgress> {
       painter: _RadialPainter(
         progress: widget.progress,
       ),
-      child: Container(
+      child: SizedBox(
         height: widget.height,
         width: widget.width,
         child: Center(
@@ -42,7 +42,7 @@ class _RadialProgressState extends State<RadialProgress> {
                     color: color,
                   ),
                 ),
-                TextSpan(text: "\n"),
+                const TextSpan(text: "\n"),
                 TextSpan(
                   text: widget.remain.isNegative?"kcal passed":"kcal left",
                   style: TextStyle(
@@ -70,7 +70,7 @@ class _RadialPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     Paint paint = Paint()
       ..strokeWidth = 10
-      ..color = Color(0xFF200087)
+      ..color = const Color(0xFF200087)
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;
 

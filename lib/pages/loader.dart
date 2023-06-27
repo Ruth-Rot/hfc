@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class Loader extends StatefulWidget {
+  const Loader({super.key});
+
   @override
-  _LoaderState createState() => _LoaderState();
+  State<Loader> createState() => _LoaderState();
 }
 
 class _LoaderState extends State<Loader> with SingleTickerProviderStateMixin {
@@ -16,7 +18,7 @@ class _LoaderState extends State<Loader> with SingleTickerProviderStateMixin {
   void initState() {
     super.initState();
     controller =
-        AnimationController(vsync: this, duration: Duration(seconds: 5));
+        AnimationController(vsync: this, duration: const Duration(seconds: 5));
     controller.repeat();
   }
 
@@ -28,27 +30,23 @@ class _LoaderState extends State<Loader> with SingleTickerProviderStateMixin {
         child: Stack(
           children: [
             Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-               const CircleAvatar(
+                const CircleAvatar(
                     backgroundColor: Colors.transparent,
                     radius: 60,
-                    child:
-                        Image(image: AssetImage("assets/images/splash_bot.png"))),
-
-                         LoadingAnimationWidget.newtonCradle(
-              size: 200,
-              color: Colors.white,
-            ),
+                    child: Image(
+                        image: AssetImage("assets/images/splash_bot.png"))),
+                LoadingAnimationWidget.newtonCradle(
+                  size: 200,
+                  color: Colors.white,
+                ),
               ],
             ),
-           
             Positioned(
               bottom: 400,
               left: 50,
               child: AnimatedTextKit(
-                
                 animatedTexts: [
                   TypewriterAnimatedText(
                     "Loading",
@@ -73,11 +71,13 @@ class _LoaderState extends State<Loader> with SingleTickerProviderStateMixin {
 
   @override
   dispose() {
-    controller.dispose(); // you need this
+    controller.dispose();
     super.dispose();
   }
 }
 
+
+//main to check:
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {

@@ -1,4 +1,3 @@
-import 'package:dialog_flowtter/dialog_flowtter.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
@@ -12,19 +11,16 @@ class DialogMessageController  {
   late var recipeMessage;
   late bool startSendMeal = false;
   late bool sentPlanMeal = false;
- // late int counterMeal = 0;
-  late Map<String,dynamic> meal_plan ={};
-  late String meal_plan_text = "";
+  late Map<String,dynamic> mealPlan ={};
+  late String mealPlanText = "";
 
 
 
   DialogMessageController();
 
   listenToServer() async {
-    var mes;
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       print('Got a message whilst in the foreground!');
-      mes = message.data;
       print('Message data: ${message.data}');
       if (message.notification != null) {
         print('Message also contained a notification: ${message.notification}');

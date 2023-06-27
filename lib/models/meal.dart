@@ -29,7 +29,7 @@ class MealModel {
 clear(){
    dishController.clear();
    amountController.clear();
-   String measurement = "Cup";
+   measurement = "Cup";
 }
 
   getHeight() {

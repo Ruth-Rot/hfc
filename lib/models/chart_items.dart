@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:vector_math/vector_math_64.dart' as math;
 
 
-class _RadialProgress extends StatelessWidget {
+class RadialProgress extends StatelessWidget {
   final double height, width, progress;
 
-  _RadialProgress({required Key key, required this.height, required this.width, required this.progress}) : super(key: key);
+  const RadialProgress({required Key key, required this.height, required this.width, required this.progress}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -13,20 +13,20 @@ class _RadialProgress extends StatelessWidget {
       painter: _RadialPainter(
         progress: 0.7,
       ),
-      child: Container(
+      child: SizedBox(
         height: height,
         width: width,
         child: Center(
           child: RichText(
             textAlign: TextAlign.center,
-            text: TextSpan(
+            text: const TextSpan(
               children: [
                 TextSpan(
                   text: "1731",
                   style: TextStyle(
                     fontSize: 32,
                     fontWeight: FontWeight.w700,
-                    color: const Color(0xFF200087),
+                    color: Color(0xFF200087),
                   ),
                 ),
                 TextSpan(text: "\n"),
@@ -35,7 +35,7 @@ class _RadialProgress extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w500,
-                    color: const Color(0xFF200087),
+                    color: Color(0xFF200087),
                   ),
                 ),
               ],
@@ -56,7 +56,7 @@ class _RadialPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     Paint paint = Paint()
       ..strokeWidth = 10
-      ..color = Color(0xFF200087)
+      ..color =const Color(0xFF200087)
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;
 

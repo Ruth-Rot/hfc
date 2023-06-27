@@ -1,13 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hfc/controllers/activity_controller.dart';
 import 'package:hfc/models/activity.dart';
-import 'package:hfc/models/activitysList.dart';
+import 'package:hfc/models/activitys_list.dart';
 import 'package:hfc/models/dish.dart';
 import 'package:hfc/controllers/dish_controller.dart';
 import 'package:hfc/models/meal.dart';
-
 import 'day.dart';
-import 'dishData.dart';
+import 'dish_data.dart';
 
 class UserModel {
   final String? id;
@@ -23,7 +22,7 @@ class UserModel {
   late double height;
   late Map<String, Day> diary;
   late String purpose;
-  late String activity_level;
+  late String activityLevel;
 
   UserModel({
     this.id,
@@ -39,7 +38,7 @@ class UserModel {
     required this.weight,
     required this.height,
     required this.purpose,
-    required this.activity_level
+    required this.activityLevel
   });
   toJson() {
     return {
@@ -55,7 +54,7 @@ class UserModel {
       "weight": weight,
       "height": height,
       "purpose": purpose,
-      "activity_level":activity_level
+      "activity_level":activityLevel
     };
   }
 
@@ -121,7 +120,7 @@ class UserModel {
         weight: data["weight"].runtimeType == double? data["weight"]:double.parse(data["weight"]),
         height: data["height"].runtimeType == double? data["height"]:double.parse(data["height"]),
        purpose: data["purpose"],
-        activity_level:data["activity_level"]);
+        activityLevel:data["activity_level"]);
      
 
   }

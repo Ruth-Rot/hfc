@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hfc/common/recipe_card.dart';
-import 'package:hfc/controllers/messageChatController.dart';
+import 'package:hfc/controllers/message_chat_controller.dart';
 import 'package:hfc/models/recipe.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hfc/models/user.dart';
@@ -32,12 +32,10 @@ class Messages extends StatefulWidget {
 class _MessagesState extends State<Messages> {
   final user = FirebaseAuth.instance.currentUser!;
 
- final ScrollController _scrollController =  ScrollController(
+  final ScrollController _scrollController = ScrollController(
     initialScrollOffset: 0.0,
     keepScrollOffset: true,
   );
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -252,31 +250,6 @@ class _MessagesState extends State<Messages> {
                             ? 20
                             : 15,
                       )),
-                  // IconButton(
-                  //     onPressed: () async {
-                  //       setState(() {
-                  //         if (like == true) {
-                  //           like = false;
-                  //         } else {
-                  //           like = true;
-                  //         }
-                  //       });
-
-                  //       //update firebase:
-                  //       UserModel userM =
-                  //           await UserReposiontry().getUserDetails(user.email!);
-                  //       RecipeModel recipeM =
-                  //           await RecipeReposiontry().getRecipeDetails(req.title);
-                  //       await RateReposiontry()
-                  //           .updateRate(like, userM.getId(), recipeM.getId());
-                  //     },
-                  //     icon: like == false
-                  //         ? Icon(
-                  //             FontAwesomeIcons.thumbsDown,
-                  //           )
-                  //         : Icon(
-                  //             FontAwesomeIcons.thumbsUp,
-                  //           )),
                 ],
               ),
             ),
@@ -301,76 +274,51 @@ class _MessagesState extends State<Messages> {
         } else {
           RecipeModel req = RecipeModel.fromJson(json);
           if (req.request == "recipe") {
-            //add recipe for firebase:
-            //  updateFireBase(req);
             return RecipeCard(
                 recipeController: RecipeWidgetController(recipe: req));
           }
         }
       } else {
         print("first: " + data);
-        if(data == "#load"){
-          return Container(
-            child:
-Center(
-      child: LoadingAnimationWidget.staggeredDotsWave(
-        color: Colors.indigo,
-        size: 200,
-      ),
-          ));
-        }
-        else {
-          return Container(
-            child: Text(data,
-                style: TextStyle(
-                    color: isUser == true ? Colors.white : Colors.black)));
+        if (data == "#load") {
+          return Center(
+            child: LoadingAnimationWidget.staggeredDotsWave(
+              color: Colors.indigo,
+              size: 200,
+            ),
+          );
+        } else {
+          return Text(data,
+              style: TextStyle(
+                  color: isUser == true ? Colors.white : Colors.black));
         }
       }
     } on FormatException catch (e) //if not json:
     {
-
       print("second: " + data);
-        if(data == "#load"){
-          return Container(
-            child:
-Center(
-      child: LoadingAnimationWidget.staggeredDotsWave(
+      if (data == "#load") {
+        return Center(
+          child: LoadingAnimationWidget.staggeredDotsWave(
         color: Colors.indigo,
         size: 150,
-      ),
-          ));
-        }
-        else {
-      return Container(
-          child: Text(data,
-              style: TextStyle(
-                  color: isUser == true ? Colors.white : Colors.black)));
-    }}
+          ),
+        );
+      } else {
+        return Text(data,
+            style:
+                TextStyle(color: isUser == true ? Colors.white : Colors.black));
+      }
+    }
   }
 
   buildMealPlan(Map<String, dynamic> json, message) {
     json.remove("request");
-    // String text = json["text"];
-    // json.remove("text");
-    //int day=1;
     return Column(
       children: [
-        // Align(
-        //     alignment: Alignment.centerLeft,
-        //     child: Text(text)),
-        // SizedBox(
-        //   height: 5,
-        // ),
         SizedBox(
             height: 670,
             width: 380,
-            child:
-                //  ListView.separated(
-                //     physics: BouncingScrollPhysics(),
-                //     scrollDirection: Axis.horizontal,
-                //     itemBuilder: (BuildContext context, int index) {
-                //       return
-                Column(
+            child: Column(
               children: [
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -382,17 +330,20 @@ Center(
                           )
                         : IconButton(
                             onPressed: () {
-                              if (widget.controllers[message]!.day > 1)
-                                setState(() {
-                                  widget.controllers[message]!.day--;
-                                });
+                              if (widget.controllers[message]!.day > 1) {
+                                if (mounted) {
+                                  setState(() {
+                                    widget.controllers[message]!.day--;
+                                  });
+                                }
+                              }
                             },
                             icon: const Icon(Icons.arrow_left, size: 40),
                           ),
                     Text(
                       "Day ${widget.controllers[message]!.day}",
-                      style:
-                          const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          fontSize: 22, fontWeight: FontWeight.bold),
                     ),
                     widget.controllers[message]!.day == json.keys.length
                         ? const SizedBox(
@@ -401,10 +352,13 @@ Center(
                         : IconButton(
                             onPressed: () {
                               if (widget.controllers[message]!.day <
-                                  json.keys.length)
-                                setState(() {
-                                  widget.controllers[message]!.day++;
-                                });
+                                  json.keys.length) {
+                                if (mounted) {
+                                  setState(() {
+                                    widget.controllers[message]!.day++;
+                                  });
+                                }
+                              }
                             },
                             icon: const Icon(Icons.arrow_right, size: 40),
                           ),
@@ -414,7 +368,7 @@ Center(
                 const SizedBox(
                   height: 5,
                 ),
-                Container(
+                SizedBox(
                   height: 610,
                   width: 350,
                   child: ListView.separated(
@@ -451,15 +405,8 @@ Center(
                     },
                   ),
                 ),
-                //  Text(json[(index+1).toString()]),
               ],
             )
-            // },
-            //       separatorBuilder: (BuildContext context, int index) {
-            //         return Divider();
-            //       },
-            //       itemCount: json.keys.length),
-            // ),
             )
       ],
     );

@@ -1,6 +1,6 @@
 
 
-import 'package:hfc/models/dishData.dart';
+import 'package:hfc/models/dish_data.dart';
 
 import '../controllers/dish_controller.dart';
 

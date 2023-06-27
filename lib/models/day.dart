@@ -1,7 +1,6 @@
 import 'package:hfc/models/meal.dart';
-import 'package:hfc/models/activitysList.dart';
+import 'package:hfc/models/activitys_list.dart';
 
-import 'activity.dart';
 
 class Day {
   final String? id;
@@ -13,7 +12,6 @@ class Day {
     'Lunch': 1,
     'Dinner': 2,
     'Snacks': 3,
-    //'Activity': 4
   };
 
   Day({this.id, required this.date,required this.meals, required this.activitys});
@@ -80,6 +78,5 @@ getDayMeals(){return [
     MealModel(type: 'Lunch',dishes: []),
     MealModel(type: 'Dinner',dishes:[]),
     MealModel(type: 'Snacks', dishes: []),
-  //  MealModel(type: 'Activity',dishes: [])
   ];
   }

@@ -7,16 +7,15 @@ import 'package:get/get.dart';
 import 'package:hfc/controllers/signup_controller.dart';
 import 'package:hfc/pages/home_page.dart';
 import 'package:hfc/pages/loader.dart';
-
-import 'package:hfc/pages/widget/Header_widget.dart';
+import 'package:hfc/headers/start_header.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:toggle_switch/toggle_switch.dart';
-
 import '../common/theme_helper.dart';
 import '../models/user.dart';
 import 'login_page.dart';
 import '../reposiontrys/user_reposiontry.dart';
+import 'package:hfc/common/show_alert.dart';
 
 class RegistrationPage extends StatefulWidget {
   const RegistrationPage({Key? key}) : super(key: key);
@@ -50,14 +49,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
   late String imageUrl;
 
   bool _errorS = false;
-    String _error = "";
+  String _error = "";
+  final double _headerHeight = 150;
 
-
-
-  var credential;
   @override
   void dispose() {
-    // TODO: implement dispose
     controller.clear();
 
     super.dispose();
@@ -70,9 +66,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
       body: SingleChildScrollView(
           child: Stack(
         children: [
-          const SizedBox(
-            height: 150,
-            child: HeaderWidget(150, false, Icons.person_add_alt_1_rounded),
+          SizedBox(
+            height: _headerHeight,
+            child: HeaderWidget(
+                _headerHeight, false, Icons.person_add_alt_1_rounded),
           ),
           Column(
             children: [
@@ -108,105 +105,100 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         terms(context),
                         const SizedBox(height: 10.0),
                         //submit:
-                        Container(
-                            decoration: ThemeHelper().buttonBoxDecoration(context),
-                            child: ElevatedButton(
-                              style: ThemeHelper().buttonStyle(),
-                              child: Padding(
-                                padding: const EdgeInsets.fromLTRB(40, 10, 40, 10),
-                                child: Text(
-                                  "Sign In".toUpperCase(),
-                                  style: const TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white),
-                                ),
-                              ),
-                              onPressed: () async {
-                                // Validate returns true if the form is valid, or false otherwise.
-                                if (_formKey.currentState!.validate()) {
-                                  // If the form is valid, display a snackbar. In the real world,
-                                  // you'd often call a server or save the information in a database.
-                                  
-                                  signUpByEmailAndPassword().then((instance){
-                                    if(instance == true){
-                                      Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => Loader()));
-                                  FirebaseAuth.instance
-                                      .authStateChanges()
-                                      .listen((User? user) async {
-                                    if (user != null) {
-                                      final user = await addUserDetails();
-                                      Navigator.pop(context);
-                                      Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => HomePage()));
-                                    } else {
-                                      print('User is currently signed out!');
-                                    }});
-                                }});}
-                              }
-                    )),
+                        sumbitButton(context),
                         const SizedBox(height: 20),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Already have an account?',
-                              style: TextStyle(color: Colors.grey[700]),
-                            ),
-                            const SizedBox(width: 4),
-                            GestureDetector(
-                              child: Text(
-                                'Login now',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Theme.of(context).colorScheme.secondary),
-                              ),
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => LoginPage()));
-                              },
-                            ),
-                          ],
-                        )
+                        loginOption(context)
                       ],
                     ),
                   )
                 ]),
-                
               ),
-                                  showAlert()
-
+              showAlert(_errorS,_error)
             ],
           ),
-
         ],
       )),
     );
   }
 
-  // ElevatedButton googleButton(BuildContext context) {
-  //   return ElevatedButton.icon(
-  //                 style: ElevatedButton.styleFrom(
-  //                   backgroundColor: Colors.white,
-  //                   foregroundColor: Colors.black,
-  //                   minimumSize: Size(double.infinity, 50),
-  //                 ),
-  //                 icon: FaIcon(FontAwesomeIcons.google,color: Colors.red,),
-  //                 label: Text("Sign Up with Google"),
-  //                 onPressed: (){
-  //                   final provider = Provider.of<GoogleSignInProvider>(context,listen: false);
-  //                   provider.googleLogin();
-  //                 },
-  //                );
-  // }
+// hyper connection to Login Page
+  Row loginOption(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          'Already have an account?',
+          style: TextStyle(color: Colors.grey[700]),
+        ),
+        const SizedBox(width: 4),
+        GestureDetector(
+          child: Text(
+            'Login now',
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).colorScheme.secondary),
+          ),
+          onTap: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const LoginPage()));
+          },
+        ),
+      ],
+    );
+  }
 
+// submit button:
+  Container sumbitButton(BuildContext context) {
+    return Container(
+        decoration: ThemeHelper().buttonBoxDecoration(context),
+        child: ElevatedButton(
+            style: ThemeHelper().buttonStyle(),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(40, 10, 40, 10),
+              child: Text(
+                "Sign In".toUpperCase(),
+                style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
+              ),
+            ),
+            onPressed: () async {
+              // Validate form fields.
+              if (_formKey.currentState!.validate()) // If the form is valid:
+              {
+                // sign up to firebase with fields content:
+                signUpByEmailAndPassword().then((instance) {
+                  if (instance == true) {
+                    // if succsed - move to loader page:
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) =>const Loader()));
+                    // wait until user authState change
+                    FirebaseAuth.instance
+                        .authStateChanges()
+                        .listen((User? user) async {
+                      if (user != null) {
+                        // add user details to firestore
+                        await addUserDetails();
+                        // move context to home page
+                        if (mounted) {
+                          Navigator.pop(context);
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => HomePage()));
+                        }
+                      } else {
+                        //return to here when user disconnect
+                      }
+                    });
+                  }
+                });
+              }
+            }));
+  }
+
+  //trems hyperlink
   FormField<bool> terms(BuildContext context) {
     return FormField<bool>(
       builder: (state) {
@@ -214,14 +206,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
           children: <Widget>[
             Row(
               children: <Widget>[
-                // Checkbox(
-                //     value: checkboxValue,
-                //     onChanged: (value) {
-                //       setState(() {
-                //         checkboxValue = value!;
-                //         state.didChange(value);
-                //       });
-                //     }),
                 Checkbox(
                   value: checkboxValue,
                   onChanged: (bool? value) {
@@ -230,7 +214,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     });
                   },
                 ),
-                Text(
+                const Text(
                   "I accept all terms and conditions.",
                   style: TextStyle(color: Colors.grey),
                 ),
@@ -260,6 +244,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
     );
   }
 
+//pasword field
   TextFormField password() {
     return TextFormField(
       keyboardType: TextInputType.visiblePassword,
@@ -271,6 +256,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
         if (value.length < 6) {
           return "Password should be more then 6 characters";
         }
+        return null;
       },
       decoration: InputDecoration(
         labelText: "Password",
@@ -306,16 +292,14 @@ class _RegistrationPageState extends State<RegistrationPage> {
     );
   }
 
+//phone number field
   Container phone() {
     return Container(
       decoration: ThemeHelper().inputBoxDecorationShaddow(),
       child: TextFormField(
         decoration: ThemeHelper().textInputDecoration("Mobile Number",
-            "Enter your mobile number", Icon(Icons.phone_android)),
+            "Enter your mobile number", const Icon(Icons.phone_android)),
         keyboardType: TextInputType.phone,
-        // onChanged: (val){
-        //     setState(() => number = val   );
-        //   },
         validator: (val) {
           if (val!.isEmpty) {
             return "Enter phone number";
@@ -333,6 +317,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
     );
   }
 
+// email field
   Container email() {
     return Container(
       decoration: ThemeHelper().inputBoxDecorationShaddow(),
@@ -350,26 +335,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
           if (!emailValidator) {
             return "Enter Valid email";
           }
+          return null;
         },
       ),
     );
   }
 
-  // Container lastName() {
-  //   return Container(
-  //     decoration: ThemeHelper().inputBoxDecorationShaddow(),
-  //     child: TextFormField(
-  //         decoration: ThemeHelper()
-  //             .textInputDecoration("Last name", "Enter your last name"),
-  //         controller: lastNameController,
-  //         validator: (value) {
-  //           if (value!.isEmpty) {
-  //             return "Enter your last name";
-  //           }
-  //         }),
-  //   );
-  // }
-
+  //full name field
   Container fullName() {
     return Container(
       decoration: ThemeHelper().inputBoxDecorationShaddow(),
@@ -385,10 +357,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
             if (value!.isEmpty) {
               return "Enter your full name";
             }
+            return null;
           }),
     );
   }
 
+//gender toggle:
   ToggleSwitch genderToggle() {
     return ToggleSwitch(
       minWidth: 170.0,
@@ -405,7 +379,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
         [Colors.pink]
       ],
       onToggle: (index) {
-        print('switched to: $index');
         genderInit = index!;
         setState(() {
           if (!isUploudPic) {
@@ -420,6 +393,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
     );
   }
 
+//image profile picker:
   GestureDetector imageProfile() {
     return GestureDetector(
         child: Stack(children: [
@@ -456,39 +430,36 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
     if (pickedFile != null) {
       if (directory != null) {
-        if (directory != null) {
-          img = (await File(pickedFile.path)
-              .copy('${directory.path}/${pickedFile.name}'));
-          isUploudPic = true;
-        }
+        img = (await File(pickedFile.path)
+            .copy('${directory.path}/${pickedFile.name}'));
+        isUploudPic = true;
       }
     }
+
     //update image
     if (mounted) {
       setState(() {});
     }
   }
 
-//create user
+  //create new user
   Future<bool> signUpByEmailAndPassword() async {
     try {
-      credential = await _auth.createUserWithEmailAndPassword(
+       await _auth.createUserWithEmailAndPassword(
           email: controller.email.text.trim(),
           password: controller.password.text.trim());
     } on FirebaseAuthException catch (e) {
+      //handele errors
       setState(() {
         _errorS = true;
         _error = e.message!;
       });
-      return false;
-      // print('Failed with error code: ${e.code}');
-      // print(e.message);
+      return false; //return false if error
     }
-    print(credential);
-    return true;
+    return true; //true if succseed
   }
 
-  //show popup dialog
+  //show image picker pop up dialog
   uploadPic() {
     showDialog(
         context: context,
@@ -496,8 +467,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
           return AlertDialog(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            title: Text('Please choose media to select'),
-            content: Container(
+            title: const Text('Please choose media to select'),
+            content: SizedBox(
               height: MediaQuery.of(context).size.height / 6,
               child: Column(
                 children: [
@@ -507,8 +478,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       Navigator.pop(context);
                       getImage(ImageSource.gallery);
                     },
-                    child: Row(
-                      children: const [
+                    child: const Row(
+                      children: [
                         Icon(Icons.image_outlined),
                         Text('From Gallery'),
                       ],
@@ -520,8 +491,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       Navigator.pop(context);
                       getImage(ImageSource.camera);
                     },
-                    child: Row(
-                      children: const [
+                    child: const Row(
+                      children: [
                         Icon(Icons.camera_alt_outlined),
                         Text('From Camera'),
                       ],
@@ -534,31 +505,20 @@ class _RegistrationPageState extends State<RegistrationPage> {
         });
   }
 
-  Color getColor(Set<MaterialState> states) {
-    const Set<MaterialState> interactiveStates = <MaterialState>{
-      MaterialState.pressed,
-      MaterialState.hovered,
-      MaterialState.focused,
-    };
-    if (states.any(interactiveStates.contains)) {
-      return Colors.blue;
-    }
-    return Colors.red;
-  }
-
   //add user details:
   Future addUserDetails() async {
     imageUrl = urlImage;
     if (isUploudPic) {
-      var ref;
-      ref = FirebaseStorage.instance
+      //add image to storage
+      var ref = FirebaseStorage.instance
           .ref()
           .child("Users Profile Photos")
           .child(_auth.currentUser!.uid);
       await ref.putFile(img);
-      // await Future.delayed(const Duration(seconds: 10), () {});
+      //get image path
       imageUrl = await ref.getDownloadURL();
     }
+    //build user model
     final user = UserModel(
         email: controller.email.text.trim().toLowerCase(),
         fullName: controller.fullname.text.trim(),
@@ -572,32 +532,14 @@ class _RegistrationPageState extends State<RegistrationPage> {
         weight: 0,
         height: 0,
         purpose: "",
-        activity_level: "");
-
+        activityLevel: "");
+    //add user to firestore
     final rep = UserReposiontry();
     await rep.createUser(user);
   }
 
-  Widget showAlert() {
-    if (_errorS) {
-      return Container(
-        color: Colors.amberAccent,
-        width: double.infinity,
-        padding: EdgeInsets.all(8.0),
-        child: Row(
-          children: [
-            Icon(Icons.error_outline),
-            SizedBox(
-              width: 10.0,
-            ),
-            Expanded(
-                child: Text(
-              _error,
-            ))
-          ],
-        ),
-      );
-    }
-    return SizedBox(height: 0.0);
-  }
+//terms and condition dialog:
+
+
+  
 }

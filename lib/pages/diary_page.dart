@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:hfc/common/circle_header.dart';
-import 'package:hfc/models/activitysList.dart';
+import 'package:hfc/headers/circle_header.dart';
+import 'package:hfc/models/activitys_list.dart';
 import 'package:hfc/models/dish.dart';
 import 'package:hfc/models/user.dart';
 import 'package:hfc/reposiontrys/user_reposiontry.dart';
 import 'package:intl/intl.dart';
+import '../common/fill_your_details.dart';
 import '../common/radial_progress.dart';
 import '../common/stick_progress.dart';
 import '../common/theme_helper.dart';
 import '../models/activity.dart';
 import '../models/day.dart';
-import '../models/dishData.dart';
+import '../models/dish_data.dart';
 import '../models/meal.dart';
-import '../reposiontrys/activityApi_reposiontry.dart';
-import '../reposiontrys/nutritionApi_reposiontry.dart';
+import '../reposiontrys/activity_api_reposiontry.dart';
+import '../reposiontrys/nutrition_api_reposiontry.dart';
 import 'package:hfc/controllers/dish_controller.dart';
 
 class DiaryPage extends StatefulWidget {
@@ -75,7 +76,6 @@ class __DiaryPageState extends State<DiaryPage> {
 
   @override
   Widget build(BuildContext context) {
-    //final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
 
     if (widget.userModel.fillDetails == true) {
@@ -172,28 +172,14 @@ class __DiaryPageState extends State<DiaryPage> {
         ),
       );
     } else {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            Text(
-              "You haven't fill your personal details yet",
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
-            ),
-            SizedBox(
-                height: 300,
-                child:
-                    Image(image: AssetImage('./assets/images/splash_bot.png'))),
-            SizedBox(
-              height: 30,
-            ),
-            Text("Fill your details in the chat bot",
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700))
-          ],
-        ),
-      );
+      return 
+       Scaffold(
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              circleHeader(context, dateWidget()), SizedBox(height: 50,),fillYourDetails()])
+        )
+       );
     }
   }
 
@@ -218,14 +204,14 @@ class __DiaryPageState extends State<DiaryPage> {
                 size: 30,
               )),
           const SizedBox(
-            width: 50,
+            width: 30,
           ),
           Text(
             dateS,
-            style: const TextStyle(color: Colors.white, fontSize: 20),
+            style: const TextStyle(color: Colors.white, fontSize: 24),
           ),
           const SizedBox(
-            width: 50,
+            width: 30,
           ),
           ElevatedButton(
               style: ElevatedButton.styleFrom(
@@ -351,7 +337,7 @@ class __DiaryPageState extends State<DiaryPage> {
               itemBuilder: (BuildContext context, int index) {
                 return SizedBox(
                   height: 50,
-                  child: ActivityitemRow(activitys.items[index],index),
+                  child: activityitemRow(activitys.items[index],index),
                 );
               },
               separatorBuilder: (BuildContext context, int index) =>
@@ -508,7 +494,6 @@ class __DiaryPageState extends State<DiaryPage> {
         color:
             activitys.isAdd == false ? Colors.blue : Colors.red, // Button color
         child: InkWell(
-          //  splashColor: isAdd==false?Colors.red:Colors.blue, // Splash color
           onTap: () {
             if (activitys.isAdd == true) {
               if (activitys.formKey.currentState!.validate()) {
@@ -640,10 +625,8 @@ class __DiaryPageState extends State<DiaryPage> {
         setState(() {
           if (level == 1) {
             activtys.type = item;
-//     currentDay.activitys.type=value;
           } else {
             activtys.subtype = item;
-            //  currentDay.activitys.subtype=value;
           }
         });
       },
@@ -693,7 +676,7 @@ class __DiaryPageState extends State<DiaryPage> {
                   int indexM = currentDay.mealsIndex[meal]!;
                   editNutritionDialogBuilder(context, dish, indexM, indexD);
                 },
-                icon: FaIcon(
+                icon: const FaIcon(
                   FontAwesomeIcons.pencil,
                   size: 20,
                 ))),
@@ -720,6 +703,7 @@ class __DiaryPageState extends State<DiaryPage> {
         if (!amountValidator) {
           return "Enter number";
         }
+        return null;
       },
     );
   }
@@ -744,6 +728,7 @@ class __DiaryPageState extends State<DiaryPage> {
         if (!dishValidator) {
           return "Enter Valid dish";
         }
+        return null;
       },
     );
   }
@@ -754,10 +739,6 @@ class __DiaryPageState extends State<DiaryPage> {
       decoration: ThemeHelper().textInputDecorationFoodForm(
         "Amount",
         "How much?",
-        // Icon(
-        //   FontAwesomeIcons.weightScale,
-        //   size: 15,
-        // )),
       ),
       controller: meal.amountController,
       style: const TextStyle(fontSize: 12),
@@ -770,6 +751,7 @@ class __DiaryPageState extends State<DiaryPage> {
         if (!amountValidator) {
           return "Enter number";
         }
+        return null;
       },
     );
   }
@@ -804,12 +786,12 @@ class __DiaryPageState extends State<DiaryPage> {
 
   actvitiyContainer(ActivityList activitys) {
     double height = activitys.getHeight();
-    return Container(
+    return SizedBox(
       height: height + 20.0,
       child: Stack(children: [
         Positioned(
             left: 10,
-            child: Container(
+            child: SizedBox(
                 height: height, width: 380, child: activityCard(activitys))),
         activitys.isOpen == true
             ? Positioned(
@@ -819,7 +801,7 @@ class __DiaryPageState extends State<DiaryPage> {
     );
   }
 
-  ActivityitemRow(Activity item,int index) {
+  activityitemRow(Activity item,int index) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       mainAxisSize: MainAxisSize.max,
@@ -847,7 +829,6 @@ class __DiaryPageState extends State<DiaryPage> {
             width: 25,
             child: IconButton(
                 onPressed: () {
-                  print("edit calories option to implemt!!!");
                   editActivityDialogBuilder(context, item, index);
                 },
                 icon: const FaIcon(
@@ -892,7 +873,7 @@ class __DiaryPageState extends State<DiaryPage> {
       decoration: ThemeHelper().textInputDecorationFoodForm(
           "Duration",
           "How much?",
-          Icon(
+          const Icon(
             FontAwesomeIcons.clock,
             size: 15,
           )),
@@ -902,10 +883,7 @@ class __DiaryPageState extends State<DiaryPage> {
         if (value!.isEmpty) {
           return "Enter your duration activity";
         }
-        // bool amountValidator = RegExp(r"/^\d+$/").hasMatch(value);
-        // if (!amountValidator) {
-        //   return "Enter number";
-        // }
+        return null;
       },
     );
   }
