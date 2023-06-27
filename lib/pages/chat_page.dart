@@ -1,23 +1,25 @@
 import 'dart:convert';
-import 'dart:math';
-
 import 'package:dialog_flowtter/dialog_flowtter.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
+import 'package:hfc/controllers/dialog_message_controller.dart';
 import 'package:hfc/pages/home_page.dart';
 import 'package:hfc/reposiontrys/dialog_reposiontry.dart';
-import '../models/rate.dart';
-import '../models/recipe.dart';
+import '../controllers/message_chat_controller.dart';
 import '../models/user.dart';
-import '../reposiontrys/rate_reposiontry.dart';
-import '../reposiontrys/recipe_reposiontry.dart';
 import '../reposiontrys/user_reposiontry.dart';
 import 'messages.dart';
 
 class ChatPage extends StatefulWidget {
-  const ChatPage({super.key});
+  final UserModel user;
+  final UserReposiontry userReposiontry;
+  final DialogMessageController dialogController;
+  const ChatPage(
+      {super.key,
+      required this.user,
+      required this.userReposiontry,
+      required this.dialogController});
 
   @override
   State<StatefulWidget> createState() {
@@ -29,46 +31,89 @@ class __ChatPageState extends State<ChatPage> {
   late DialogFlowtter dialogFlowtter;
   final TextEditingController _controller = TextEditingController();
   //final userFire = FirebaseAuth.instance.currentUser!;
-  late UserModel user;
   List<Map<String, dynamic>> messages = [];
-  List<Map<String, dynamic>> previous_messages = [];
-
-  bool isUser = false;
-
+  List<Map<String, dynamic>> previousMessages = [];
+  Map<dynamic, MessageChatController> controllers = {};
+  Message loadMessage = Message(text: DialogText(text: const ["#load"]));
   var isOnce = true;
+  bool isDialog = false;
 
   @override
   void initState() {
-    UserReposiontry()
-        .getUserDetails(FirebaseAuth.instance.currentUser!.email!)
-        .then((instance) {
-      user = instance;
-      DialogReposiontry().createDialogRep().then((ins) {
-        dialogFlowtter = ins;
-        UserReposiontry()
-            .updateSessionId(dialogFlowtter.sessionId, user.email)
-            .then((instance) {
-          if (this.mounted) {
-            setState(() {
-              isUser = true;
-              buildPreviousMessages(user.convresation);
-
-              // previous_messages = buildPreviousMessages(user.convresation);
-            });
-          }
-        });
+    DialogReposiontry().createDialogRep().then((ins) {
+      dialogFlowtter = ins;
+      UserReposiontry()
+          .updateSessionId(dialogFlowtter.sessionId, widget.user.email)
+          .then((instance) {
+        if (mounted) {
+          setState(() {
+            isDialog = true;
+            buildPreviousMessages(widget.user.conversation);
+          });
+        }
       });
     });
 
     super.initState();
   }
 
+  listenToServerChat(DialogMessageController controller) async {
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('Got a message whilst in the foreground!');
+      print('Message data: ${message.data}');
+      if (message.notification != null) {
+        print('Message also contained a notification: ${message.notification}');
+      } else {
+        if (message.data['request'] == 'recipe') {
+          if (mounted) {
+            setState(() {
+              controller.recipeMessage = message.data;
+              controller.isWaitedRecipe = true;
+            });
+          }
+        }
+        if (message.data['request'] == 'text') {
+          print("text");
+          if (mounted) {
+            setState(() {
+              controller.startSendMeal = true;
+              controller.mealPlan = {};
+              controller.mealPlanText = message.data["text"];
+            });
+          }
+        }
+        if (message.data['request'] == 'meal_plan') {
+          if (mounted) {
+            setState(() {
+              print(message.data);
+              controller.mealPlan[message.data['currentMessage']] =
+                  message.data['card'];
+              if (controller.mealPlan.length.toString() ==
+                  message.data['messagesNumber'].toString()) {
+                controller.sentPlanMeal = true;
+              }
+            });
+          }
+        }
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     checkStart();
+    listenToServerChat(widget.dialogController);
+    checkWaitedRecipe();
+
+    for (var m in previousMessages) {
+      controllers[m] = MessageChatController();
+    }
+    for (var m in messages) {
+      controllers[m] = MessageChatController();
+    }
     return Scaffold(
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(80.0), // here the desired height
+          preferredSize: const Size.fromHeight(80.0), // here the desired height
           child: AppBar(
             title: const Text(
               "HFC Bot",
@@ -93,9 +138,9 @@ class __ChatPageState extends State<ChatPage> {
             ),
             Expanded(
                 child: Messages(
-              messages: messages,
-              previous_messages: previous_messages,
-            )),
+                    messages: messages,
+                    previousMessages: previousMessages,
+                    controllers: controllers)),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
               // color: Colors.indigo.shade800,
@@ -111,7 +156,7 @@ class __ChatPageState extends State<ChatPage> {
                       color: Color.fromARGB(171, 158, 158, 158),
                     ),
                     TextField(
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         hintText: 'Enter your message...',
                         enabledBorder: UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.transparent),
@@ -140,54 +185,24 @@ class __ChatPageState extends State<ChatPage> {
   }
 
   botAvatar() {
-    return
-        //    Align(
-        //           alignment: Alignment.bottomRight,
-        //           child: Row(
-        //             children: [
-        //               const SizedBox(
-        //                 width: 270,
-        //               ),
-        //               Column(
-        //                 children: [
-        //                      const SizedBox(
-        //                 height: 26,),
-        //                   Container(
-        //                     child: const CircleAvatar(
-        //                       radius: 40,
-        //                       backgroundColor: Colors.white70,
-        //                       child: CircleAvatar(
-        //                           radius: 50,
-        //                           child: Image(
-        //                               image:
-        //                                   AssetImage("assets/images/splash_bot.png"))),
-        //                     ),
-        //                   ),
-        //                 ],
-        //               ),
-        //             ],
-        //           ),
-        //         );
-        Transform.translate(
-            offset: Offset(100, 40),
-            child: const CircleAvatar(
-              radius: 50,
-              backgroundColor: Colors.white70,
-              child: CircleAvatar(
-                  radius: 60,
-                  child:
-                      Image(image: AssetImage("assets/images/splash_bot.png"))),
-            ));
+    return Transform.translate(
+        offset: const Offset(100, 40),
+        child: const CircleAvatar(
+          radius: 50,
+          backgroundColor: Colors.white70,
+          child: CircleAvatar(
+              radius: 60,
+              child: Image(image: AssetImage("assets/images/splash_bot.png"))),
+        ));
   }
 
   IconButton returnBack(BuildContext context) {
     return IconButton(
-      icon: Icon(
+      icon: const Icon(
         Icons.arrow_back,
         color: Colors.white70,
       ),
       onPressed: () {
-        UserReposiontry().saveMessages(previous_messages+messages, user.email);
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => HomePage()));
       },
@@ -198,7 +213,7 @@ class __ChatPageState extends State<ChatPage> {
     if (text.isEmpty) {
       print('Message is empty');
     } else {
-      if (this.mounted) {
+      if (mounted) {
         setState(() {
           var mes = Message(text: DialogText(text: [text]));
           addMessage(mes, true);
@@ -209,56 +224,54 @@ class __ChatPageState extends State<ChatPage> {
       DetectIntentResponse response =
           await dialogFlowtter.detectIntent(queryInput: query);
       if (response.message == null) return;
-      if (this.mounted) {
+
+      if (mounted) {
         setState(() {
           addMessage(response.message!);
         });
+      }
+      //save messages in firebase:
+      UserReposiontry()
+          .saveMessages(previousMessages + messages, widget.user.email);
+      if (response.message!.text!.text![0]
+              .contains("the server working on it.") ||
+          response.message!.text!.text![0].contains(
+              "I'm making the plan for you, it may take some time.")) {
+        if (mounted) {
+          setState(() {
+            Future.delayed(const Duration(milliseconds: 5), () {
+              addMessage(loadMessage);
+            });
+          });
+        }
       }
     }
   }
 
   fillDetails() async {
-    var query = QueryInput(text: TextInput(text: 'profile'));
+    var query = QueryInput(text: TextInput(text: 'personal details'));
+
     DetectIntentResponse response =
         await dialogFlowtter.detectIntent(queryInput: query);
-    if (this.mounted) {
+    if (mounted) {
       if (response.message == null) return;
       setState(() {
         addMessage(response.message!);
       });
+
+      //save messages in firebase:
+      UserReposiontry()
+          .saveMessages(previousMessages + messages, widget.user.email);
     }
-    //}
   }
 
   addMessage(Message message, [bool isUserMessage = false]) {
     messages.add({'message': message, 'isUserMessage': isUserMessage});
-    try {
-      String text = message.text!.text![0];
-      var dec = jsonDecode(text.toString());
-      if (dec is Map<String, dynamic>) {
-        RecipeModel req = RecipeModel.fromJson(dec);
-        if (req.requset == "recipe") {
-          updateFireBase(req);
-        }
-      }
-    } on FormatException catch (e) //if not json:
-    {
-    } on Exception catch (e) {}
-  }
-
-  Future<void> updateFireBase(RecipeModel req) async {
-    //add recipe for firebase:
-    RecipeReposiontry().createRecipe(req);
-    //add recommenstion suggest to user:
-    RecipeModel recipeM = await RecipeReposiontry().getRecipeDetails(req.title);
-    var rate =
-        RateModel(like: true, userId: user.getId(), recipeId: recipeM.getId());
-    RateReposiontry().createRate(rate);
   }
 
   checkStart() async {
-    if (isUser == true) {
-      if (user.fillDetails == false && isOnce == true) {
+    if (isDialog == true) {
+      if (widget.user.fillDetails == false && isOnce == true) {
         fillDetails();
         isOnce = false;
       }
@@ -267,21 +280,63 @@ class __ChatPageState extends State<ChatPage> {
 
   buildPreviousMessages(var convresation) {
     if (convresation != "") {
-      // List valueMap = jsonDecode(convresation).toList();
       for (var value in convresation) {
-        // Map valueMap = jsonDecode(value);
-        // value = value.replaceAll("{", "");
-        // value = value.replaceAll("}", "");
-        // var dataSp = value.split(',');
-        // Map<String, String> mapData = Map();
-        // dataSp.forEach((element) => mapData[element.split(':')[0].trim()] =
-        //     element.split(':')[1].trim());
-        // print(value);
-        previous_messages.add({
-          'message': value['text'],
-          'isUserMessage': value['isUser']
+        previousMessages
+            .add({'message': value['text'], 'isUserMessage': value['isUser']});
+      }
+    }
+  }
+
+  void checkWaitedRecipe() {
+    if (widget.dialogController.isWaitedRecipe == true) {
+      if (mounted) {
+        setState(() {
+          messages[messages.length - 1]['message'] = Message(
+              text: DialogText(
+                  text: [widget.dialogController.recipeMessage['card']]));
+          addMessage(Message(
+              text: DialogText(
+                  text: [widget.dialogController.recipeMessage['text']])));
+        });
+        //save messages in firebase:
+        UserReposiontry()
+            .saveMessages(previousMessages + messages, widget.user.email);
+      }
+      widget.dialogController.isWaitedRecipe = false;
+    }
+    if (widget.dialogController.sentPlanMeal == true) {
+      String req =
+          jsonEncode(addMealPlanToMessages(widget.dialogController.mealPlan));
+      if (mounted) {
+        setState(() {
+          messages[messages.length - 1]['message'] = Message(
+              text: DialogText(text: [widget.dialogController.mealPlanText]));
+          addMessage(Message(text: DialogText(text: [req])));
+          //save messages in firebase:
+          UserReposiontry()
+              .saveMessages(previousMessages + messages, widget.user.email);
+          widget.dialogController.sentPlanMeal = false;
         });
       }
     }
+  }
+
+  addMealPlanToMessages(Map mealPlan) {
+    Map<String, dynamic> days = {};
+    Map<String, dynamic> meals;
+    int day = 1;
+    for (var index = 1; index < mealPlan.length; index = index + 3) {
+      meals = {};
+      int place = 1;
+      for (var inerIndex = index; inerIndex < index + 3; inerIndex++) {
+        //  int modolu = (inerIndex / 3).floor()+1;
+        meals[place.toString()] = mealPlan[(inerIndex).toString()];
+        place++;
+      }
+      days[day.toString()] = jsonEncode(meals);
+      day++;
+    }
+    days["request"] = "meal_plan";
+    return days;
   }
 }

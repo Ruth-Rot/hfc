@@ -1,11 +1,11 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:hfc/pages/login_page.dart';
 import '../common/theme_helper.dart';
-import 'package:hfc/pages/widget/Header_widget.dart';
+import 'package:hfc/headers/start_header.dart';
 import 'package:otp_text_field/otp_field.dart';
 import 'package:otp_text_field/style.dart';
 
-import 'profile_page.dart';
 
 class ForgotPasswordVerificationPage extends StatefulWidget {
   const ForgotPasswordVerificationPage({Key? key}) : super(key: key);
@@ -125,7 +125,7 @@ class _ForgotPasswordVerificationPageState extends State<ForgotPasswordVerificat
                                 onPressed: _pinSuccess ? () {
                                   Navigator.of(context).pushAndRemoveUntil(
                                       MaterialPageRoute(
-                                          builder: (context) => ProfilePage()
+                                          builder: (context) => const LoginPage()
                                       ),
                                           (Route<dynamic> route) => false
                                   );

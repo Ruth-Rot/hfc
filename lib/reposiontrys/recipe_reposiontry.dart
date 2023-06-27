@@ -1,33 +1,31 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+
 import 'package:hfc/models/recipe.dart';
 import 'package:hfc/models/user.dart';
 
-class RecipeReposiontry extends GetxController{
-static RecipeReposiontry get instance => Get.find();
-
+class RecipeReposiontry{
+ 
 final _db = FirebaseFirestore.instance;
 
-createRecipe(RecipeModel recipe) async{
-  //check if the not recipe exist:
+// createRecipe(RecipeModel recipe) async{
+//   //check if the not recipe exist:
 
-  // add recipe:
-  await _db.collection("Recipes").add(recipe.toJson())
- // .whenComplete(() =>
-  //  Get.snackbar("Success", "Your accont has been created.",
-  // snackPosition: SnackPosition.BOTTOM,
-  // backgroundColor: Colors.green.withOpacity(0.1),
-  // colorText:Colors.green),
-  //)
-  .catchError((error,stackTrace){
-  //  Get.snackbar("Error", "Something get wrong. Try again.",
-  // snackPosition: SnackPosition.BOTTOM,
-  // backgroundColor: Colors.redAccent.withOpacity(0.1),
-  // colorText:Colors.red);
-  print(error.toString());
-  });
-}
+//   // add recipe:
+//   await _db.collection("Recipes").add(recipe.toJson())
+//  // .whenComplete(() =>
+//   //  Get.snackbar("Success", "Your accont has been created.",
+//   // snackPosition: SnackPosition.BOTTOM,
+//   // backgroundColor: Colors.green.withOpacity(0.1),
+//   // colorText:Colors.green),
+//   //)
+//   .catchError((error,stackTrace){
+//   //  Get.snackbar("Error", "Something get wrong. Try again.",
+//   // snackPosition: SnackPosition.BOTTOM,
+//   // backgroundColor: Colors.redAccent.withOpacity(0.1),
+//   // colorText:Colors.red);
+//   print(error.toString());
+//   });
+// }
 
 
 Future<RecipeModel> getRecipeDetails(String title) async{

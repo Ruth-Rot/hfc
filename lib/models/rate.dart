@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 
 class RateModel {
   final String? id;
@@ -26,7 +25,7 @@ class RateModel {
     return RateModel(
         like: json['like'] as bool,
         userId: json['userId'] as String,
-        recipeId: json['recipeIf']);
+        recipeId: json['recipeId']);
   }
   factory RateModel.fromSnapshot(
       DocumentSnapshot<Map<String, dynamic>> document) {

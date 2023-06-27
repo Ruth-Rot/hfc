@@ -1,10 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:hfc/models/day.dart';
 import 'package:hfc/models/user.dart';
 
-class UserReposiontry extends GetxController {
-  static UserReposiontry get instance => Get.find();
+class UserReposiontry {
 
   final _db = FirebaseFirestore.instance;
 
@@ -32,14 +30,15 @@ class UserReposiontry extends GetxController {
   }
 
   updateSessionId(String sessionId, String email) async {
-// Get a new write batch
+  // Get a new write batch
     final batch = _db.batch();
 
-// Set the value of 'NYC'
+    // get the user doc
     var snapshot =
         await _db.collection("Users").where("email", isEqualTo: email).get();
     final userData = snapshot.docs.map((e) => UserModel.fromSnapshot(e)).single;
 
+    //update the sessionId of user in this session
     var userRef = _db.collection("Users").doc(userData.id);
     batch.update(userRef, {"sessionId": sessionId});
 
@@ -50,46 +49,73 @@ class UserReposiontry extends GetxController {
     // Get a new write batch
     final batch = _db.batch();
 
-// Set the value of 'NYC'
+    // get the user doc
     var snapshot =
         await _db.collection("Users").where("email", isEqualTo: email).get();
     final userData = snapshot.docs.map((e) => UserModel.fromSnapshot(e)).single;
 
+    //update the conversation of the user doc
     var userRef = _db.collection("Users").doc(userData.id);
-   // buildMessagesToSave(messages);
-    batch.update(userRef, {"convresation": buildMessagesToSave(messages)});
+    batch.update(userRef, {"conversation": buildMessagesToSave(messages)});
 
     batch.commit();
   }
+
+   void updateDiary(Map<String, Day> days, String email)async {
+// Get a new write batch
+    final batch = _db.batch();
+
+    // get the user doc
+    var snapshot =
+        await _db.collection("Users").where("email", isEqualTo: email).get();
+    final userData = snapshot.docs.map((e) => UserModel.fromSnapshot(e)).single;
+
+    //update the sessionId of user in this session
+    var userRef = _db.collection("Users").doc(userData.id);
+    batch.update(userRef, {"diary": buildDaysToSave(days)});
+
+    batch.commit();
+
 }
 
 buildMessagesToSave(List<Map<String, dynamic>> messages) {
   List build = [];
   for (var mes in messages) {
-    bool flag =  mes['isUserMessage'];
-   // var t =  await mes['message'].text;
-   var text;
-   if(mes['message'] is String){
-     text = mes['message'];
-   }
-   else{
-
-     text = mes['message'].text.text[0];
-   }
-     //chanfge the parse charcacters in text:
-    //  text=text.replaceAll(',','#');
-    //  text=text.replaceAll('{', '^');
-    //  text=text.replaceAll('}', "~");
-    //  text=text.replaceAll(':', ';');
-    // Map m = Map();
-    // m["isUser"] = flag;
-    // m["text"]= text;
-    
-    var json = {
-      "isUser": flag,
-      "text": text};
+    bool flag = mes['isUserMessage'];
+    var text="";
+    if (mes['message'] is String) {
+      text = mes['message'];
+    } else {
+      text = mes['message'].text.text[0];
+    }
+    var json = {"isUser": flag, "text": text};
 
     build.add(json);
   }
   return build;
+}
+
+buildDaysToSave (Map<String, Day> days){
+Map build ={};
+for(String key in days.keys){
+build[key] = days[key]!.toJson();
+}
+return build;
+}
+
+  void updateFCMToken(String? fcmToken, String email) async{
+    // Get a new write batch
+    final batch = _db.batch();
+
+    // get the user doc
+    var snapshot =
+        await _db.collection("Users").where("email", isEqualTo: email).get();
+    final userData = snapshot.docs.map((e) => UserModel.fromSnapshot(e)).single;
+
+    //update the sessionId of user in this session
+    var userRef = _db.collection("Users").doc(userData.id);
+    batch.update(userRef, {"token": fcmToken});
+
+    batch.commit();
+  }
 }

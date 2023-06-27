@@ -1,14 +1,9 @@
 // ignore_for_file: unnecessary_new
 
 import 'dart:async';
-
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:hfc/pages/authPage.dart';
-import 'package:hfc/pages/navigator.dart';
+import 'package:hfc/pages/auth_page.dart';
 
-import 'login_page.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key, required this.title}) : super(key: key);
@@ -16,7 +11,7 @@ class SplashScreen extends StatefulWidget {
   final String title;
 
   @override
-  _SplashScreenState createState() => _SplashScreenState();
+  State<SplashScreen> createState() => _SplashScreenState();
 }
 
 class _SplashScreenState extends State<SplashScreen> {
@@ -27,15 +22,15 @@ class _SplashScreenState extends State<SplashScreen> {
      Timer(const Duration(milliseconds: 2000), (){
       setState(() {
         Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(
-          builder: (context,) => AuthPage()), (route) => false);
+        MaterialPageRoute( //check connection statues:
+          builder: (context,) => const AuthPage()), (route) => false);
       });
     });
 
      Timer(
-      Duration(milliseconds: 10),(){
+      const Duration(milliseconds: 10),(){
         setState(() {
-          _isVisible = true; // Now it is showing fade effect and navigating to Login page
+          _isVisible = true; // showing fade effect
         });
       }
     );
