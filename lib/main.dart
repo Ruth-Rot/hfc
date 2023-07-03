@@ -3,21 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:hfc/pages/splash_screen.dart';
 //import 'package:provider/provider.dart';
 
-void main() async{
+void main() async{// Needed to enable background API in the killed state.
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
 
-  
-  // var mes;
-  // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-  //   print('Got a message whilst in the foreground!');
-  //   mes = message.data; 
-  //   print('Message data: ${message.data}');
-  //   if (message.notification != null) {
-  //     print('Message also contained a notification: ${message.notification}');
-  //   }
-  // });
-  
+  await Firebase.initializeApp(); 
   runApp(const Login());
 
 }
@@ -49,6 +38,7 @@ class Login extends StatelessWidget {
     //   child: 
     
       MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Flutter Login',
         theme: ThemeData(
          primaryColor: _primaryColor,

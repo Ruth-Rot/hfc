@@ -86,6 +86,9 @@ dependencies:
 
   vector_math: ^2.1.4
 
+  path: ^1.8.0
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -142,4 +145,5 @@ flutter:
   assets:
     - assets/svgs/
     - assets/images/
+    - assets/files/
     - assets/

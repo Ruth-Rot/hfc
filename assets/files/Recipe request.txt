@@ -1,0 +1,12 @@
+A recipe request is made through the bot. You must write to the bot the characteristics of the recipe you want. The parameters that the bot expects (but none of them are mandatory): 
+Type of meal (breakfast, lunch or dinner)
+Type of dish (e.g. main dish or dessert. To view the full list of dishes you can write the message "dish type" in the bot)
+Diet label (to see the full list of tags you can write the message " diet labels" in the bot) 
+Health label (to see the full list of tags you can write the message "health labels" in the bot)
+Examples of correct wording of a recipe request:
+"do you have an idea for a recipe for suffer with high protein"
+"Can I have a recipe for vegetarian lunch?"
+"dinner low sugar high protein salad"
+After sending the message, the application will search for a suitable recipe for you, according to the parameters you entered and according to a recommendation system  - based on artificial intelligence - that matches your personal preferences.
+After the bot sends the recipe, you can mark the recipe as favorite or alternatively as not favorite in order to update the system accordingly. Recipes marked as favorites can be viewed on the favorite recipes page.
+If you are not satisfied with the recipe, you can send another request to the bot and in it you can choose whether to send the same message again or change the parameters. In any case (with a high probability) the result will be different, and we hope that in the end the bot will offer you a recipe that will satisfy you!

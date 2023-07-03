@@ -232,7 +232,7 @@ class __ProgressPageState extends State<ProgressPage> {
                               width: 10,
                             ),
                             Text(
-                              "Progress",
+                              "Statistics",
                               style: TextStyle(
                                   color: Colors.white, fontSize: 30),
                             )

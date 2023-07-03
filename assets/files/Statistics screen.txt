@@ -1,0 +1,6 @@
+In the statistics screen you can see the following three parameters from your personal characteristics: weight, activity level and the goal of the diet. If you want to change them, you can enter the bot and type "personal details".
+You can also see the distribution of your calories by meals.
+In addition, you can see your monthly calorie intake, and also compare it to your recommended calorie intake.
+Favorite recipes:
+On the favorite recipes screen you can see all the recipes you marked as favorites.
+Marking a recipe as a favorite is done through the bot. After requesting a recipe, there are like and dislike icons in the lower right corner of the recipe. To mark a recipe as a favorite, click the like button.

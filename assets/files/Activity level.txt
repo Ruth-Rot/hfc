@@ -1,0 +1,6 @@
+1 –  Sedentary: little or no exercise
+2 –  Exercise 1-3 times/week
+3 –  Exercise 4-5 times/week
+4 –  Daily exercise or intense exercise 3-4 times/week
+5 –  Intense exercise 6-7 times/week
+6 –  Very intense exercise daily, or physical job

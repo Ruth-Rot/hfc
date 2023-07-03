@@ -1,0 +1,75 @@
+Welcome and thank you for choosing to use our app!
+After registration, you will be required to fill in your personal details. The details you must fill in are: date of birth (in "dd/mm/yyyy" format), weight, height, activity level and the diet goal.
+The activity level and the diet goal are numerical values, the meanings of which is as follows:
+
+Activity Level:
+1 –  Sedentary: little or no exercise
+2 –  Exercise 1-3 times/week
+3 –  Exercise 4-5 times/week
+4 –  Daily exercise or intense exercise 3-4 times/week
+5 –  Intense exercise 6-7 times/week
+6 –  Very intense exercise daily, or physical job
+
+Diet Goal:
+1 –  Maintain weight
+2 –  Mild weight loss
+3 –  Weight loss
+4 –  Extreme weight loss
+5 –  Mild weight gain
+6 –  Weight gain
+7 –  Extreme weight gain
+
+Without filling in the details you will not be able to use the application.
+After filling in details, the application will update your details in the system and calculate the recommended daily calorie intake for you, which you can see on the diary screen.
+Now you can use the different options offered by the application. We will explain each one:
+
+Nutritional diary:
+In the nutrition diary you can record your food consumption and sports activity. The information will be automatically synchronized with the statistics page.
+At each meal you can enter records of the food you consumed. Each record consists of: product name, unit and quantity. For example: "one medium cucumber" or "2 cup rice". The application will calculate the nutritional values in the product and add them to the daily consumption calculation.
+At the bottom of the page there is a place to fill in records of sports activities you have performed. Here, too, the application will calculate the amount of calories you burned, and add them to the daily consumption calculation.
+In the circle on the top left you can see how many calories you have left until the daily consumption goal. To the right of the circle you can see the protein, carbohydrates and fat you consumed that day.
+You can move between the different dates by clicking on the arrows on the sides of the date.
+
+Recipe request:
+A recipe request is made through the bot. You must write to the bot the characteristics of the recipe you want. The parameters that the bot expects (but none of them are mandatory): 
+Type of meal (breakfast, lunch or dinner)
+Type of dish (e.g. main dish or dessert. To view the full list of dishes you can write the message "dish type" in the bot)
+Diet label (to see the full list of tags you can write the message " diet labels" in the bot) 
+Health label (to see the full list of tags you can write the message "health labels" in the bot)
+Examples of correct wording of a recipe request:
+"do you have an idea for a recipe for suffer with high protein"
+"Can I have a recipe for vegetarian lunch?"
+"dinner low sugar high protein salad"
+After sending the message, the application will search for a suitable recipe for you, according to the parameters you entered and according to a recommendation system  - based on artificial intelligence - that matches your personal preferences.
+After the bot sends the recipe, you can mark the recipe as favorite or alternatively as not favorite in order to update the system accordingly. Recipes marked as favorites can be viewed on the favorite recipes page.
+If you are not satisfied with the recipe, you can send another request to the bot and in it you can choose whether to send the same message again or change the parameters. In any case (with a high probability) the result will be different, and we hope that in the end the bot will offer you a recipe that will satisfy you!
+
+Meal plan:
+A request for a meal plan is made through the bot. You must enter the following parameters into the bot:
+Health tag (to view the complete list of tags you can write the message "health labels" in the bot). If you are not careful about your health, write "none".
+Forbidden foods - foods you prefer to avoid. You must write the names of the foods in a clear and simple list as possible.
+The number of days for which you want the program (maximum 5).
+Examples of correct wording of a meal plan request:
+"I'm looking for a meal plan that is gluten-free and vegan for the next 5 days"
+"I need a meal plan for 6 days that follows a Mediterranean diet"
+After filling out the request, the app will search for a meal plan for you. With the help of a smart artificial intelligence algorithm, the application will match you with a plan for the number of days you requested, which matches the parameters you entered and your recommended daily calorie consumption, and avoids offering you recipes that you marked as unliked.
+When the app finishes the search it will send the search result back to the bot. The message will show three recipes for each day, and you can switch between the days using the arrows next to the day number.
+
+Nutritional information:
+A request for nutritional information is made through the bot. You must enter the following parameters into the bot:
+Product name - required.
+Quantity - required.
+Unit - for example "bowl" or "medium". Optional.
+Examples of correct wording of a request for nutritional information regarding a product:
+"2 plates of rice"
+"200 gram nuts"
+"I want information about tomatoes"
+The bot will return the following information for the product: calories, protein, fats and carbohydrates.
+
+Statistics screen:
+In the statistics screen you can see the following three parameters from your personal characteristics: weight, activity level and the goal of the diet. If you want to change them, you can enter the bot and type "personal details".
+You can also see the distribution of your calories by meals.
+In addition, you can see your monthly calorie intake, and also compare it to your recommended calorie intake.
+Favorite recipes:
+On the favorite recipes screen you can see all the recipes you marked as favorites.
+Marking a recipe as a favorite is done through the bot. After requesting a recipe, there are like and dislike icons in the lower right corner of the recipe. To mark a recipe as a favorite, click the like button.

@@ -65,6 +65,8 @@ class __DiaryPageState extends State<DiaryPage> {
   void initState() {
     super.initState();
     dateS = DateFormat.yMMMMd('en_US').format(date);
+        if(widget.userModel.fillDetails == true){
+
     days = widget.userModel.diary;
     if (days.containsKey(dateS) == false) {
       days[dateS] = currentDay;
@@ -72,6 +74,7 @@ class __DiaryPageState extends State<DiaryPage> {
       currentDay = days[dateS]!;
     }
     widget.userReposiontry.updateDiary(days, widget.userModel.email);
+    }
   }
 
   @override
@@ -463,9 +466,11 @@ class __DiaryPageState extends State<DiaryPage> {
 
                   meal.dishes.add(newDish);
 
+                  if(widget.userModel.fillDetails == true){
                   //update firebase:
                   widget.userReposiontry
                       .updateDiary(days, widget.userModel.email);
+                  }
 
                   meal.clear();
                   setState(() {
@@ -510,9 +515,12 @@ class __DiaryPageState extends State<DiaryPage> {
 
                   activitys.items.add(activity);
 
+                                    if(widget.userModel.fillDetails == true){
+
                   //update firebase
                   widget.userReposiontry
                       .updateDiary(days, widget.userModel.email);
+                                    }
 
                   setState(() {
                     activitys.isAdd = !activitys.isAdd;
@@ -959,10 +967,13 @@ class __DiaryPageState extends State<DiaryPage> {
                   }
                   dishModel.controller.clear();
 
+                                    if(widget.userModel.fillDetails == true){
+
                   //save changes:
                   widget.userReposiontry
                       .updateDiary(days, widget.userModel.email);
                   Navigator.of(context).pop();
+                }
                 }
               },
             ),
@@ -1026,10 +1037,12 @@ class __DiaryPageState extends State<DiaryPage> {
                     });
                   }
                   activity.controller.clear();
+                  if(widget.userModel.fillDetails == true){
 
                   //save changes:
                   widget.userReposiontry
                       .updateDiary(days, widget.userModel.email);
+                  }
                   Navigator.of(context).pop();
                 }
               },

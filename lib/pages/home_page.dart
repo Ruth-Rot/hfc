@@ -77,7 +77,7 @@ class __HomePageState extends State<HomePage> {
                 recipes: widget.recipes,
               );
             } else if (currentPage == DrawerSections.aboutAs) {
-              pageWidget =const AboutUs();
+              pageWidget = AboutUs();
             }
           isUser = true;
 
@@ -157,12 +157,12 @@ class __HomePageState extends State<HomePage> {
       child: Column(children: [
         menuItem(1, "Diary", FontAwesomeIcons.calendar,
             currentPage == DrawerSections.diary ? true : false),
-        menuItem(2, "Progress", FontAwesomeIcons.chartLine,
+        menuItem(2, "Statistics", FontAwesomeIcons.chartLine,
             currentPage == DrawerSections.progress ? true : false),
         menuItem(3, "Saved Recipes", FontAwesomeIcons.bowlFood,
             currentPage == DrawerSections.savedRecipes ? true : false),
         const Divider(),
-        menuItem(4, "About As", FontAwesomeIcons.circleInfo,
+        menuItem(4, "App's guide", FontAwesomeIcons.circleInfo,
             currentPage == DrawerSections.aboutAs ? true : false),
         logOut(5, "Log Out", FontAwesomeIcons.doorOpen,
             currentPage == DrawerSections.logout ? true : false),

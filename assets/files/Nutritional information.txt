@@ -1,0 +1,9 @@
+A request for nutritional information is made through the bot. You must enter the following parameters into the bot:
+Product name - required.
+Quantity - required.
+Unit - for example "bowl" or "medium". Optional.
+Examples of correct wording of a request for nutritional information regarding a product:
+"2 plates of rice"
+"200 gram nuts"
+"I want information about tomatoes"
+The bot will return the following information for the product: calories, protein, fats and carbohydrates.

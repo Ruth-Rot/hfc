@@ -1,0 +1,3 @@
+Welcome and thank you for choosing to use our app!
+After registration, you will be required to fill in your personal details. The details you must fill in are: date of birth (in "dd/mm/yyyy" format), weight, height, activity level and the diet goal.
+The activity level and the diet goal are numerical values, the meanings of which is as follows:

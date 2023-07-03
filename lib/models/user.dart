@@ -115,7 +115,7 @@ class UserModel {
         gender: data["gender"],
         fillDetails: data["fill_details"],
         conversation: data["conversation"],
-        dailyCalories: data["daily_calories"],
+        dailyCalories:  data["daily_calories"].runtimeType == double? data["daily_calories"]:data["daily_calories"].toDouble(),
         diary: days,
         weight: data["weight"].runtimeType == double? data["weight"]:double.parse(data["weight"]),
         height: data["height"].runtimeType == double? data["height"]:double.parse(data["height"]),

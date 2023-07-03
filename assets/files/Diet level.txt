@@ -1,0 +1,7 @@
+1 –  Maintain weight
+2 –  Mild weight loss
+3 –  Weight loss
+4 –  Extreme weight loss
+5 –  Mild weight gain
+6 –  Weight gain
+7 –  Extreme weight gain

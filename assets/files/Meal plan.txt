@@ -1,0 +1,9 @@
+A request for a meal plan is made through the bot. You must enter the following parameters into the bot:
+Health tag (to view the complete list of tags you can write the message "health labels" in the bot). If you are not careful about your health, write "none".
+Forbidden foods - foods you prefer to avoid. You must write the names of the foods in a clear and simple list as possible.
+The number of days for which you want the program (maximum 5).
+Examples of correct wording of a meal plan request:
+"I'm looking for a meal plan that is gluten-free and vegan for the next 5 days"
+"I need a meal plan for 6 days that follows a Mediterranean diet"
+After filling out the request, the app will search for a meal plan for you. With the help of a smart artificial intelligence algorithm, the application will match you with a plan for the number of days you requested, which matches the parameters you entered and your recommended daily calorie consumption, and avoids offering you recipes that you marked as unliked.
+When the app finishes the search it will send the search result back to the bot. The message will show three recipes for each day, and you can switch between the days using the arrows next to the day number.
