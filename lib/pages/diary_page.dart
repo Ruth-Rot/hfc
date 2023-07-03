@@ -52,9 +52,6 @@ class __DiaryPageState extends State<DiaryPage> {
     "Unit",
     "Bowl"
   ];
-
-  String? selectedMeaserment = "Cup";
-
   @override
   dispose() {
     widget.userReposiontry.updateDiary(days, widget.userModel.email);
@@ -580,10 +577,9 @@ class __DiaryPageState extends State<DiaryPage> {
               borderRadius: BorderRadius.circular(10.0),
               borderSide: BorderSide(color: Colors.grey.shade400)),
         ),
-        value: selectedMeaserment,
+        value: meal.measurement,
         onChanged: (item) {
-          meal.measurement = item!;
-          setState(() => selectedMeaserment = item);
+          setState(() =>   meal.measurement = item!);
         },
         items: measurements
             .map((item) => DropdownMenuItem<String>(
