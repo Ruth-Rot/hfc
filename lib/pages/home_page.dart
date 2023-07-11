@@ -60,7 +60,6 @@ class __HomePageState extends State<HomePage> {
 
         if (mounted) {
           setState(() {
-            // dialogMessageController.listenToServer();
             //update user init:
             email = user.email;
             name = user.fullName;
@@ -117,8 +116,7 @@ class __HomePageState extends State<HomePage> {
             ClipOval(
               child: bot,
             ),
-            dialogMessageController.isWaitedMessages == true ||
-                    (isUser == true && user.fillDetails == false)
+                    (isUser == true && (user.fillDetails == false || user.haveNotification == true))
                 ? notificationBell()
                 : const SizedBox()
           ])),

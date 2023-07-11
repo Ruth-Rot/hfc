@@ -16,6 +16,7 @@ class UserModel {
   final String urlImage;
   final String gender;
   late bool fillDetails;
+  late bool haveNotification;
   late List conversation;
   late double dailyCalories;
   late double weight;
@@ -32,6 +33,7 @@ class UserModel {
     required this.urlImage,
     required this.gender,
     required this.fillDetails,
+    required this.haveNotification,
     required this.conversation,
     required this.dailyCalories,
     required this.diary,
@@ -48,6 +50,7 @@ class UserModel {
       "gender": gender,
       "urlImage": urlImage,
       "fill_details": fillDetails,
+      "have_notification":haveNotification,
       "conversation": conversation,
       "daily_calories": dailyCalories,
       "diary": diary,
@@ -114,6 +117,7 @@ class UserModel {
         urlImage: data["urlImage"],
         gender: data["gender"],
         fillDetails: data["fill_details"],
+        haveNotification: data["have_notification"],
         conversation: data["conversation"],
         dailyCalories:  data["daily_calories"].runtimeType == double? data["daily_calories"]:data["daily_calories"].toDouble(),
         diary: days,

@@ -63,39 +63,160 @@ class __ChatPageState extends State<ChatPage> {
       print('Message data: ${message.data}');
       if (message.notification != null) {
         print('Message also contained a notification: ${message.notification}');
-      } else {
-        if (message.data['request'] == 'recipe') {
-          if (mounted) {
-            setState(() {
-              controller.recipeMessage = message.data;
-              controller.isWaitedRecipe = true;
-            });
+      }
+      String request = message.data['request'];
+      switch (request) {
+        case "note":
+          {
+            // add data and handle controller:
+            if (mounted) {
+              setState(() {
+                controller.insertNotification(message.data['text']);
+              });
+            }
           }
-        }
-        if (message.data['request'] == 'text') {
-          print("text");
-          if (mounted) {
-            setState(() {
-              controller.startSendMeal = true;
-              controller.mealPlan = {};
-              controller.mealPlanText = message.data["text"];
-            });
+
+          break;
+
+        case "start_meal_plan":
+          {
+            //  handle controller
+            if (mounted) {
+              setState(() {
+                controller.starwaitForMealPlan(message.data['text']);
+              });
+            }
           }
-        }
-        if (message.data['request'] == 'meal_plan') {
-          if (mounted) {
+          break;
+        case "start_recipe_search":
+          {
+            //  handle controller
+            if (mounted) {
+              setState(() {
+                controller.starwaitForRecipe(message.data['text']);
+              });
+            }
+          }
+          break;
+
+        case "Meal_plan_details_1":
+          {
+            // start to wait for meal plan card:
+            // add  first meal:
+
+            if (mounted) {
+              setState(() {
+                controller.mealPlanTextStart = message.data["text"];
+              });
+            }
+          }
+          break;
+          case "Meal_plan_details_2":
+          {
+            // start to wait for meal plan card:
+            // add  first meal:
+
+            if (mounted) {
+              setState(() {
+                controller.mealPlanTextEnd = message.data["text"];
+              });
+            }
+          }
+          break;
+
+        case "meal_plan":
+          {
+            // add  meal:
+            if (mounted) {
             setState(() {
-              print(message.data);
               controller.mealPlan[message.data['currentMessage']] =
                   message.data['card'];
+            // check if last and handle:
               if (controller.mealPlan.length.toString() ==
                   message.data['messagesNumber'].toString()) {
                 controller.sentPlanMeal = true;
               }
             });
           }
-        }
+          }
+          break;
+
+        case "meal_plan_failed":
+          {
+             // update controller
+            if (mounted) {
+              setState(() {
+                controller.mealPlanFailed(message.data);
+              });
+            }
+          }
+          break;
+
+        case "recipe":
+          {
+            // update controller with recipe
+            if (mounted) {
+              setState(() {
+                controller.addRecipe(message.data);
+              });
+            }
+          }
+          break;
+
+        case "recipe_failed":
+          {
+            // update controller
+            if (mounted) {
+              setState(() {
+                controller.recipeFailed(message.data);
+              });
+            }
+          }
+          break;
+        default:
+          {
+            //statements;
+          }
+          break;
       }
+      
+      //  else {
+      //   if (message.data['request'] == 'recipe') {
+      //     if (mounted) {
+      //       setState(() {
+      //         controller.recipeMessage = message.data;
+      //         controller.isWaitedRecipe = true;
+      //       });
+      //     }
+      //   }
+      //     else      if (message.data['request'] == 'daily sentence') {
+      //             // change firebase field
+      //             //add message to mess!
+      //           }
+      //  else if (message.data['request'] == 'text') {
+      //     print("text");
+      //     if (mounted) {
+      //       setState(() {
+      //         controller.startSendMeal = true;
+      //         controller.mealPlan = {};
+      //         controller.mealPlanText = message.data["text"];
+      //       });
+      //     }
+      //   }
+      //  else if (message.data['request'] == 'meal_plan') {
+      //     if (mounted) {
+      //       setState(() {
+      //         print(message.data);
+      //         controller.mealPlan[message.data['currentMessage']] =
+      //             message.data['card'];
+      //         if (controller.mealPlan.length.toString() ==
+      //             message.data['messagesNumber'].toString()) {
+      //           controller.sentPlanMeal = true;
+      //         }
+      //       });
+      //     }
+      //   }
+      // }
     });
   }
 
@@ -103,7 +224,7 @@ class __ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     checkStart();
     listenToServerChat(widget.dialogController);
-    checkWaitedRecipe();
+    //  checkWaitedRecipe();
 
     for (var m in previousMessages) {
       controllers[m] = MessageChatController();
@@ -233,18 +354,6 @@ class __ChatPageState extends State<ChatPage> {
       //save messages in firebase:
       UserReposiontry()
           .saveMessages(previousMessages + messages, widget.user.email);
-      if (response.message!.text!.text![0]
-              .contains("the server working on it.") ||
-          response.message!.text!.text![0].contains(
-              "I'm making the plan for you, it may take some time.")) {
-        if (mounted) {
-          setState(() {
-            Future.delayed(const Duration(milliseconds: 5), () {
-              addMessage(loadMessage);
-            });
-          });
-        }
-      }
     }
   }
 
@@ -269,25 +378,65 @@ class __ChatPageState extends State<ChatPage> {
     messages.add({'message': message, 'isUserMessage': isUserMessage});
   }
 
+  handleWaitNote() {
+    // turn off have_notification flag in user:
+    widget.userReposiontry.updateGetNotification(widget.user.email);
+    // add message:
+    if (mounted) {
+      setState(() {
+        addMessage(Message(
+            text: DialogText(
+                text: [widget.dialogController.notificationMessage])));
+      });
+      //save messages in firebase:
+      UserReposiontry()
+          .saveMessages(previousMessages + messages, widget.user.email);
+    }
+    // update controller:
+    widget.dialogController.notifiactionReset();
+  }
+
   checkStart() async {
+    // check if there a notification:
+    if (widget.dialogController.isWaitedNotification == true) {
+      handleWaitNote();
+    }
+    //check if there is a need to fill details:
     if (isDialog == true) {
       if (widget.user.fillDetails == false && isOnce == true) {
         fillDetails();
         isOnce = false;
       }
     }
-  }
-
-  buildPreviousMessages(var convresation) {
-    if (convresation != "") {
-      for (var value in convresation) {
-        previousMessages
-            .add({'message': value['text'], 'isUserMessage': value['isUser']});
+    //check if there a mealPlan start:
+    if (widget.dialogController.waitForMeal == true) {
+      if (mounted) {
+        setState(() {
+          addMessage(Message(
+              text: DialogText(
+                  text: [widget.dialogController.waitForMealMessage])));
+          Future.delayed(const Duration(seconds: 1), () {
+            addMessage(loadMessage);
+          });
+          widget.dialogController.waitForMeal == false;
+        });
       }
     }
-  }
-
-  void checkWaitedRecipe() {
+    //check if there a recipe start:
+    if (widget.dialogController.waitForRecipe == true) {
+      if (mounted) {
+        setState(() {
+          addMessage(Message(
+              text: DialogText(
+                  text: [widget.dialogController.waitForRecipeMessage])));
+          Future.delayed(const Duration(seconds: 1), () {
+            addMessage(loadMessage);
+          });
+          widget.dialogController.waitForRecipe = false;
+        });
+      }
+    }
+    //check if get a recipe:
     if (widget.dialogController.isWaitedRecipe == true) {
       if (mounted) {
         setState(() {
@@ -304,21 +453,94 @@ class __ChatPageState extends State<ChatPage> {
       }
       widget.dialogController.isWaitedRecipe = false;
     }
+    //check if recipe fail:
+    if (widget.dialogController.isfailrecipe == true) {
+      if (mounted) {
+        setState(() {
+          messages[messages.length - 1]['message'] = Message(
+              text: DialogText(
+                  text: [widget.dialogController.failureTextRecipe]));
+          widget.dialogController.isfailrecipe = false;
+        });
+      }
+    }
+
+    //check if get a meal plan:
     if (widget.dialogController.sentPlanMeal == true) {
       String req =
           jsonEncode(addMealPlanToMessages(widget.dialogController.mealPlan));
       if (mounted) {
         setState(() {
           messages[messages.length - 1]['message'] = Message(
-              text: DialogText(text: [widget.dialogController.mealPlanText]));
+              text: DialogText(text: [widget.dialogController.mealPlanTextStart]));
           addMessage(Message(text: DialogText(text: [req])));
+          addMessage(Message(text: DialogText(text: [widget.dialogController.mealPlanTextEnd])));
           //save messages in firebase:
           UserReposiontry()
               .saveMessages(previousMessages + messages, widget.user.email);
           widget.dialogController.sentPlanMeal = false;
+          widget.dialogController.mealPlan = {};
+
         });
       }
     }
+
+    //check if meal plan fail:
+    if (widget.dialogController.isfailPlan == true) {
+      if (mounted) {
+        setState(() {
+          messages[messages.length - 1]['message'] = Message(
+              text: DialogText(
+                  text: [widget.dialogController.failureTextPlan]));
+          widget.dialogController.isfailrecipe = false;
+widget.dialogController.mealPlan = {};
+
+        });
+      }
+    }
+  }
+
+  buildPreviousMessages(var convresation) {
+    if (convresation != "") {
+      for (var value in convresation) {
+        previousMessages
+            .add({'message': value['text'], 'isUserMessage': value['isUser']});
+      }
+    }
+  }
+
+  void checkWaitedRecipe() {
+    // if (widget.dialogController.isWaitedRecipe == true) {
+    //   if (mounted) {
+    //     setState(() {
+    //       messages[messages.length - 1]['message'] = Message(
+    //           text: DialogText(
+    //               text: [widget.dialogController.recipeMessage['card']]));
+    //       addMessage(Message(
+    //           text: DialogText(
+    //               text: [widget.dialogController.recipeMessage['text']])));
+    //     });
+    //     //save messages in firebase:
+    //     UserReposiontry()
+    //         .saveMessages(previousMessages + messages, widget.user.email);
+    //   }
+    //   widget.dialogController.isWaitedRecipe = false;
+    // }
+    // if (widget.dialogController.sentPlanMeal == true) {
+    //   String req =
+    //       jsonEncode(addMealPlanToMessages(widget.dialogController.mealPlan));
+    //   if (mounted) {
+    //     setState(() {
+    //       messages[messages.length - 1]['message'] = Message(
+    //           text: DialogText(text: [widget.dialogController.mealPlanText]));
+    //       addMessage(Message(text: DialogText(text: [req])));
+    //       //save messages in firebase:
+    //       UserReposiontry()
+    //           .saveMessages(previousMessages + messages, widget.user.email);
+    //       widget.dialogController.sentPlanMeal = false;
+    //     });
+    //   }
+    // }
   }
 
   addMealPlanToMessages(Map mealPlan) {

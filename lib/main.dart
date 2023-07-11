@@ -1,10 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hfc/pages/splash_screen.dart';
-//import 'package:provider/provider.dart';
+
 
 void main() async{// Needed to enable background API in the killed state.
   WidgetsFlutterBinding.ensureInitialized();
+  //await NotificationController.initializeLocalNotifications();
 
   await Firebase.initializeApp(); 
   runApp(const Login());

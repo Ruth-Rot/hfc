@@ -45,6 +45,22 @@ class UserReposiontry {
     batch.commit();
   }
 
+  updateGetNotification(String email) async {
+  // Get a new write batch
+    final batch = _db.batch();
+
+    // get the user doc
+    var snapshot =
+        await _db.collection("Users").where("email", isEqualTo: email).get();
+    final userData = snapshot.docs.map((e) => UserModel.fromSnapshot(e)).single;
+
+    //update the sessionId of user in this session
+    var userRef = _db.collection("Users").doc(userData.id);
+    batch.update(userRef, {"have_notification": false});
+
+    batch.commit();
+  }
+
   void saveMessages(List<Map<String, dynamic>> messages, String email) async {
     // Get a new write batch
     final batch = _db.batch();

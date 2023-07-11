@@ -526,6 +526,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
         gender: genderInit == 0 ? "male" : "female",
         password: controller.password.text.trim(),
         fillDetails: false,
+        haveNotification: false,
         conversation: [],
         dailyCalories: 0.0,
         diary: {},
