@@ -85,7 +85,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         const SizedBox(height: 10),
-
                         //picture:
                         imageProfile(),
                         const SizedBox(height: 50),
@@ -94,19 +93,16 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         const SizedBox(height: 40),
                         //full name:
                         fullName(),
-                        const SizedBox(height: 30),
+                        const SizedBox(height: 40),
                         //email:
                         email(),
-                        const SizedBox(height: 30),
+                        const SizedBox(height: 40),
                         //password:
                         password(),
-                        const SizedBox(height: 30),
-                        //accept terms:
-                        terms(context),
-                        const SizedBox(height: 10.0),
+                        const SizedBox(height: 40),
                         //submit:
                         sumbitButton(context),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 30),
                         loginOption(context)
                       ],
                     ),
@@ -198,52 +194,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
             }));
   }
 
-  //trems hyperlink
-  FormField<bool> terms(BuildContext context) {
-    return FormField<bool>(
-      builder: (state) {
-        return Column(
-          children: <Widget>[
-            Row(
-              children: <Widget>[
-                Checkbox(
-                  value: checkboxValue,
-                  onChanged: (bool? value) {
-                    setState(() {
-                      checkboxValue = value!;
-                    });
-                  },
-                ),
-                const Text(
-                  "I accept all terms and conditions.",
-                  style: TextStyle(color: Colors.grey),
-                ),
-              ],
-            ),
-            Container(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                state.errorText ?? '',
-                textAlign: TextAlign.left,
-                style: TextStyle(
-                  color: Theme.of(context).errorColor,
-                  fontSize: 12,
-                ),
-              ),
-            )
-          ],
-        );
-      },
-      validator: (value) {
-        if (!checkboxValue) {
-          return 'You need to accept terms and conditions';
-        } else {
-          return null;
-        }
-      },
-    );
-  }
-
+  
 //pasword field
   TextFormField password() {
     return TextFormField(
