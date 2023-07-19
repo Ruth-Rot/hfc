@@ -14,7 +14,7 @@ class DialogMessageController {
   late bool waitForRecipe = false;
   late String waitForRecipeMessage = "";
   late bool isWaitedRecipe = false;
-  late var recipeMessage;
+  late var recipeCard;
   late bool isfailrecipe = false;
   late String failureTextRecipe="";
 
@@ -32,24 +32,10 @@ class DialogMessageController {
 
   DialogMessageController();
 
-  recipeFailed(mes){
-    isfailrecipe = true;
-    failureTextRecipe=mes;
-  }
- mealPlanFailed(mes){
-    isfailPlan = true;
-    failureTextPlan=mes;
-  }
 
-  starwaitForMealPlan(mes) {
-    waitForMeal = true;
-    waitForRecipeMessage = mes;
-  }
+ 
 
-  starwaitForRecipe(mes) {
-    waitForRecipe = true;
-    waitForMealMessage = mes;
-  }
+
 
   insertNotification(mes) {
     isWaitedNotification = true;
@@ -61,10 +47,7 @@ class DialogMessageController {
     notificationMessage = "";
   }
 
-  addRecipe(recipe) {
-    recipeMessage = recipe;
-    isWaitedRecipe = true;
-  }
+ 
 
   listenToServer() async {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
@@ -74,7 +57,7 @@ class DialogMessageController {
         print('Message also contained a notification: ${message.notification}');
       } else {
         if (message.data['request'] == 'recipe') {
-          recipeMessage = message.data;
+          recipeCard = message.data;
           isWaitedRecipe = true;
         }
       }
