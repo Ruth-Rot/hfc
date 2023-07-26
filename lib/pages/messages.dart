@@ -48,13 +48,13 @@ class _MessagesState extends State<Messages> {
         child: Column(
           children: [
             messagesList(w, widget.previousMessages),
-            const SizedBox(
-                height: 20,
-                width: 400,
-                child: Divider(
-                  height: 10,
-                )),
-            const Text("start convresation"),
+            // const SizedBox(
+            //     height: 20,
+            //     width: 400,
+            //     child: Divider(
+            //       height: 10,
+            //     )),
+        //    const Text("start convresation"),
             messagesList(w, widget.messages),
           ],
         ),
@@ -279,7 +279,7 @@ class _MessagesState extends State<Messages> {
           }
         }
       } else {
-        print("first: " + data);
+       // print("first: " + data);
         if (data == "#load") {
           return Center(
             child: LoadingAnimationWidget.staggeredDotsWave(
@@ -295,7 +295,7 @@ class _MessagesState extends State<Messages> {
       }
     } on FormatException catch (e) //if not json:
     {
-      print("second: " + data);
+      //print("second: " + data);
       if (data == "#load") {
         return Center(
           child: LoadingAnimationWidget.staggeredDotsWave(

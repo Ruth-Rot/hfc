@@ -1,0 +1,2 @@
+On the favorite recipes screen you can see all the recipes you marked as favorites.
+Marking a recipe as a favorite is done through the bot. After requesting a recipe, there are like and dislike icons in the lower right corner of the recipe. To mark a recipe as a favorite, click the like button.

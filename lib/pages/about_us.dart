@@ -21,6 +21,7 @@ class __AboutUsState extends State<AboutUs> {
   String plan = "";
   String info = "";
   String statistics = "";
+  String favorite="";
 
   @override
   Widget build(BuildContext context) {
@@ -119,6 +120,14 @@ class __AboutUsState extends State<AboutUs> {
               height: 5,
             ),
             textField(statistics),
+              const SizedBox(
+              height: 15,
+            ),
+             title("Favorite recipes:"),
+            const SizedBox(
+              height: 5,
+            ),
+            textField(favorite),
           ],
         ),
       )
@@ -178,6 +187,11 @@ class __AboutUsState extends State<AboutUs> {
         await rootBundle.loadString('assets/files/Statistics screen.txt');
     setState(() {
       statistics = responseStatistic;
+    });
+     final String responseFavorite =
+        await rootBundle.loadString('assets/files/Favorite recipes.txt');
+    setState(() {
+      favorite = responseFavorite;
     });
   }
 

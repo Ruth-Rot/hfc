@@ -152,7 +152,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
             child: Padding(
               padding: const EdgeInsets.fromLTRB(40, 10, 40, 10),
               child: Text(
-                "Sign In".toUpperCase(),
+                "Sign Up".toUpperCase(),
                 style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,

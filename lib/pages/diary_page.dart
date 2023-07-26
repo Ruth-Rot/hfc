@@ -565,7 +565,7 @@ class __DiaryPageState extends State<DiaryPage> {
       width: 120,
       child: DropdownButtonFormField<String>(
         decoration: InputDecoration(
-          labelText: "Measerment",
+          labelText: "Measurement",
           labelStyle: const TextStyle(fontSize: 12),
           fillColor: Colors.white,
           filled: true,
@@ -876,7 +876,7 @@ class __DiaryPageState extends State<DiaryPage> {
       keyboardType: TextInputType.text,
       decoration: ThemeHelper().textInputDecorationFoodForm(
           "Duration",
-          "How much?",
+          "minutes",
           const Icon(
             FontAwesomeIcons.clock,
             size: 15,
