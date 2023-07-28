@@ -3,11 +3,13 @@ import 'dart:async';
 import 'dart:convert';
 import '../models/dish_data.dart';
 
-Future<DishData> fetchDishData (String type, String amount, String measurement) async {
-  
-    String ask = "$type $amount $measurement";
+Future<DishData> fetchDishData(
+    String type, String amount, String measurement) async {
+  String ask = "$type $amount $measurement";
+ // String check = "$type 1 $measurement";
 
   ask = ask.replaceAll(" ", "%20");
+//  check = check.replaceAll(" ", "%20");
 
   final response = await http.get(Uri.parse(
       'https://api.edamam.com/api/nutrition-data?app_id=5cb3740f&app_key=a9e3c561a5d66e6b507a809b9b28e07b&nutrition-type=cooking&ingr=$ask'));
@@ -15,11 +17,25 @@ Future<DishData> fetchDishData (String type, String amount, String measurement) 
   if (response.statusCode == 200) {
     // If the server did return a 200 OK response,
     // then parse the JSON.
-    return DishData.fromJson(jsonDecode(response.body));
+    // if (amount != "1") {
+    //   final responseCheck = await http.get(Uri.parse(
+    //       'https://api.edamam.com/api/nutrition-data?app_id=5cb3740f&app_key=a9e3c561a5d66e6b507a809b9b28e07b&nutrition-type=cooking&ingr=$check'));
+    //   if (responseCheck.statusCode == 200) {
+    //     DishData res = DishData.fromJson(jsonDecode(response.body));
+    //   //  DishData check = DishData.fromJson(jsonDecode(responseCheck.body));
+    //     return res;
+    //   } else {
+    //     // If the server did not return a 200 OK response,
+    //     // then throw an exception.
+    //     throw Exception('Failed to load nutrion data');
+    //   }
+    // } else {
+      return DishData.fromJson(jsonDecode(response.body));
+    //}
   } else {
     // If the server did not return a 200 OK response,
     // then throw an exception.
-    throw Exception('Failed to load album');
+    throw Exception('Failed to load nutrion data');
   }
 }
 

@@ -449,8 +449,8 @@ class __DiaryPageState extends State<DiaryPage> {
                 //ask api for nutrition date:
 
                 DishData dishData;
-                fetchDishData(meal.dishController.text.trim(), meal.measurement,
-                        meal.amountController.text.trim())
+                fetchDishData(meal.dishController.text.trim(),
+                        meal.amountController.text.trim(), meal.measurement,)
                     .then((value) {
                   dishData = value;
 
