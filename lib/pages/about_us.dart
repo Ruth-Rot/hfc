@@ -12,6 +12,7 @@ class AboutUs extends StatefulWidget {
 }
 
 class __AboutUsState extends State<AboutUs> {
+  String first="";
   String introduction = "";
   String activityLevel = "";
   String dietLevel = "";
@@ -58,8 +59,11 @@ class __AboutUsState extends State<AboutUs> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            titleCenter(first),
+            const SizedBox(
+              height: 5,
+            ),
             textField(introduction),
-           
             const SizedBox(
               height: 15,
             ),
@@ -128,6 +132,9 @@ class __AboutUsState extends State<AboutUs> {
               height: 5,
             ),
             textField(favorite),
+            const SizedBox(
+              height: 75,
+            ),
           ],
         ),
       )
@@ -143,6 +150,11 @@ class __AboutUsState extends State<AboutUs> {
   }
 
   Future<void> readTexts() async {
+    final String responseFi =
+        await rootBundle.loadString('assets/files/First Sentence.txt');
+    setState(() {
+      first = responseFi;
+    });
     final String responseIn =
         await rootBundle.loadString('assets/files/Introduction.txt');
     setState(() {
@@ -198,7 +210,16 @@ class __AboutUsState extends State<AboutUs> {
   Text title(String text) {
     return Text(
       text,
-      style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
+      style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
+    );
+  }
+
+  Text titleCenter(String text) {
+    return Text(
+      text,
+      style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w500, ),
+            textAlign: TextAlign.center,
+
     );
   }
 }

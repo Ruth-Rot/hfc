@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hfc/headers/circle_header.dart';
 import 'package:hfc/common/recipe_card.dart';
 import 'package:hfc/models/recipe_widget_controller.dart';
+import '../common/no_recipes.dart';
 import '../models/recipe.dart';
 
 class MyRecipePage extends StatefulWidget {
@@ -21,6 +22,37 @@ class __MyRecipePageState extends State<MyRecipePage> {
 
   @override
   Widget build(BuildContext context) {
+    if(widget.recipes.isEmpty){
+      return Scaffold(
+        body: SingleChildScrollView(
+            child: Column(
+      children: [
+        circleHeader(
+            context,
+            const Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  FaIcon(
+                    FontAwesomeIcons.bowlFood,
+                    color: Colors.white,
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    "My Recipes",
+                    style: TextStyle(color: Colors.white, fontSize: 30),
+                  )
+                ])),
+                SizedBox(height: 30,),
+        SizedBox(
+          height: 540,
+          child: noRecipes()
+        )])));
+    }
+    else{
+      
     for (RecipeModel r in widget.recipes) {
       recipeControllers.add(RecipeWidgetController(recipe: r));
     }
@@ -68,5 +100,6 @@ class __MyRecipePageState extends State<MyRecipePage> {
         ),
       ],
     )));
+  }
   }
 }

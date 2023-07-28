@@ -82,12 +82,12 @@ class __ChatPageState extends State<ChatPage> {
         case "start_meal_plan":
           {
             //  handle controller
-           // if (mounted) {
+            if (mounted) {
               setState(() {
                 widget.dialogController.waitForMeal = true;
    widget.dialogController.waitForMealMessage = message.data['text'];
               });
-          //  }
+           }
           }
         break;
         case "start_recipe_search":
@@ -110,23 +110,23 @@ class __ChatPageState extends State<ChatPage> {
 
               if (mounted) {
                 setState(() {
-                  widget.dialogController.mealPlanTextStart = message.data["text"];
+                  widget.dialogController.mealPlanText = message.data["text"];
                 });
               }
             }
             break;
-            case "Meal_plan_details_2":
-            {
-              // start to wait for meal plan card:
-              // add  first meal:
+            // case "Meal_plan_details_2":
+            // {
+            //   // start to wait for meal plan card:
+            //   // add  first meal:
 
-              if (mounted) {
-                setState(() {
-                  widget.dialogController.mealPlanTextEnd = message.data["text"];
-                });
-              }
-            }
-            break;
+            //   if (mounted) {
+            //     setState(() {
+            //       widget.dialogController.mealPlanTextEnd = message.data["text"];
+            //     });
+            //   }
+            // }
+            // break;
 
           case "meal_plan":
             {
@@ -484,13 +484,10 @@ class __ChatPageState extends State<ChatPage> {
           jsonEncode(addMealPlanToMessages(widget.dialogController.mealPlan));
       if (mounted) {
         setState(() {
-          messages[messages.length - 1]['message'] = Message(
-              text: DialogText(
-                  text: [widget.dialogController.mealPlanTextStart]));
-          addMessage(Message(text: DialogText(text: [req])));
+          messages[messages.length - 1]['message'] =Message(text: DialogText(text: [req]));
           addMessage(Message(
               text:
-                  DialogText(text: [widget.dialogController.mealPlanTextEnd])));
+                  DialogText(text: [widget.dialogController.mealPlanText])));
           //save messages in firebase:
           UserReposiontry()
               .saveMessages(previousMessages + messages, widget.user.email);

@@ -47,7 +47,7 @@ class __ProgressPageState extends State<ProgressPage> {
       _consumChartData = getCounsumChartData();
       _dailyChartData = getdailyChartData();
       _tooltipBehavior = TooltipBehavior(enable: true);
-      _pieChartData = getDailyPie();
+      _pieChartData = getMonthAveragePie();
     }
     super.initState();
   }
@@ -55,20 +55,17 @@ class __ProgressPageState extends State<ProgressPage> {
   @override
   Widget build(BuildContext context) {
     if (widget.userModel.fillDetails == false) {
-      return 
-      SafeArea(
+      return SafeArea(
           child: Scaffold(
               body: SingleChildScrollView(
                   scrollDirection: Axis.vertical,
                   child: Column(children: [
                     progressHeader(context),
                     const SizedBox(
-                      height: 20,
+                      height: 30,
                     ),
-                    fillYourDetails()])
-              )))
-                    
-                    ;
+                    fillYourDetails()
+                  ]))));
     } else {
       return SafeArea(
           child: Scaffold(
@@ -156,7 +153,7 @@ class __ProgressPageState extends State<ProgressPage> {
                       card(
                           SfCircularChart(
                               title: ChartTitle(
-                                  text: "Today ckal consumption",
+                                  text: "Distribution of average calorie intake",
                                   textStyle: _textStyle),
                               legend: Legend(
                                   isVisible: true,
@@ -219,24 +216,23 @@ class __ProgressPageState extends State<ProgressPage> {
 
   Container progressHeader(BuildContext context) {
     return circleHeader(
-                      context,
-                      const Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            FaIcon(
-                              FontAwesomeIcons.chartLine,
-                              color: Colors.white,
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Text(
-                              "Statistics",
-                              style: TextStyle(
-                                  color: Colors.white, fontSize: 30),
-                            )
-                          ]));
+        context,
+        const Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              FaIcon(
+                FontAwesomeIcons.chartLine,
+                color: Colors.white,
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Text(
+                "Statistics",
+                style: TextStyle(color: Colors.white, fontSize: 30),
+              )
+            ]));
   }
 
   iconCard(String num, IconData icon, String label) {
@@ -302,37 +298,56 @@ class __ProgressPageState extends State<ProgressPage> {
 
   List<CkalConsumptionData> getdailyChartData() {
     final List<CkalConsumptionData> charData = [];
+    DateTime now = DateTime.now();
     for (String date in widget.userModel.diary.keys) {
       Day day = widget.userModel.diary[date]!;
-      //check it belong to this month!!!!!
+      //check the day belong to this month:
       DateTime time = DateFormat.yMMMMd('en_US').parse(date);
-      charData
-          .add(CkalConsumptionData(time.day, widget.userModel.dailyCalories));
+      if (now.month == time.month) {
+        charData
+            .add(CkalConsumptionData(time.day, widget.userModel.dailyCalories));
+      }
     }
     charData.sort((a, b) => a.day.compareTo(b.day));
 
     return charData;
   }
 
-  getDailyPie() {
-    String date = DateFormat.yMMMMd('en_US').format(DateTime.now());
-    double breakfast = widget.userModel.diary[date]?.meals[0].getCalories();
+  getMonthAveragePie() {
+
+    double lunch = 0, breakfast = 0, dinner = 0, snacks = 0;
+    int counter = 0;
+
+    DateTime now = DateTime.now();
+    for (String date in widget.userModel.diary.keys) {
+      Day day = widget.userModel.diary[date]!;
+      //check the day belong to this month:
+      DateTime time = DateFormat.yMMMMd('en_US').parse(date);
+      if (now.month == time.month) {
+        counter++;
+        breakfast += day.meals[0].getCalories();
+        lunch += day.meals[1].getCalories();
+        dinner += day.meals[2].getCalories();
+        snacks += day.meals[3].getCalories();
+      }
+    }
     return [
-      DailyPieChartData(breakfast, "Breakfast"),
+      DailyPieChartData(breakfast / counter, "Breakfast",),
       DailyPieChartData(
-        widget.userModel.diary[date]?.meals[1].getCalories(),
+        lunch / counter,
         "Lunch",
       ),
       DailyPieChartData(
-        widget.userModel.diary[date]?.meals[2].getCalories(),
+        dinner / counter,
         "Dinner",
       ),
       DailyPieChartData(
-        widget.userModel.diary[date]?.meals[3].getCalories(),
+        snacks / counter,
         "Snacks",
       ),
     ];
   }
+
 }
 
 class CkalConsumptionData {
