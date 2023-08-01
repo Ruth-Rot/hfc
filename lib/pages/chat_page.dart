@@ -82,17 +82,22 @@ class __ChatPageState extends State<ChatPage> {
         case "start_meal_plan":
           {
             //  handle controller
-            if (mounted) {
-              setState(() {
-                widget.dialogController.waitForMeal = true;
-   widget.dialogController.waitForMealMessage = message.data['text'];
-              });
-           }
+            if (widget.dialogController.startSendMeal == false) {
+              if (mounted) {
+                setState(() {
+                  widget.dialogController.waitForMeal = true;
+                  widget.dialogController.waitForMealMessage =
+                      message.data['text'];
+                  widget.dialogController.startSendMeal = true;
+                });
+              }
+            }
           }
-        break;
+          break;
         case "start_recipe_search":
           {
             //  handle controller
+
             if (mounted) {
               setState(() {
                 widget.dialogController.waitForRecipe = true;
@@ -103,59 +108,49 @@ class __ChatPageState extends State<ChatPage> {
           }
           break;
 
-          case "Meal_plan_details_1":
-            {
-              // start to wait for meal plan card:
-              // add  first meal:
+        case "Meal_plan_details_1":
+          {
+            // start to wait for meal plan card:
+            // add  first meal:
 
-              if (mounted) {
-                setState(() {
-                  widget.dialogController.mealPlanText = message.data["text"];
-                });
-              }
-            }
-            break;
-            // case "Meal_plan_details_2":
-            // {
-            //   // start to wait for meal plan card:
-            //   // add  first meal:
-
-            //   if (mounted) {
-            //     setState(() {
-            //       widget.dialogController.mealPlanTextEnd = message.data["text"];
-            //     });
-            //   }
-            // }
-            // break;
-
-          case "meal_plan":
-            {
-              // add  meal:
-              if (mounted) {
+            if (mounted) {
               setState(() {
-                widget.dialogController.mealPlan[message.data['currentMessage']] =
+                widget.dialogController.mealPlanText = message.data["text"];
+              });
+            }
+          }
+          break;
+
+        case "meal_plan":
+          {
+            // add  meal:
+            if (mounted) {
+              setState(() {
+                widget.dialogController
+                        .mealPlan[message.data['currentMessage']] =
                     message.data['card'];
-              // check if last and handle:
+                // check if last and handle:
                 if (widget.dialogController.mealPlan.length.toString() ==
                     message.data['messagesNumber'].toString()) {
                   widget.dialogController.sentPlanMeal = true;
                 }
               });
             }
-            }
-            break;
+          }
+          break;
 
-          case "meal_plan_failed":
-            {
-               // update controller
-              if (mounted) {
-                setState(() {
-                    widget.dialogController.isfailPlan = true;
-     widget.dialogController.failureTextPlan=message.data.toString();
-                });
-              }
+        case "meal_plan_failed":
+          {
+            // update controller
+            if (mounted) {
+              setState(() {
+                widget.dialogController.isfailPlan = true;
+                widget.dialogController.failureTextPlan =
+                    message.data.toString();
+              });
             }
-            break;
+          }
+          break;
 
         case "recipe":
           {
@@ -169,17 +164,24 @@ class __ChatPageState extends State<ChatPage> {
           }
           break;
 
-          case "recipe_failed":
-            {
-              // update controller
-              if (mounted) {
-                setState(() {
-                   widget.dialogController.isfailrecipe = true;
-    widget.dialogController.failureTextRecipe=message.data.toString();
-                });
-              }
+        case "recipe_failed":
+          {
+            // update controller
+            if (mounted) {
+              setState(() {
+                widget.dialogController.isfailrecipe = true;
+                widget.dialogController.failureTextRecipe =
+                    message.data.toString();
+              });
             }
-            break;
+          }
+          break;
+        case "text":
+          {
+            addMessage(
+                Message(text: DialogText(text: [message.data.toString()])));
+          }
+          break;
         default:
           {
             //statements;
@@ -352,7 +354,8 @@ class __ChatPageState extends State<ChatPage> {
       DetectIntentResponse response =
           await dialogFlowtter.detectIntent(queryInput: query);
       try {
-        if (response.message == null) return;
+        if (response.message == null ||
+            response.message!.text!.text![0] == "ignore") return;
 
         if (mounted) {
           setState(() {
@@ -427,10 +430,10 @@ class __ChatPageState extends State<ChatPage> {
           addMessage(Message(
               text: DialogText(
                   text: [widget.dialogController.waitForMealMessage])));
-         // Future.delayed(const Duration(seconds: 1), () {
-            addMessage(loadMessage);
-        //  });
-          widget.dialogController.waitForMeal == false;
+          // Future.delayed(const Duration(seconds: 1), () {
+          addMessage(loadMessage);
+          //  });
+          widget.dialogController.waitForMeal = false;
         });
       }
     }
@@ -484,14 +487,15 @@ class __ChatPageState extends State<ChatPage> {
           jsonEncode(addMealPlanToMessages(widget.dialogController.mealPlan));
       if (mounted) {
         setState(() {
-          messages[messages.length - 1]['message'] =Message(text: DialogText(text: [req]));
+          messages[messages.length - 1]['message'] =
+              Message(text: DialogText(text: [req]));
           addMessage(Message(
-              text:
-                  DialogText(text: [widget.dialogController.mealPlanText])));
+              text: DialogText(text: [widget.dialogController.mealPlanText])));
           //save messages in firebase:
           UserReposiontry()
               .saveMessages(previousMessages + messages, widget.user.email);
           widget.dialogController.sentPlanMeal = false;
+          widget.dialogController.startSendMeal = false;
           widget.dialogController.mealPlan = {};
         });
       }
@@ -505,6 +509,7 @@ class __ChatPageState extends State<ChatPage> {
               text:
                   DialogText(text: [widget.dialogController.failureTextPlan]));
           widget.dialogController.isfailrecipe = false;
+          widget.dialogController.startSendMeal = false;
           widget.dialogController.mealPlan = {};
         });
       }

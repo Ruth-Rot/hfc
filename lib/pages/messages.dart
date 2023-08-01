@@ -384,7 +384,7 @@ class _MessagesState extends State<Messages> {
                             child: Text(
                               index != 0
                                   ? index == 1
-                                      ? "Lanch"
+                                      ? "Lunch"
                                       : "Dinner"
                                   : "Breakfast",
                               style: const TextStyle(fontSize: 16),

@@ -21,7 +21,9 @@ class DialogMessageController {
   //meals plan:
   late bool waitForMeal = false;
   late String waitForMealMessage = "";
+
   late bool startSendMeal = false;
+  
   late bool sentPlanMeal = false;
   late Map<String, dynamic> mealPlan = {};
   late String mealPlanText = "";
