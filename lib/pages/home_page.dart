@@ -78,8 +78,7 @@ class __HomePageState extends State<HomePage> {
             } else if (currentPage == DrawerSections.aboutAs) {
               pageWidget = AboutUs();
             }
-          isUser = true;
-
+            isUser = true;
           });
         }
       });
@@ -94,7 +93,7 @@ class __HomePageState extends State<HomePage> {
         elevation: 0.0,
         iconTheme: const IconThemeData(color: Colors.white),
       ),
-      body: isUser == true? pageWidget: Container(),
+      body: isUser == true ? pageWidget : Container(),
       drawer: Drawer(
         child: SingleChildScrollView(
             child: Column(children: [mydrawerHeader(), myDrawerList()])),
@@ -103,6 +102,9 @@ class __HomePageState extends State<HomePage> {
           onPressed: () => {
                 if (isUser == true)
                   {
+                    if (user.haveNotification == true){
+                      userReposiontry.updateGetNotification(user.email)
+                    },
                     Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
@@ -116,7 +118,9 @@ class __HomePageState extends State<HomePage> {
             ClipOval(
               child: bot,
             ),
-                    (isUser == true && (user.fillDetails == false || user.haveNotification == true))
+            (isUser == true &&
+                    (user.fillDetails == false ||
+                        user.haveNotification == true))
                 ? notificationBell()
                 : const SizedBox()
           ])),
@@ -126,10 +130,10 @@ class __HomePageState extends State<HomePage> {
 //a bell that "ring" when the bot have a message!
   Positioned notificationBell() {
     return Positioned(
-        bottom: 0,
+        bottom: -0,
         right: 0,
-        height: 18,
-        width: 18,
+        height: 24,
+        width: 24,
         child: ClipOval(
           child: Material(
             color: Colors.green[200],
@@ -141,7 +145,7 @@ class __HomePageState extends State<HomePage> {
                   child: const FaIcon(
                     FontAwesomeIcons.bell,
                     color: Colors.white,
-                    size: 12,
+                    size: 20,
                   )),
             ),
           ),
@@ -234,7 +238,8 @@ class __HomePageState extends State<HomePage> {
                 Expanded(
                     flex: 3,
                     child: Text(title,
-                        style: const TextStyle(color: Colors.black, fontSize: 16)))
+                        style:
+                            const TextStyle(color: Colors.black, fontSize: 16)))
               ],
             ),
           )),
@@ -262,7 +267,7 @@ class __HomePageState extends State<HomePage> {
     );
   }
 
-//oval profile image 
+//oval profile image
   Container profileCircle() {
     if (isUser == true) {
       return Container(
@@ -277,7 +282,7 @@ class __HomePageState extends State<HomePage> {
       return Container(
         margin: const EdgeInsets.only(bottom: 10),
         height: 80,
-        child:const CircleAvatar(
+        child: const CircleAvatar(
           radius: 60,
           backgroundColor: Colors.white,
         ),
@@ -286,4 +291,4 @@ class __HomePageState extends State<HomePage> {
   }
 }
 
-enum DrawerSections {diary, progress, savedRecipes, aboutAs, logout}
+enum DrawerSections { diary, progress, savedRecipes, aboutAs, logout }
