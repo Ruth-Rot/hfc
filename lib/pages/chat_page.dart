@@ -85,7 +85,6 @@ class __ChatPageState extends State<ChatPage> {
         case "start_recipe_search":
           {
             //  handle controller
-
             if (mounted) {
               setState(() {
                 widget.dialogController.waitForRecipe = true;
@@ -95,7 +94,6 @@ class __ChatPageState extends State<ChatPage> {
             }
           }
           break;
-
         case "Meal_plan_details_1":
           {
             // start to wait for meal plan card:
@@ -108,7 +106,6 @@ class __ChatPageState extends State<ChatPage> {
             }
           }
           break;
-
         case "meal_plan":
           {
             // add  meal:
@@ -126,7 +123,6 @@ class __ChatPageState extends State<ChatPage> {
             }
           }
           break;
-
         case "meal_plan_failed":
           {
             // update controller
@@ -139,7 +135,6 @@ class __ChatPageState extends State<ChatPage> {
             }
           }
           break;
-
         case "recipe":
           {
             // update controller with recipe
@@ -151,7 +146,6 @@ class __ChatPageState extends State<ChatPage> {
             }
           }
           break;
-
         case "recipe_failed":
           {
             // update controller
@@ -172,8 +166,6 @@ class __ChatPageState extends State<ChatPage> {
                 widget.dialogController.text = message.data["text"].toString();
               });
             }
-
-
           }
           break;
         default:
@@ -385,6 +377,9 @@ class __ChatPageState extends State<ChatPage> {
                     Message(text: DialogText(text: [widget.dialogController.text])));
       widget.dialogController.isTextWait = false;
        });
+       //save messages in firebase:
+      UserReposiontry()
+          .saveMessages(previousMessages + messages, widget.user.email);
     }
     //check if there a mealPlan start:
     if (widget.dialogController.waitForMeal == true) {
@@ -399,6 +394,9 @@ class __ChatPageState extends State<ChatPage> {
           widget.dialogController.waitForMeal = false;
         });
       }
+      //save messages in firebase:
+      UserReposiontry()
+          .saveMessages(previousMessages + messages, widget.user.email);
     }
     //check if there a recipe start:
     if (widget.dialogController.waitForRecipe == true) {
@@ -414,6 +412,9 @@ class __ChatPageState extends State<ChatPage> {
           widget.dialogController.waitForRecipe = false;
         });
       }
+      //save messages in firebase:
+      UserReposiontry()
+          .saveMessages(previousMessages + messages, widget.user.email);
     }
     //check if get a recipe:
     if (widget.dialogController.isWaitedRecipe == true) {
@@ -431,6 +432,9 @@ class __ChatPageState extends State<ChatPage> {
             .saveMessages(previousMessages + messages, widget.user.email);
       }
       widget.dialogController.isWaitedRecipe = false;
+      //save messages in firebase:
+      UserReposiontry()
+          .saveMessages(previousMessages + messages, widget.user.email);
     }
     //check if recipe fail:
     if (widget.dialogController.isfailrecipe == true) {
@@ -442,6 +446,9 @@ class __ChatPageState extends State<ChatPage> {
           widget.dialogController.isfailrecipe = false;
         });
       }
+      //save messages in firebase:
+      UserReposiontry()
+          .saveMessages(previousMessages + messages, widget.user.email);
     }
 
     //check if get a meal plan:
@@ -462,6 +469,9 @@ class __ChatPageState extends State<ChatPage> {
           widget.dialogController.mealPlan = {};
         });
       }
+      //save messages in firebase:
+      UserReposiontry()
+          .saveMessages(previousMessages + messages, widget.user.email);
     }
 
     //check if meal plan fail:
@@ -476,6 +486,9 @@ class __ChatPageState extends State<ChatPage> {
           widget.dialogController.mealPlan = {};
         });
       }
+      //save messages in firebase:
+      UserReposiontry()
+          .saveMessages(previousMessages + messages, widget.user.email);
     }
   }
 
