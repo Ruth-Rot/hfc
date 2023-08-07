@@ -3,7 +3,6 @@ import 'package:dialog_flowtter/dialog_flowtter.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
-import 'package:get/get.dart';
 import 'package:hfc/controllers/dialog_message_controller.dart';
 import 'package:hfc/pages/home_page.dart';
 import 'package:hfc/reposiontrys/dialog_reposiontry.dart';
@@ -311,7 +310,6 @@ class __ChatPageState extends State<ChatPage> {
           });
         }
       } catch (e) {
-        // TODO: handle exception, for example by showing an alert to the user
         print(e);
       }
       //save messages in firebase:

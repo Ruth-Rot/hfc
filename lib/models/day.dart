@@ -29,10 +29,6 @@ class Day {
   }
   
   getDailyCalories(double daily) {
-    double used = 0;
-    for (var meal in meals) {
-      used += meal.getCalories();
-    }
     double result = daily + activitys.getCalories();
     return result;
   }

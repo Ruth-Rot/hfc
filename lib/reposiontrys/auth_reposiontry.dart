@@ -1,8 +1,6 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:hfc/pages/home_page.dart';
 import 'package:hfc/pages/splash_screen.dart';
 

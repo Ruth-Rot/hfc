@@ -177,7 +177,7 @@ class __DiaryPageState extends State<DiaryPage> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              circleHeader(context, dateWidget()), SizedBox(height: 30,),fillYourDetails()])
+              circleHeader(context, dateWidget()), const SizedBox(height: 30,),fillYourDetails()])
         )
        );
     }

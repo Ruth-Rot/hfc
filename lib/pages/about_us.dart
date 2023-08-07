@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import '../headers/circle_header.dart';
 
 class AboutUs extends StatefulWidget {
-  AboutUs({super.key});
+  const AboutUs({super.key});
   @override
   State<StatefulWidget> createState() {
     return __AboutUsState();

@@ -76,14 +76,3 @@ class _LoaderState extends State<Loader> with SingleTickerProviderStateMixin {
   }
 }
 
-
-//main to check:
-void main() => runApp(MyApp());
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(home: Loader());
-  }
-}
