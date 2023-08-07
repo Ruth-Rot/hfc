@@ -161,7 +161,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
             ),
             onPressed: () async {
               // Validate form fields.
-              if (_formKey.currentState!.validate()) // If the form is valid:
+              if (_formKey.currentState!.validate() && mounted) // If the form is valid:
               {
                 // sign up to firebase with fields content:
                 signUpByEmailAndPassword().then((instance) {
