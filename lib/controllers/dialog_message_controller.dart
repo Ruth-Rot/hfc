@@ -32,6 +32,7 @@ class DialogMessageController {
   late bool sentPlanMeal = false;
   late Map<String, dynamic> mealPlan = {};
   late String mealPlanText = "";
+  late bool isPlanText = false;
   late bool isfailPlan = false;
   late String failureTextPlan="";
   

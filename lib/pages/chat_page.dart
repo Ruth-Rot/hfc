@@ -102,6 +102,7 @@ class __ChatPageState extends State<ChatPage> {
             if (mounted) {
               setState(() {
                 widget.dialogController.mealPlanText = message.data["text"];
+                widget.dialogController.isPlanText = true;
               });
             }
           }
@@ -452,7 +453,7 @@ class __ChatPageState extends State<ChatPage> {
     }
 
     //check if get a meal plan:
-    if (widget.dialogController.sentPlanMeal == true) {
+    if (widget.dialogController.sentPlanMeal == true && widget.dialogController.isPlanText == true) {
       String req =
           jsonEncode(addMealPlanToMessages(widget.dialogController.mealPlan));
       if (mounted) {
@@ -465,6 +466,7 @@ class __ChatPageState extends State<ChatPage> {
           UserReposiontry()
               .saveMessages(previousMessages + messages, widget.user.email);
           widget.dialogController.sentPlanMeal = false;
+          widget.dialogController.isPlanText = false;
           widget.dialogController.startSendMeal = false;
           widget.dialogController.mealPlan = {};
         });
