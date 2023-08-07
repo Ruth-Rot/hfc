@@ -230,9 +230,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
             borderSide: const BorderSide(color: Colors.red, width: 2.0)),
         suffixIcon: InkWell(
           onTap: () {
+            if(mounted){
             setState(() {
               passToggle = !passToggle;
             });
+            }
           },
           child: Icon(passToggle
               ? Icons.visibility_outlined
@@ -331,6 +333,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
       ],
       onToggle: (index) {
         genderInit = index!;
+        if(mounted){
         setState(() {
           if (!isUploudPic) {
             if (index == 0) {
@@ -340,6 +343,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
             }
           }
         });
+        }
       },
     );
   }
@@ -468,6 +472,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
       await ref.putFile(img);
       //get image path
       imageUrl = await ref.getDownloadURL();
+    }
+    else{
+      String manNetworkUrl = "https://firebasestorage.googleapis.com/v0/b/hfc-app-b33ed.appspot.com/o/Users%20Profile%20Photos%2Fman_icon.png?alt=media&token=3570ba04-d05e-404e-b850-6343acb5b525";
+      String womanNetworkUrl = "https://firebasestorage.googleapis.com/v0/b/hfc-app-b33ed.appspot.com/o/Users%20Profile%20Photos%2Fwoman_icon.png?alt=media&token=c39682fb-7cf1-44ac-980e-896075df71ea";
+      imageUrl = genderInit == 0 ?       manNetworkUrl : womanNetworkUrl;
+      
     }
     //build user model
     final user = UserModel(

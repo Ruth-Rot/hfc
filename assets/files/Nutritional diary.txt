@@ -1,5 +1,9 @@
-In the nutrition diary you can record your food consumption and sports activity. The information will be automatically synchronized with the statistics page.
-At each meal you can enter records of the food you consumed. Each record consists of: product name, unit and quantity. For example: "one medium cucumber" or "2 cup rice". The application will calculate the nutritional values in the product and add them to the daily consumption calculation.
-At the bottom of the page there is a place to fill in records of sports activities you have performed. Here, too, the application will calculate the amount of calories you burned, and add them to the daily consumption calculation.
-In the circle on the top left you can see how many calories you have left until the daily consumption goal. To the right of the circle you can see the protein, carbohydrates and fat you consumed that day.
-You can move between the different dates by clicking on the arrows on the sides of the date.
+A request for nutritional information is made through the bot. You must enter the following parameters into the bot:
+Ingredient name - required.
+Quantity - required.
+Unit - for example "bowl" or "medium". Optional.
+Examples of correct wording of a request for nutritional information regarding a product:
+"2 plates of rice"
+"200 gram nuts"
+Pay attention: you can enter ingredients only and not names of dishes.
+The bot will return the following information for the product: calories, protein, fats and carbohydrates.

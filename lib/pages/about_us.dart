@@ -23,6 +23,9 @@ class __AboutUsState extends State<AboutUs> {
   String info = "";
   String statistics = "";
   String favorite="";
+  String healthLabels="";
+  String dietLabels="";
+  String dishTypes="";
 
   @override
   Widget build(BuildContext context) {
@@ -132,6 +135,32 @@ class __AboutUsState extends State<AboutUs> {
               height: 5,
             ),
             textField(favorite),
+
+             const SizedBox(
+              height: 15,
+            ),
+             title("Health Labels supported by the app:"),
+            const SizedBox(
+              height: 5,
+            ),
+            textField(healthLabels),
+              const SizedBox(
+              height: 15,
+            ),
+             title("Diet Labels supported by the app:"),
+            const SizedBox(
+              height: 5,
+            ),
+            textField(dietLabels),
+               const SizedBox(
+              height: 15,
+            ),
+             title("Dish Types supported by the app:"),
+            const SizedBox(
+              height: 5,
+            ),
+            textField(dishTypes),
+            
             const SizedBox(
               height: 75,
             ),
@@ -204,6 +233,22 @@ class __AboutUsState extends State<AboutUs> {
         await rootBundle.loadString('assets/files/Favorite recipes.txt');
     setState(() {
       favorite = responseFavorite;
+    });
+
+     final String responseHealth =
+        await rootBundle.loadString('assets/files/Health Labels.txt');
+    setState(() {
+      healthLabels = responseHealth;
+    });
+     final String responseDiet =
+        await rootBundle.loadString('assets/files/Diet Labels.txt');
+    setState(() {
+      dietLabels = responseDiet;
+    });
+     final String responseDish =
+        await rootBundle.loadString('assets/files/Dish types.txt');
+    setState(() {
+      dishTypes = responseDish;
     });
   }
 
