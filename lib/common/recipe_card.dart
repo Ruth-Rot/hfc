@@ -76,8 +76,14 @@ class __RecipeCardState extends State<RecipeCard>{
           alignment: Alignment.center,
           child: GestureDetector(
             onTap: () async {
-              final uri = Uri.parse(recipeController.recipe.url);
+              String url = recipeController.recipe.url;
+              if(url.contains('https') == false){
+                url = url.replaceFirst("http", "https");
+              }
+              final uri = Uri.parse(url);
+              
               if (!await launchUrl(uri)) {
+
                 throw Exception('Could not launch $uri');
               }
             },
