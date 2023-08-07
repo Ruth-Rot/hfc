@@ -473,7 +473,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
     final user = UserModel(
         email: controller.email.text.trim().toLowerCase(),
         fullName: controller.fullname.text.trim(),
-        urlImage: genderInit == 0 ? manNetworkUrl : womanNetworkUrl,
+        urlImage: imageUrl,
         gender: genderInit == 0 ? "male" : "female",
         password: controller.password.text.trim(),
         fillDetails: false,

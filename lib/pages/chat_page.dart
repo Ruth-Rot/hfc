@@ -67,7 +67,7 @@ class __ChatPageState extends State<ChatPage> {
       }
       String request = message.data['request'];
       switch (request) {
-              case "start_meal_plan":
+        case "start_meal_plan":
           {
             //  handle controller
             if (widget.dialogController.startSendMeal == false) {
@@ -166,8 +166,12 @@ class __ChatPageState extends State<ChatPage> {
           break;
         case "text":
           {
-            addMessage(
-                Message(text: DialogText(text: [message.data.toString()])));
+            if (mounted) {
+              setState(() {
+                addMessage(
+                    Message(text: DialogText(text: [message.data.toString()])));
+              });
+            }
           }
           break;
         default:
@@ -175,14 +179,12 @@ class __ChatPageState extends State<ChatPage> {
             //statements;
           }
           break;
-      }    
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-   
-    
     checkStart();
     listenToServerChat();
 
@@ -475,7 +477,6 @@ class __ChatPageState extends State<ChatPage> {
       }
     }
   }
-
 
   addMealPlanToMessages(Map mealPlan) {
     Map<String, dynamic> days = {};

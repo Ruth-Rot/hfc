@@ -44,8 +44,10 @@ class __HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     Future.delayed(Duration.zero, () {
+      var currentUser = FirebaseAuth.instance.currentUser;
+      if(currentUser != null){
       userReposiontry
-          .getUserDetails(FirebaseAuth.instance.currentUser!.email!)
+          .getUserDetails(currentUser.email!)
           .then((instance) {
         user = instance;
 
@@ -81,8 +83,10 @@ class __HomePageState extends State<HomePage> {
             isUser = true;
           });
         }
+          
       });
-    });
+    }});
+  
     return buildPageWidget(context);
   }
 
