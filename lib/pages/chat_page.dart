@@ -134,7 +134,7 @@ class __ChatPageState extends State<ChatPage> {
               setState(() {
                 widget.dialogController.isfailPlan = true;
                 widget.dialogController.failureTextPlan =
-                    message.data.toString();
+                    message.data["text"].toString();
               });
             }
           }
@@ -159,7 +159,7 @@ class __ChatPageState extends State<ChatPage> {
               setState(() {
                 widget.dialogController.isfailrecipe = true;
                 widget.dialogController.failureTextRecipe =
-                    message.data.toString();
+                    message.data["text"].toString();
               });
             }
           }
@@ -168,10 +168,12 @@ class __ChatPageState extends State<ChatPage> {
           {
             if (mounted) {
               setState(() {
-                addMessage(
-                    Message(text: DialogText(text: [message.data.toString()])));
+                widget.dialogController.isTextWait = true;
+                widget.dialogController.text = message.data["text"].toString();
               });
             }
+
+
           }
           break;
         default:
@@ -376,6 +378,14 @@ class __ChatPageState extends State<ChatPage> {
         isOnce = false;
       }
     }
+    //check if text wait:
+    if(widget.dialogController.isTextWait == true){
+       setState(() {
+       addMessage(
+                    Message(text: DialogText(text: [widget.dialogController.text])));
+      widget.dialogController.isTextWait = false;
+       });
+    }
     //check if there a mealPlan start:
     if (widget.dialogController.waitForMeal == true) {
       if (mounted) {
@@ -461,7 +471,7 @@ class __ChatPageState extends State<ChatPage> {
           messages[messages.length - 1]['message'] = Message(
               text:
                   DialogText(text: [widget.dialogController.failureTextPlan]));
-          widget.dialogController.isfailrecipe = false;
+          widget.dialogController.isfailPlan = false;
           widget.dialogController.startSendMeal = false;
           widget.dialogController.mealPlan = {};
         });

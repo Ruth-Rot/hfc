@@ -6,6 +6,11 @@ import '../reposiontrys/user_reposiontry.dart';
 class DialogMessageController {
   Key? key;
 
+  //text
+    late bool isTextWait = false;
+    late String text = "";
+
+
   //notifications:
   late bool isWaitedNotification = false;
   late String notificationMessage = "";

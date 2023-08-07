@@ -7,12 +7,21 @@ class UserReposiontry {
   final _db = FirebaseFirestore.instance;
 
   createUser(UserModel user) async {
+    try{
+   UserModel exist =  await getUserDetails(user.email);
+   if(exist.email != "") {
+     print("user exist");
+    }
+    }
+    catch(e){
     await _db
         .collection("Users")
         .add(user.toJson())
         .catchError((error, stackTrace) {
       print(error.toString());
+         throw Exception('Error in create user file');
     });
+    }
   }
 
   Future<UserModel> getUserDetails(String email) async {
