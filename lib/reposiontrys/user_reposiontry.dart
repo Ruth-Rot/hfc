@@ -3,32 +3,41 @@ import 'package:hfc/models/day.dart';
 import 'package:hfc/models/user.dart';
 
 class UserReposiontry {
-
   final _db = FirebaseFirestore.instance;
 
   createUser(UserModel user) async {
-    try{
-   UserModel exist =  await getUserDetails(user.email);
-   if(exist.email != "") {
-     print("user exist");
-    }
-    }
-    catch(e){
+    //   try{
+    //  UserModel exist =  await getUserDetails(user.email);
+    //  if(exist.email != "") {
+    //    print("user exist");
+    //   }
+    //   }
+    //   catch(e){
     await _db
         .collection("Users")
         .add(user.toJson())
         .catchError((error, stackTrace) {
       print(error.toString());
-         throw Exception('Error in create user file');
+      throw Exception('Error in create user file');
     });
-    }
+    //  }
   }
 
   Future<UserModel> getUserDetails(String email) async {
     final snapshot =
         await _db.collection("Users").where("email", isEqualTo: email).get();
-    final userData = snapshot.docs.map((e) => UserModel.fromSnapshot(e)).single;
-    return userData;
+    try {
+      final userData =
+          snapshot.docs.map((e) => UserModel.fromSnapshot(e)).single;
+      return userData;
+    } catch (e) {
+      final List<UserModel> usersDatas =
+          snapshot.docs.map((e) => UserModel.fromSnapshot(e)).toList();
+      for (int i = 1; i < usersDatas.length; i++) {
+        _db.collection('Users').doc(usersDatas[i].id).delete();
+      }
+      return usersDatas[0];
+    }
   }
 
   Future<List<UserModel>> allUser(String email) async {
@@ -39,7 +48,7 @@ class UserReposiontry {
   }
 
   updateSessionId(String sessionId, String email) async {
-  // Get a new write batch
+    // Get a new write batch
     final batch = _db.batch();
 
     // get the user doc
@@ -55,7 +64,7 @@ class UserReposiontry {
   }
 
   updateGetNotification(String email) async {
-  // Get a new write batch
+    // Get a new write batch
     final batch = _db.batch();
 
     // get the user doc
@@ -86,7 +95,7 @@ class UserReposiontry {
     batch.commit();
   }
 
-   void updateDiary(Map<String, Day> days, String email)async {
+  void updateDiary(Map<String, Day> days, String email) async {
 // Get a new write batch
     final batch = _db.batch();
 
@@ -100,35 +109,34 @@ class UserReposiontry {
     batch.update(userRef, {"diary": buildDaysToSave(days)});
 
     batch.commit();
-
-}
-
-buildMessagesToSave(List<Map<String, dynamic>> messages) {
-  List build = [];
-  for (var mes in messages) {
-    bool flag = mes['isUserMessage'];
-    var text="";
-    if (mes['message'] is String) {
-      text = mes['message'];
-    } else {
-      text = mes['message'].text.text[0];
-    }
-    var json = {"isUser": flag, "text": text};
-
-    build.add(json);
   }
-  return build;
-}
 
-buildDaysToSave (Map<String, Day> days){
-Map build ={};
-for(String key in days.keys){
-build[key] = days[key]!.toJson();
-}
-return build;
-}
+  buildMessagesToSave(List<Map<String, dynamic>> messages) {
+    List build = [];
+    for (var mes in messages) {
+      bool flag = mes['isUserMessage'];
+      var text = "";
+      if (mes['message'] is String) {
+        text = mes['message'];
+      } else {
+        text = mes['message'].text.text[0];
+      }
+      var json = {"isUser": flag, "text": text};
 
-  void updateFCMToken(String? fcmToken, String email) async{
+      build.add(json);
+    }
+    return build;
+  }
+
+  buildDaysToSave(Map<String, Day> days) {
+    Map build = {};
+    for (String key in days.keys) {
+      build[key] = days[key]!.toJson();
+    }
+    return build;
+  }
+
+  void updateFCMToken(String? fcmToken, String email) async {
     // Get a new write batch
     final batch = _db.batch();
 
