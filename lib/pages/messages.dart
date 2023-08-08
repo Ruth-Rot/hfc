@@ -48,13 +48,6 @@ class _MessagesState extends State<Messages> {
         child: Column(
           children: [
             messagesList(w, widget.previousMessages),
-            // const SizedBox(
-            //     height: 20,
-            //     width: 400,
-            //     child: Divider(
-            //       height: 10,
-            //     )),
-        //    const Text("start convresation"),
             messagesList(w, widget.messages),
           ],
         ),

@@ -6,13 +6,6 @@ class UserReposiontry {
   final _db = FirebaseFirestore.instance;
 
   createUser(UserModel user) async {
-    //   try{
-    //  UserModel exist =  await getUserDetails(user.email);
-    //  if(exist.email != "") {
-    //    print("user exist");
-    //   }
-    //   }
-    //   catch(e){
     await _db
         .collection("Users")
         .add(user.toJson())

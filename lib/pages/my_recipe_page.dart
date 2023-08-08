@@ -45,7 +45,7 @@ class __MyRecipePageState extends State<MyRecipePage> {
                     style: TextStyle(color: Colors.white, fontSize: 30),
                   )
                 ])),
-                SizedBox(height: 30,),
+                const SizedBox(height: 30,),
         SizedBox(
           height: 540,
           child: noRecipes()

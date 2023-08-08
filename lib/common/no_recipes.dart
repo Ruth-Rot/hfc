@@ -13,7 +13,6 @@ noRecipes(){
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-         
               SizedBox(
                   height: 540,
                   child:

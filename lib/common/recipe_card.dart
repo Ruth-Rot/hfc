@@ -4,19 +4,21 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hfc/models/recipe_widget_controller.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class RecipeCard extends StatefulWidget{
+class RecipeCard extends StatefulWidget {
   final RecipeWidgetController recipeController;
-    const RecipeCard({Key? key, required this.recipeController}) : super(key: key);
-
+  const RecipeCard({Key? key, required this.recipeController})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-     return __RecipeCardState();
+    return __RecipeCardState();
   }
-
 }
 
-class __RecipeCardState extends State<RecipeCard>{
+class __RecipeCardState extends State<RecipeCard> {
+  double fontvaluesize = 12.0;
+  double fontlabelSize = 10.0;
+
   @override
   Widget build(BuildContext context) {
     double height = widget.recipeController.getHeight() + 20;
@@ -33,12 +35,15 @@ class __RecipeCardState extends State<RecipeCard>{
               left: 170,
               child: ClipOval(
                   child: Material(
-                                            color: Colors.blue,
+                      color: Colors.blue,
                       child: InkWell(
                         onTap: () {
                           setState(() {
-                            Future.delayed(const Duration(milliseconds:10 ), () {
-                            widget.recipeController.isOpen = !widget.recipeController.isOpen;});
+                            Future.delayed(const Duration(milliseconds: 10),
+                                () {
+                              widget.recipeController.isOpen =
+                                  !widget.recipeController.isOpen;
+                            });
                           });
                         },
                         child: SizedBox(
@@ -58,18 +63,18 @@ class __RecipeCardState extends State<RecipeCard>{
       ),
     );
   }
-  
+
   recipeCard(RecipeWidgetController recipeController) {
     Widget openColumn = Container();
     if (recipeController.isOpen) {
       openColumn = Column(children: [
         showList("Diet Labels", recipeController.recipe.dietLabels,
-           const Color.fromARGB(255, 77, 182, 172)),
+            const Color.fromARGB(255, 77, 182, 172)),
         showList("Health Labels", recipeController.recipe.healthLabels,
             Colors.amberAccent),
         showList("Ingredients", recipeController.recipe.ingredients,
-          const  Color.fromARGB(255, 218, 146, 146)),
-     const   SizedBox(
+            const Color.fromARGB(255, 218, 146, 146)),
+        const SizedBox(
           height: 5,
         ),
         Container(
@@ -77,19 +82,18 @@ class __RecipeCardState extends State<RecipeCard>{
           child: GestureDetector(
             onTap: () async {
               String url = recipeController.recipe.url;
-              if(url.contains('https') == false){
+              if (url.contains('https') == false) {
                 url = url.replaceFirst("http", "https");
               }
               final uri = Uri.parse(url);
-              
-              if (!await launchUrl(uri)) {
 
+              if (!await launchUrl(uri)) {
                 throw Exception('Could not launch $uri');
               }
             },
             child: const Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children:  [
+              children: [
                 Text(
                   "To view the complete recipe, ",
                   style: TextStyle(
@@ -158,7 +162,7 @@ class __RecipeCardState extends State<RecipeCard>{
               padding: const EdgeInsets.all(5),
               child: Text(
                 label,
-                style:const TextStyle(fontSize: 10),
+                style:  TextStyle(fontSize: fontlabelSize),
               ))),
     );
   }
@@ -181,7 +185,7 @@ class __RecipeCardState extends State<RecipeCard>{
                   imageUrl: controller.recipe.image,
                   placeholder: (context, url) =>
                       const CircularProgressIndicator(), // Placeholder widget while loading
-                  errorWidget: (context, url, error) =>  const Icon(
+                  errorWidget: (context, url, error) => const Icon(
                       Icons.error), // Widget to display in case of an error
                 ),
               ),
@@ -209,60 +213,64 @@ class __RecipeCardState extends State<RecipeCard>{
                         Center(
                           child: Column(children: [
                             const FaIcon(FontAwesomeIcons.utensils),
-                            const Text(
+                             Text(
                               "Ckal",
                               style: TextStyle(
-                                  fontSize: 10, fontWeight: FontWeight.w300),
+                                  fontSize: fontlabelSize, fontWeight: FontWeight.w300),
                             ),
                             Text(
                               controller.recipe.calories.toStringAsFixed(2),
-                              style: const TextStyle(
-                                  fontSize: 12, fontWeight: FontWeight.bold),
+                              style: TextStyle(
+                                  fontSize: fontvaluesize,
+                                  fontWeight: FontWeight.bold),
                             )
                           ]),
                         ),
                         Center(
                           child: Column(children: [
                             const FaIcon(FontAwesomeIcons.breadSlice),
-                            const Text(
+                             Text(
                               "Carbs",
                               style: TextStyle(
-                                  fontSize: 10, fontWeight: FontWeight.w300),
+                                  fontSize: fontlabelSize, fontWeight: FontWeight.w300),
                             ),
                             Text(
                               controller.recipe.carbs.toStringAsFixed(2),
-                              style: const TextStyle(
-                                  fontSize: 12, fontWeight: FontWeight.bold),
+                              style: TextStyle(
+                                  fontSize: fontvaluesize,
+                                  fontWeight: FontWeight.bold),
                             )
                           ]),
                         ),
                         Center(
                           child: Column(children: [
                             const FaIcon(FontAwesomeIcons.dna),
-                            const Text(
+                             Text(
                               "Protein",
                               style: TextStyle(
-                                  fontSize: 10, fontWeight: FontWeight.w300),
+                                  fontSize: fontlabelSize, fontWeight: FontWeight.w300),
                             ),
                             Text(
                               controller.recipe.protein.toStringAsFixed(2),
-                              style: const TextStyle(
-                                  fontSize: 12, fontWeight: FontWeight.bold),
+                              style: TextStyle(
+                                  fontSize: fontvaluesize,
+                                  fontWeight: FontWeight.bold),
                             )
                           ]),
                         ),
                         Center(
                           child: Column(children: [
                             const FaIcon(FontAwesomeIcons.droplet),
-                            const Text(
+                             Text(
                               "Fat",
                               style: TextStyle(
-                                  fontSize: 10, fontWeight: FontWeight.w300),
+                                  fontSize: fontlabelSize, fontWeight: FontWeight.w300),
                             ),
                             Text(
                               controller.recipe.fat.toStringAsFixed(2),
-                              style: const TextStyle(
-                                  fontSize: 12, fontWeight: FontWeight.bold),
+                              style: TextStyle(
+                                  fontSize: fontvaluesize,
+                                  fontWeight: FontWeight.bold),
                             )
                           ]),
                         )

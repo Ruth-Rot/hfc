@@ -4,49 +4,61 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 class ThemeHelper {
   InputDecoration textInputDecoration(
       [String labelText = "", String hintText = "", Icon? icon]) {
+    double circular = 100.0;
+    double circularEdgesWidth = 10.0;
+    double circularEdgeHeight = 20.0;
+    double width = 2.0;
+    MaterialColor error = Colors.red;
     return InputDecoration(
       labelText: labelText,
       hintText: hintText,
       prefixIcon: icon,
       fillColor: Colors.white,
       filled: true,
-      contentPadding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+      contentPadding: EdgeInsets.fromLTRB(circularEdgeHeight,
+          circularEdgesWidth, circularEdgeHeight, circularEdgesWidth),
       focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(100.0),
+          borderRadius: BorderRadius.circular(circular),
           borderSide: const BorderSide(color: Colors.grey)),
       enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(100.0),
+          borderRadius: BorderRadius.circular(circular),
           borderSide: BorderSide(color: Colors.grey.shade400)),
       errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(100.0),
-          borderSide: const BorderSide(color: Colors.red, width: 2.0)),
+          borderRadius: BorderRadius.circular(circular),
+          borderSide: BorderSide(color: error, width: width)),
       focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(100.0),
-          borderSide: const BorderSide(color: Colors.red, width: 2.0)),
+          borderRadius: BorderRadius.circular(circular),
+          borderSide: BorderSide(color: error, width: width)),
     );
   }
 
-   InputDecoration textInputDecorationFoodForm(
+  InputDecoration textInputDecorationFoodForm(
       [String labelText = "", String hintText = "", Icon? icon]) {
+    double circular = 10.0;
+    double circularEdges = 5.0;
+    double width = 2.0;
+    MaterialColor error = Colors.red;
+
     return InputDecoration(
       labelText: labelText,
       hintText: hintText,
       prefixIcon: icon,
       fillColor: Colors.white,
       filled: true,
-      contentPadding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+      contentPadding:
+          EdgeInsets.fromLTRB(circular, circularEdges, circular, circularEdges),
       focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10.0),
+          borderRadius: BorderRadius.circular(circular),
           borderSide: const BorderSide(color: Colors.grey)),
       enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10.0),
+          borderRadius: BorderRadius.circular(circular),
           borderSide: BorderSide(color: Colors.grey.shade400)),
       errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10.0),
-          borderSide: const BorderSide(color: Colors.red, width: 2.0)),
+          borderRadius: BorderRadius.circular(circular),
+          borderSide: BorderSide(color: error, width: width)),
       focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10.0),
-          borderSide: const BorderSide(color: Colors.red, width: 2.0)),
+          borderRadius: BorderRadius.circular(circular),
+          borderSide: BorderSide(color: error, width: width)),
     );
   }
 
@@ -88,16 +100,19 @@ class ThemeHelper {
     return GestureDetector(
       onTap: action(),
       child: Container(
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.white),
-          borderRadius: BorderRadius.circular(16),
-          color: Colors.grey[200],
-        ),
-        child: FaIcon(icon, color: color,)
-        ),
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.white),
+            borderRadius: BorderRadius.circular(16),
+            color: Colors.grey[200],
+          ),
+          child: FaIcon(
+            icon,
+            color: color,
+          )),
     );
-}
+  }
+
   AlertDialog alartDialog(String title, String content, BuildContext context) {
     return AlertDialog(
       title: Text(title),
@@ -117,7 +132,4 @@ class ThemeHelper {
       ],
     );
   }
-  
 }
-
-

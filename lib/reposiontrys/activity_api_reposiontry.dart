@@ -5,7 +5,6 @@ import '../models/activity.dart';
 
 Future<Activity> fetchActivityData(
     String activity, double weight, String duration) async {
-  //var querystring = {"activity":"ym","weight":"70","duration":"60"};
   if (weight < 50) {
     weight = 50;
   }

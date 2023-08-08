@@ -12,7 +12,7 @@ class AboutUs extends StatefulWidget {
 }
 
 class __AboutUsState extends State<AboutUs> {
-  String first="";
+  String first = "";
   String introduction = "";
   String activityLevel = "";
   String dietLevel = "";
@@ -22,13 +22,19 @@ class __AboutUsState extends State<AboutUs> {
   String plan = "";
   String info = "";
   String statistics = "";
-  String favorite="";
-  String healthLabels="";
-  String dietLabels="";
-  String dishTypes="";
+  String favorite = "";
+  String healthLabels = "";
+  String dietLabels = "";
+  String dishTypes = "";
 
   @override
   Widget build(BuildContext context) {
+    SizedBox paragraph = const SizedBox(
+      height: 15.0,
+    );
+    SizedBox space = const SizedBox(
+      height: 5.0,
+    );
     readTexts();
 
     return Scaffold(
@@ -63,104 +69,54 @@ class __AboutUsState extends State<AboutUs> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             titleCenter(first),
-            const SizedBox(
-              height: 5,
-            ),
+            space,
             textField(introduction),
-            const SizedBox(
-              height: 15,
-            ),
+            paragraph,
             title("Activity Level:"),
-            const SizedBox(
-              height: 5,
-            ),
+            space,
             textField(activityLevel),
-            const SizedBox(
-              height: 15,
-            ),
+           paragraph,
             title("Diet Goal:"),
-            const SizedBox(
-              height: 5,
-            ),
+            space,
             textField(dietLevel),
-            const SizedBox(
-              height: 15,
-            ),
+            paragraph,
             textField(details),
-            const SizedBox(
-              height: 15,
-            ),
+            paragraph,
             title("Nutritional diary:"),
-            const SizedBox(
-              height: 5,
-            ),
+            space,
             textField(diary),
-            const SizedBox(
-              height: 15,
-            ),
+            paragraph,
             title("Recipe request:"),
-            const SizedBox(
-              height: 5,
-            ),
+            space,
             textField(recipe),
-            const SizedBox(
-              height: 15,
-            ),
+           paragraph,
             title("Meal plan:"),
-            const SizedBox(
-              height: 5,
-            ),
+            space,
             textField(plan),
-            const SizedBox(
-              height: 15,
-            ),
+            paragraph,
             title("Nutritional information:"),
-            const SizedBox(
-              height: 5,
-            ),
+            space,
             textField(info),
-            const SizedBox(
-              height: 15,
-            ),
-             title("Statistics screen:"),
-            const SizedBox(
-              height: 5,
-            ),
+            paragraph,
+            title("Statistics screen:"),
+            space,
             textField(statistics),
-              const SizedBox(
-              height: 15,
-            ),
-             title("Favorite recipes:"),
-            const SizedBox(
-              height: 5,
-            ),
+            paragraph,
+            title("Favorite recipes:"),
+            space,
             textField(favorite),
-
-             const SizedBox(
-              height: 15,
-            ),
-             title("Health Labels supported by the app:"),
-            const SizedBox(
-              height: 5,
-            ),
+          paragraph,
+            title("Health Labels supported by the app:"),
+           space,
             textField(healthLabels),
-              const SizedBox(
-              height: 15,
-            ),
-             title("Diet Labels supported by the app:"),
-            const SizedBox(
-              height: 5,
-            ),
+           paragraph,
+            title("Diet Labels supported by the app:"),
+           space,
             textField(dietLabels),
-               const SizedBox(
-              height: 15,
-            ),
-             title("Dish Types supported by the app:"),
-            const SizedBox(
-              height: 5,
-            ),
+            paragraph,
+            title("Dish Types supported by the app:"),
+            space,
             textField(dishTypes),
-            
             const SizedBox(
               height: 75,
             ),
@@ -215,37 +171,37 @@ class __AboutUsState extends State<AboutUs> {
       recipe = responseRecipe;
     });
     final String responsePlan =
-        await rootBundle.loadString('assets/files/Recipe request.txt');
+        await rootBundle.loadString('assets/files/Meal plan.txt');
     setState(() {
       plan = responsePlan;
     });
-     final String responseInfo =
+    final String responseInfo =
         await rootBundle.loadString('assets/files/Nutritional information.txt');
     setState(() {
       info = responseInfo;
     });
-     final String responseStatistic =
+    final String responseStatistic =
         await rootBundle.loadString('assets/files/Statistics screen.txt');
     setState(() {
       statistics = responseStatistic;
     });
-     final String responseFavorite =
+    final String responseFavorite =
         await rootBundle.loadString('assets/files/Favorite recipes.txt');
     setState(() {
       favorite = responseFavorite;
     });
 
-     final String responseHealth =
+    final String responseHealth =
         await rootBundle.loadString('assets/files/Health Labels.txt');
     setState(() {
       healthLabels = responseHealth;
     });
-     final String responseDiet =
+    final String responseDiet =
         await rootBundle.loadString('assets/files/Diet Labels.txt');
     setState(() {
       dietLabels = responseDiet;
     });
-     final String responseDish =
+    final String responseDish =
         await rootBundle.loadString('assets/files/Dish types.txt');
     setState(() {
       dishTypes = responseDish;
@@ -262,9 +218,11 @@ class __AboutUsState extends State<AboutUs> {
   Text titleCenter(String text) {
     return Text(
       text,
-      style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w500, ),
-            textAlign: TextAlign.center,
-
+      style: const TextStyle(
+        fontSize: 17,
+        fontWeight: FontWeight.w500,
+      ),
+      textAlign: TextAlign.center,
     );
   }
 }
